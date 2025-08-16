@@ -1,5 +1,5 @@
 # commit.ps1
-
+cd ..
 # Stage all changes
 git add .
 
