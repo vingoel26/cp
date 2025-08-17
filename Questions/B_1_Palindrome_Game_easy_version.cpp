@@ -48,40 +48,49 @@ void solve()
     cin >> n;
     string s;
     cin >> s;
-    int c = 0;
-    char a;
+    map<char, int> m;
     for (int i = 0; i < n; i++)
     {
-        if (s[i] == '1')
-        {
-            c++;
-        }
-        if (i == n / 2)
-        {
-            a = s[i];
-        }
+        m[s[i]]++;
     }
-    if (c == n)
+    int ans = 1e9;
+    for (auto it = m.begin(); it != m.end(); it++)
     {
-        cout << "DRAW" << endl;
-    }
-    else
-    {
-        if (n - c == 1)
+        int i = 0;
+        int j = n - 1;
+        int ct = 0;
+        while (i <= j)
         {
-            cout << "BOB" << endl;
-        }
-        else
-        {
-            if (n % 2 && a == '0')
+            if (s[i] == s[j])
             {
-                cout << "ALICE" << endl;
+                i++;
+                j--;
+            }
+            else if (s[i] == it->first)
+            {
+                ct++;
+                i++;
+            }
+            else if (s[j] == it->first)
+            {
+                ct++;
+                j--;
             }
             else
             {
-                cout << "BOB" << endl;
+                ct = 1e9;
+                break;
             }
         }
+        ans = min(ans, ct);
+    }
+    if (ans == 1e9)
+    {
+        cout << -1 << endl;
+    }
+    else
+    {
+        cout << ans << endl;
     }
 }
 
