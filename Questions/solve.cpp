@@ -44,35 +44,13 @@ May the WA avoid you
 
 void solve()
 {
-    int n,w;
-    cin>>n>>w;
-    multiset<int>s;
-    for(int i=0;i<n;i++){
-        int x;
-        cin>>x;
-        s.insert(x);
-    }
-    int ans=1;
-    int w1=w;
-    while(!s.empty()){
-        auto it=s.upper_bound(w1);
-        if(it!=s.begin()){
-            it--;
-            w1=w1-(*it);
-            s.erase(it);
-        }
-        else{
-            ans++;
-            w1=w;
-        }
-    }
-    cout<<ans<<endl;
+    cout<<754155400/157289617<<" "<<754155400%157289617<<endl;
 }
 
 int32_t main()
 {
     fast int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
