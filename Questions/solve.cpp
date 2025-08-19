@@ -44,7 +44,9 @@ May the WA avoid you
 
 void solve()
 {
-    cout<<754155400/157289617<<" "<<754155400%157289617<<endl;
+    cout<<char('z'+1)<<endl;
+    cout<<char('z'+2)<<endl;
+    cout<<(int)('a');
 }
 
 int32_t main()
