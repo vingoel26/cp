@@ -3,32 +3,36 @@ using namespace std;
 
 int main()
 {
-    int n, k;
-    cin >> n >> k;
-    string s;
-    cin >> s;
-    // int n1=(n+k-1)/k;
-    vector<vector<char>> v(k);
-    for (int i = 0; i < n; i++)
-    {
-        v[i % k].push_back(s[i]);
+    int n,k;
+    cin>>n>>k;
+    vector<int> v(n);
+    int mx=0;
+    long long s=0;
+    for(int i=0;i<n;i++){
+        cin>>v[i];
+        s+=v[i];
+        mx=max(mx,v[i]);
     }
-    for (int i = 0; i < k; ++i)
-    {
-        for (char c : v[i])
-        {
-            cout << c << " ";
+    int low=mx,high=s;
+    while(low<=high){
+        long long mid=low+((high-low)/2);
+        int s1=0;
+        int ct=0;
+        for(int i=0;i<n;i++){
+            if(s1+v[i]>mid){
+                ct++;
+                s1=v[i];
+            }
+            else{
+                s1+=v[i];
+            }
         }
-        cout << endl;
+        if(ct>k){
+            low=mid+1;
+        }
+        else{
+            high=mid-1;
+        }
     }
-    // int ans = 0;
-    // for (auto it : v)
-    // {
-    //     int mx = 0;
-    //     int s = 0;
-    //     map<char, int> mp;
-    //     for (int i = 0; i < it.size(); i++)
-    //     {
-    //     }
-    // }
+    cout<<low<<endl;
 }
