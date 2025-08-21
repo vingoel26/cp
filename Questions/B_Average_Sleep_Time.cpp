@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -41,68 +41,34 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vi p(40);
+
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    int ans = 0;
-    int m = n;
-    int x = 0;
-    int d1 = 0;
-    vi dg;
-    while (m > 0)
-    {
-        int d = m % 3;
-        d1 += d;
-        dg.pb(d);
-        if (x >= 1)
-        {
-            ans += (d * x * p[x - 1]);
-        }
-        ans += (3 * d * p[x]);
-        m /= 3;
-        x++;
+    int n,k;
+    int s=0;
+    cin>>n>>k;
+    long double ans=0;
+    vi a(n);
+    for(int i=0;i<n;i++){
+        cin>>a[i];
     }
-    if (d1 > k)
-    {
-        cout << -1 << endl;
+    for(int i=0;i<k;i++){
+        s+=a[i];
     }
-    else if (d1 == k)
-    {
-        cout << ans << endl;
+    ans=s;
+    for(int i=k;i<n;i++){
+        s=s-a[i-k]+a[i];
+        ans+=s;
     }
-    else
-    {
-        int k1 = k - d1;
-        int m = n;
-        int x = 0;
-        for (int i = dg.size() - 1; i >= 1; i--)
-        {
-            int n1 = min(dg[i], k1 / 2);
-            dg[i] -= n1;
-            dg[i - 1] += 3 * n1;
-            ans -= n1 * p[i - 1];
-            k1 -= 2 * n1;
-            if (k1 <= 0)
-            {
-                break;
-            }
-        }
-        cout << ans << endl;
-    }
+    long double k1=n-k+1;
+    ans=ans/k1;
+    cout<< fixed << setprecision(10)<<ans<<endl;
 }
 
 int32_t main()
 {
     fast int t = 1;
-    cin >> t;
-    int q = 1;
-    for (int i = 0; i < 40; i++)
-    {
-        p[i] = q;
-        q = q * 3;
-    }
+    // cin >> t;
     while (t--)
     {
         solve();
