@@ -10,10 +10,14 @@ int divide(vector<int> &a, int l, int h)
         if (a[j] < pivot)
         {
             i++;
-            swap(a[i], a[j]);
+            int temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
         }
     }
-    swap(a[i + 1], a[h]);
+    int temp = a[i+1];
+    a[i+1] = a[h];
+    a[h] = temp;
     return i + 1;
 }
 
