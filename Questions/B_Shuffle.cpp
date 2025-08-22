@@ -44,7 +44,33 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n, x, m;
+    cin >> n >> x >> m;
+    // set <int> s;
+    // s.insert(x);
+    int l = 0, r = 0;
+    for (int i = 0; i < m; i++)
+    {
+        int l1, r1;
+        cin >> l1 >> r1;
+        if (l == 0 and r == 0)
+        {
+            if (x >= l1 and x <= r1)
+            {
+                l = l1;
+                r = r1;
+            }
+        }
+        else
+        {
+            if (max(l, l1) <= min(r, r1))
+            {
+                l = min(l, l1);
+                r = max(r, r1);
+            }
+        }
+    }
+    cout<<r-l+1<<endl;
 }
 
 int32_t main()
