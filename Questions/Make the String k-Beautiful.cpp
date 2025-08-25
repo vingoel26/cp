@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 int main()
 {
     int n, k;
@@ -14,7 +13,7 @@ int main()
         v[i % k].push_back(s[i]);
     }
     // for (int i = 0; i < k; ++i)
-    // { ok
+    // {
     //     for (char c : v[i])
     //     {
     //         cout << c << " ";

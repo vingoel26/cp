@@ -55,11 +55,11 @@ void solve()
     else
     {
         sort(all(a));
-        int ans = a[0],ans1=1e18;
+        int ans = a[0], ans1 = 1e18;
         for (int i = 0; i < n - 1; i++)
         {
             ans = min(ans, a[i + 1] - a[i]);
-            ans1=min(ans1,a[i + 1] - a[i]);
+            ans1 = min(ans1, a[i + 1] - a[i]);
         }
         if (k == 1)
         {
@@ -67,13 +67,21 @@ void solve()
         }
         else
         {
-            a.pb(ans1);
-            sort(all(a));
             for (int i = 0; i < n; i++)
-            {
-                ans = min(ans, a[i + 1] - a[i]);
-            }
-            cout<<ans<<endl;
+                for (int j = 0; j < i; j++)
+                {
+                    int v = a[i] - a[j];
+                    int p = lower_bound(all(a), v) - a.begin();
+                    if (p < n)
+                    {
+                        ans = min(ans, a[p] - v);
+                    }
+                    if (p > 0)
+                    {
+                        ans = min(ans, v - a[p - 1]);
+                    }
+                }
+            cout << ans << endl;
         }
     }
 }
