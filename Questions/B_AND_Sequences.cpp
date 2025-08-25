@@ -44,40 +44,34 @@ May the WA avoid you
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n, mn = 1e9;
+    cin >> n;
     vi a(n);
-    vin(a);
-    if (k >= 3)
+    map<int, int> m;
+    for (int i = 0; i < n; i++)
     {
-        cout << 0 << endl;
+        cin >> a[i];
+        mn = min(mn, a[i]);
+        m[a[i]]++;
     }
-    else
+    // cout<<mn<<endl;
+    for (auto it : m)
     {
-        sort(all(a));
-        int ans = a[0],ans1=1e18;
-        for (int i = 0; i < n - 1; i++)
+        if ((mn & it.first) != mn)
         {
-            ans = min(ans, a[i + 1] - a[i]);
-            ans1=min(ans1,a[i + 1] - a[i]);
-        }
-        if (k == 1)
-        {
-            cout << ans << endl;
-        }
-        else
-        {
-            a.pb(ans1);
-            sort(all(a));
-            for (int i = 0; i < n; i++)
-            {
-                ans = min(ans, a[i + 1] - a[i]);
-            }
-            cout<<ans<<endl;
+            cout << 0 << endl;
+            return;
         }
     }
+    int p = 1;
+    for (int i = 1; i <= n - 2; i++)
+    {
+        p = (1LL * p * i) % mod;
+    }
+    int ans = (m[mn] * (m[mn] - 1)) % mod;
+    ans = (ans * p) % mod;
+    cout << ans << endl;
 }
-
 int32_t main()
 {
     fast int t = 1;
