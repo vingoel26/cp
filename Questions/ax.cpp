@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -44,42 +44,34 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi m(n + 1);
-    vi a(n);
-    for (int i = 0; i < n; ++i)
-    {
-        cin >> a[i];
-        m[a[i]]++;
+    int n,m;
+    cin>>n>>m;
+    vector<int>v(n+1);
+    for(int i=0;i<m;i++){
+        int x,y;
+        cin>>x>>y;
+        v[x]++;
+        v[y]++;
     }
-    sort(m.rbegin(), m.rend());
-    int ans = m[0];
-    int s = m[0];
-    for (int i = 1; i <= n; ++i)
-    {
-        if (s == 0)
-        {
+    int k=0;
+    for(int i=1;i<=n;i++){
+        if(v[i]==0){
+            k=i;
             break;
         }
-        if (m[i] >= s)
-        {
-            ans += s - 1;
-            s -= 1;
-        }
-        else
-        {
-            ans += m[i];
-            s = m[i];
+    }
+    cout<<n-1<<endl;
+    for(int i=1;i<=n;i++){
+        if(k!=i){
+            cout<<k<<" "<<i<<endl;
         }
     }
-    cout << ans << endl;
 }
 
 int32_t main()
 {
     fast int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
