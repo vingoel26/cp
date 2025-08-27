@@ -44,28 +44,31 @@ May the WA avoid you
 
 void solve()
 {
-    int n; cin >> n;
-        vector<int> a(n);
-        for(int i=0;i<n;i++) cin >> a[i];
-
-        vector<long long> b(n);
-        for(int i=0;i<n;i++){
-            b[i] = (i %2 == 0 ? a[i] : -a[i]);
+    int n;
+    cin >> n;
+    vi a(n);
+    vin(a);
+    int ans = 0;
+    for (int i = 1; i < n; i = i + 2)
+    {
+        int p = 0;
+        if (i != 0)
+        {
+            p += a[i - 1];
         }
-
-        vector<long long> pref(n+1,0);
-        for(int i=1;i<=n;i++) pref[i] = pref[i-1] + b[i-1];
-
-        long long ans = 0;
-        long long min_pref = 0;
-        for(int i=2;i<=n;i++){
-            if(pref[i] < min_pref){
-                ans += min_pref - pref[i];
-                pref[i] = min_pref;
-            }
-            min_pref = min(min_pref, pref[i-1]);
+        if (i != n - 1)
+        {
+            p += a[i + 1];
         }
-        cout << ans << "\n";
+        ans += max(0LL, p - a[i]);
+        if (i != n - 1 and p>a[i])
+        {
+            a[i + 1] = max(0LL,a[i+1]-(p-a[i]));
+        }
+    }
+    // vout(a);
+    // cout<<endl;
+    cout << ans << endl;
 }
 
 int32_t main()
