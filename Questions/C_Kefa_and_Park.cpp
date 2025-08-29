@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -41,45 +41,52 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-const int N = 2*1e5 + 9;
-bool vis[N];
-viv df(N);
-vi ct(N,0);
-void dfs(int u)
+
+viv df;
+vector<int> cat;
+vector<int> v;
+int m, ans = 0;
+
+void dfs(int node, int par)
 {
-    vis[u] = true;
-    for (auto v : df[u])
+    for (int child : df[node])
     {
-        if (!vis[v])
-        {
-            dfs(v);
-            ct[u]+=1;
-            ct[u]+=ct[v];
-        }
+        if (child == par)
+            continue;
+        if (cat[child])
+            v[child] = v[node] + 1;
+        else
+            v[child] = 0;
+        if (v[child] > m)
+            continue;
+        if (df[child].size() == 1)
+            ans++;
+        dfs(child, node);
     }
 }
 void solve()
 {
     int n;
-    cin >> n;
-    for (int i = 2; i <= n; i++)
+    cin >> n >> m;
+    ans = 0;
+    cat.resize(n + 1);
+    for (int i = 1; i <= n; i++)
+        cin >> cat[i];
+    df.resize(n + 1);
+    v.resize(n + 1, 0);
+    for (int i = 0; i < n - 1; i++)
     {
-        int x;
-        cin >> x;
-        df[i].pb(x);
-        df[x].pb(i);
+        int x, y;
+        cin >> x >> y;
+        df[x].push_back(y);
+        df[y].push_back(x);
     }
-    for (int u = 1; u <= n; u++)
-    {
-        if (!vis[u])
-        {
-            dfs(u);
-        }
-    }
-    for(int i=1;i<=n;i++){
-        cout<<ct[i]<<" ";
-    }
+    if (cat[1])
+        v[1] = 1;
+    dfs(1, -1);
+    cout << ans;
 }
+
 int32_t main()
 {
     fast int t = 1;

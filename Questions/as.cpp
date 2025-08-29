@@ -41,49 +41,21 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-const int N = 2*1e5 + 9;
-bool vis[N];
-viv df(N);
-vi ct(N,0);
-void dfs(int u)
-{
-    vis[u] = true;
-    for (auto v : df[u])
-    {
-        if (!vis[v])
-        {
-            dfs(v);
-            ct[u]+=1;
-            ct[u]+=ct[v];
-        }
-    }
-}
+
 void solve()
 {
     int n;
-    cin >> n;
-    for (int i = 2; i <= n; i++)
-    {
-        int x;
-        cin >> x;
-        df[i].pb(x);
-        df[x].pb(i);
-    }
-    for (int u = 1; u <= n; u++)
-    {
-        if (!vis[u])
-        {
-            dfs(u);
-        }
-    }
-    for(int i=1;i<=n;i++){
-        cout<<ct[i]<<" ";
+    cin>>n;
+    vi a(n-1);
+    for(int i=0;i<n;i++){
+        
     }
 }
+
 int32_t main()
 {
     fast int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
