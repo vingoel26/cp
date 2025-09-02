@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -45,10 +45,39 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    vi prmx(n),sufmn(n);
+    cin >> n;
+    vi v(n);
+    vin(v)
+    vi ans(n);
+    ans[n - 1] = *max_element(all(v));
+    vi prmx(n);
+    prmx[0] = v[0];
+    for (int i = 1; i < n; i++)
+    {
+        prmx[i] = max(prmx[i - 1], v[i]);
+    }
+    vi suffmn(n);
+    suffmn[n - 1] = v[n - 1];
+    for (int i = n - 2; i >= 0; i--)
+    {
+        suffmn[i] = min(suffmn[i + 1], v[i]);
+    }
+    for (int i = n - 2; i >= 0; i--)
+    {
+        if (prmx[i] > suffmn[i + 1])
+        {
+            ans[i] = ans[i + 1];
+        }
+        else
+        {
+            ans[i] = prmx[i];
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        cout << ans[i] << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
