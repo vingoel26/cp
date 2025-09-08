@@ -47,29 +47,11 @@ void solve()
     int n;
     cin >> n;
     vi a(n);
-    vin(a);
-    if(n==1){
-        cout<<0<<endl;
-        return;
-    }
-    vi b(n);
-    b[0]=a[0];
-    for(int i=1;i<n;i++){
-        b[i]=max(b[i-1],a[i]);
-    }
-    // vout(b);
-    // cout<<endl;
-    int ans=0;
+    vin(a)
     for(int i=0;i<n;i++){
-        int k=b[i]-a[i];
-        // cout<<k<<" ";
-        if(k!=0){
-            int h=64 - __builtin_clzll(k);
-            ans=max(ans,h);
-        }
+        cout<<n+1-a[i]<<" ";
     }
-    // cout<<endl;
-    cout<<ans<<endl;
+    cout << endl;
 }
 
 int32_t main()

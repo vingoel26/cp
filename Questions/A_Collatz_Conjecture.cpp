@@ -44,32 +44,12 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    vin(a);
-    if(n==1){
-        cout<<0<<endl;
-        return;
+    int k, x;
+    cin >> k >> x;
+    for(int i=0;i<k;i++){
+        x=x*2;
     }
-    vi b(n);
-    b[0]=a[0];
-    for(int i=1;i<n;i++){
-        b[i]=max(b[i-1],a[i]);
-    }
-    // vout(b);
-    // cout<<endl;
-    int ans=0;
-    for(int i=0;i<n;i++){
-        int k=b[i]-a[i];
-        // cout<<k<<" ";
-        if(k!=0){
-            int h=64 - __builtin_clzll(k);
-            ans=max(ans,h);
-        }
-    }
-    // cout<<endl;
-    cout<<ans<<endl;
+    cout<<x<<endl;
 }
 
 int32_t main()

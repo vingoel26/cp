@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -45,31 +45,16 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin >> n;
-    vi a(n);
+    cin>>n;
+    vi a(n),b(n);
     vin(a);
-    if(n==1){
-        cout<<0<<endl;
-        return;
+    vin(b);
+    vi pr(n);
+    pr[n-1]=a[n-1];
+    for(int i=n-2;i>=0;i--){
+        pr[i]=pr[i+1]+a[i];
     }
-    vi b(n);
-    b[0]=a[0];
-    for(int i=1;i<n;i++){
-        b[i]=max(b[i-1],a[i]);
-    }
-    // vout(b);
-    // cout<<endl;
-    int ans=0;
-    for(int i=0;i<n;i++){
-        int k=b[i]-a[i];
-        // cout<<k<<" ";
-        if(k!=0){
-            int h=64 - __builtin_clzll(k);
-            ans=max(ans,h);
-        }
-    }
-    // cout<<endl;
-    cout<<ans<<endl;
+    
 }
 
 int32_t main()

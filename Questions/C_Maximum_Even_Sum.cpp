@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -44,32 +44,30 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    vin(a);
-    if(n==1){
-        cout<<0<<endl;
-        return;
+    int a,b;
+    cin>>a>>b;
+    int ct=0;
+    int b1=b;
+    while(b1%2==0){
+        b1=b1/2;
+        ct++;
     }
-    vi b(n);
-    b[0]=a[0];
-    for(int i=1;i<n;i++){
-        b[i]=max(b[i-1],a[i]);
-    }
-    // vout(b);
-    // cout<<endl;
-    int ans=0;
-    for(int i=0;i<n;i++){
-        int k=b[i]-a[i];
-        // cout<<k<<" ";
-        if(k!=0){
-            int h=64 - __builtin_clzll(k);
-            ans=max(ans,h);
+    if(ct==0){
+        if(a%2==0){
+            cout<<-1<<endl;
+        }
+        else{
+            cout<<a*b+1<<endl;
         }
     }
-    // cout<<endl;
-    cout<<ans<<endl;
+    else{
+        if(ct==1 and a%2!=0){
+            cout<<-1<<endl;
+        }
+        else{
+            cout<<(a*(b/2))+2<<endl;
+        }
+    }
 }
 
 int32_t main()

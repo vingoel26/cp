@@ -48,28 +48,28 @@ void solve()
     cin >> n;
     vi a(n);
     vin(a);
-    if(n==1){
-        cout<<0<<endl;
-        return;
-    }
-    vi b(n);
-    b[0]=a[0];
-    for(int i=1;i<n;i++){
-        b[i]=max(b[i-1],a[i]);
-    }
-    // vout(b);
-    // cout<<endl;
-    int ans=0;
-    for(int i=0;i<n;i++){
-        int k=b[i]-a[i];
-        // cout<<k<<" ";
-        if(k!=0){
-            int h=64 - __builtin_clzll(k);
-            ans=max(ans,h);
-        }
-    }
-    // cout<<endl;
-    cout<<ans<<endl;
+    viv dp(n + 1, vi(2,1e9));
+    dp[0][1] = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < 2; j++)
+            for (int k = 1; k <= min(n - i, 2LL); k++)
+            {
+                int s;
+                if(k==1){
+                    s=a[i];
+                }
+                else{
+                    s=a[i]+a[i+1];
+                }
+                if(j==0){
+                    dp[i+k][1]=min(dp[i+k][1],dp[i][0]);
+                }
+                else{
+                    dp[i+k][0]=min(dp[i+k][0],dp[i][1]+s);
+                }
+            }
+
+    cout << min(dp[n][0], dp[n][1]) << endl;
 }
 
 int32_t main()
