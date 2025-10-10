@@ -78,66 +78,51 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-bool check(vi s,int n,vi a){
-    int ct=1;
-    bool q=false;
-    for(int i=1;i<n;i++){
-        if(s[i]==1){
-            ct++;
-        }
-    }
-        if(ct==a[0]){
-            q=true;
-            for(int i=0;i<n-1;i++){
-                if(s[i]==1 and s[i+1]==1){
-                    ct--;
-                }
-                else if(s[i]==0 and s[i+1]==0){
-                    ct++;
-                }
-                if(a[i+1]!=ct){
-                    q=false;
-                    break;
-                }
-            }
-        }
-    return q;
-}
+
 void solve()
 {
     int n;
     cin>>n;
-    vi a(n);
-    vin(a);
-    if(n==1){
-        cout<<2<<endl;
-        return;
-    }
-    vi s1,s2;
-    s1.pb(0);
-    s2.pb(1);
-    for(int i=0;i<n-1;i++){
-        if(a[i+1]-a[i]>1){
-            cout<<0<<endl;
-            return;
+    vi a1(n);
+    vin(a1);
+    vi a,b;
+    int ct=0;
+    for(int i=0;i<n;i++){
+        if(a1[i]==0){
+            ct++;
         }
-        if(a[i+1]-a[i]==0){
-            s1.pb(1-s1[i]);
-            s2.pb(1-s2[i]);
+        else if(a1[i]>0){
+            a.pb(a1[i]);
         }
         else{
-            s1.pb(s1[i]);
-            s2.pb(s2[i]);
+            b.pb(a1[i]);
         }
     }
-    int ans=0;
-    if(check(s1,n,a)){
-        ans++;
+    if(ct==n){
+        nah
+        return;
     }
-    if(check(s2,n,a)){
-        ans++;
+    vi ans;
+    int s=b[0],j=0,k=1;
+    ans.pb(b[0]);
+    yah
+    for(int i=1;i<n-ct;i++){
+        if(s<0){
+            s+=a[j];
+            ans.pb(a[j]);
+            j++;
+        }
+        else{
+            s+=b[k];
+            ans.pb(b[k]);
+            k++;
+        }
     }
-    cout<<ans<<endl;
+    for(int i=0;i<ct;i++){
+        ans.pb(0);
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()

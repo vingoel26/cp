@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -78,66 +78,38 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-bool check(vi s,int n,vi a){
-    int ct=1;
-    bool q=false;
-    for(int i=1;i<n;i++){
-        if(s[i]==1){
-            ct++;
-        }
-    }
-        if(ct==a[0]){
-            q=true;
-            for(int i=0;i<n-1;i++){
-                if(s[i]==1 and s[i+1]==1){
-                    ct--;
-                }
-                else if(s[i]==0 and s[i+1]==0){
-                    ct++;
-                }
-                if(a[i+1]!=ct){
-                    q=false;
-                    break;
-                }
-            }
-        }
-    return q;
-}
+
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    if(n==1){
-        cout<<2<<endl;
+
+    int n, x;
+    cin >> n >> x;
+    if ((x & n) != x) {
+        cout << -1 << endl;
         return;
     }
-    vi s1,s2;
-    s1.pb(0);
-    s2.pb(1);
-    for(int i=0;i<n-1;i++){
-        if(a[i+1]-a[i]>1){
-            cout<<0<<endl;
-            return;
+    if (x == n) {
+        cout << n << endl;
+        return;
+    }
+    int ans = n, ans1 = LLONG_MAX;
+    for (int i = 0; i < 64; ++i) {
+        bool n1 = (n >> i) & 1;
+        bool x1 = (x >> i) & 1;
+        if (!x1 && n1) {
+            int mi = ((n >> (i + 1)) + 1) << (i + 1);
+            ans = max(ans, mi);
         }
-        if(a[i+1]-a[i]==0){
-            s1.pb(1-s1[i]);
-            s2.pb(1-s2[i]);
-        }
-        else{
-            s1.pb(s1[i]);
-            s2.pb(s2[i]);
+        if (x1) {
+            int mi = ((n >> i) << i) + ((1LL << i) - 1);
+            ans1 = min(ans1, mi);
         }
     }
-    int ans=0;
-    if(check(s1,n,a)){
-        ans++;
+    if (ans < ans1) {
+        cout << ans << endl;
+    } else {
+        cout << -1 << endl;
     }
-    if(check(s2,n,a)){
-        ans++;
-    }
-    cout<<ans<<endl;
 }
 
 int32_t main()

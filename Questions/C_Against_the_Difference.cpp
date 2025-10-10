@@ -78,66 +78,26 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-bool check(vi s,int n,vi a){
-    int ct=1;
-    bool q=false;
-    for(int i=1;i<n;i++){
-        if(s[i]==1){
-            ct++;
-        }
-    }
-        if(ct==a[0]){
-            q=true;
-            for(int i=0;i<n-1;i++){
-                if(s[i]==1 and s[i+1]==1){
-                    ct--;
-                }
-                else if(s[i]==0 and s[i+1]==0){
-                    ct++;
-                }
-                if(a[i+1]!=ct){
-                    q=false;
-                    break;
-                }
-            }
-        }
-    return q;
-}
+
 void solve()
 {
     int n;
     cin>>n;
     vi a(n);
     vin(a);
-    if(n==1){
-        cout<<2<<endl;
-        return;
-    }
-    vi s1,s2;
-    s1.pb(0);
-    s2.pb(1);
-    for(int i=0;i<n-1;i++){
-        if(a[i+1]-a[i]>1){
-            cout<<0<<endl;
-            return;
+    vi dp(n+1,0);
+    vector<deque<int>> b(n+1);
+    for(int i=1;i<=n;i++){
+        dp[i]=dp[i-1];
+        b[a[i-1]].pb(i);
+        if(b[a[i-1]].size()>a[i-1]){
+            b[a[i-1]].pop_front();
         }
-        if(a[i+1]-a[i]==0){
-            s1.pb(1-s1[i]);
-            s2.pb(1-s2[i]);
-        }
-        else{
-            s1.pb(s1[i]);
-            s2.pb(s2[i]);
+        if(b[a[i-1]].size()==a[i-1]){
+            dp[i]=max(dp[i],dp[b[a[i-1]].front()-1]+a[i-1]);
         }
     }
-    int ans=0;
-    if(check(s1,n,a)){
-        ans++;
-    }
-    if(check(s2,n,a)){
-        ans++;
-    }
-    cout<<ans<<endl;
+    cout<<dp[n]<<endl;
 }
 
 int32_t main()
