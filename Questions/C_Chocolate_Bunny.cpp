@@ -81,72 +81,38 @@ May the WA avoid you
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    viv a(n, vi(m)), b(n, vi(m));
-    for (int i = 0; i < n; ++i)
+    int n;
+    cin >> n;
+    vi ans(n + 1, 0);
+    int it = 1;
+    for (int i = 2; i <= n; i++)
     {
-        for (int j = 0; j < m; ++j)
+        cout << "? " << it << " " << i << endl;
+        cout.flush();
+        inp(x);
+        cout << "? " << i << " " << it << endl;
+        cout.flush();
+        inp(y);
+        if (x > y)
         {
-            cin >> a[i][j];
+            ans[it] = x;
+            it = i;
+        }
+        else
+        {
+            ans[i] = y;
         }
     }
-    for (int i = 0; i < n; ++i)
+    ans[it] = n;
+    cout << "! ";
+    cout.flush();
+    for (int i = 1; i <= n; i++)
     {
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> b[i][j];
-        }
+        cout << ans[i] << " ";
+        cout.flush();
     }
-    vector<vector<bool>> rs(n, vector<bool>(256, false)), cs(m, vector<bool>(256, false));
-    for (int i = 0; i < n; ++i)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int j = 0; j < m; ++j)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    rs[i][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int j = 0; j < m; ++j)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    cs[j][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            int q = b[i][j];
-            if (!rs[i][q] || !cs[j][q])
-            {
-                nah return;
-            }
-        }
-    }
-    yah
+    cout<<endl;
+    cout.flush();
 }
 
 int32_t main()

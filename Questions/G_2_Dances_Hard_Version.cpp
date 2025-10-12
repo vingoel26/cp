@@ -44,7 +44,43 @@ May the WA avoid you
 
 void solve()
 {
-    
+    inp(n);
+    inp(m);
+    vi a(n + 2, 0);
+    vi b(n + 2, 0);
+    vi mk(n + 2, 0);
+    for (int i = 2; i <= n; i++)
+        cin >> a[i];
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> b[i];
+        mk[i] = 0;
+    }
+    sort(a.be + 2, a.be + n + 1);
+    sort(b.be + 1, b.be + n + 1);
+    int i = 2, j = 1;
+    while (i <= n && j <= n)
+    {
+        if (a[i] < b[j])
+        {
+            mk[j] = 1;
+            i++, j++;
+        }
+        else
+        {
+            j++;
+        }
+    }
+    vi v;
+    for (int i = 1; i <= n; i++)
+    {
+        if (mk[i] == 0)
+            v.pb(b[i]);
+    }
+    int mx = v[v.size()-1];
+    int inia = n - i + 2;
+    int ans = inia * m - min((mx - 1), m);
+    cout << ans << endl;
 }
 
 int32_t main()

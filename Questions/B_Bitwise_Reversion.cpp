@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -81,70 +81,19 @@ May the WA avoid you
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    viv a(n, vi(m)), b(n, vi(m));
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> a[i][j];
-        }
+    int x,y,z;
+    cin>>x>>y>>z;
+    if((x&z)&~y){
+        nah
+        return;
     }
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> b[i][j];
-        }
+    if((y&z)&~x){
+        nah
+        return;
     }
-    vector<vector<bool>> rs(n, vector<bool>(256, false)), cs(m, vector<bool>(256, false));
-    for (int i = 0; i < n; ++i)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int j = 0; j < m; ++j)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    rs[i][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int j = 0; j < m; ++j)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    cs[j][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            int q = b[i][j];
-            if (!rs[i][q] || !cs[j][q])
-            {
-                nah return;
-            }
-        }
+    if((x&y)&~z){
+        nah
+        return;
     }
     yah
 }
@@ -152,7 +101,7 @@ void solve()
 int32_t main()
 {
     fast int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

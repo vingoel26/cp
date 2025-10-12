@@ -81,78 +81,79 @@ May the WA avoid you
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    viv a(n, vi(m)), b(n, vi(m));
-    for (int i = 0; i < n; ++i)
+    int n;
+    cin >> n;
+    map<int, int> mp;
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> a[i][j];
-        }
+        int x;
+        cin >> x;
+        mp[x]++;
     }
-    for (int i = 0; i < n; ++i)
+    vector<pair<int, int>> v, v1;
+    int ct = 0;
+    for (auto x : mp)
     {
-        for (int j = 0; j < m; ++j)
+        if (x.ss % 2 == 0)
         {
-            cin >> b[i][j];
+            v.push_back({x.ff, x.ss / 2});
+            ct += x.ss / 2;
         }
-    }
-    vector<vector<bool>> rs(n, vector<bool>(256, false)), cs(m, vector<bool>(256, false));
-    for (int i = 0; i < n; ++i)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int j = 0; j < m; ++j)
+        else
         {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
+            if (x.ss > 1)
             {
-                if (seen[q])
-                {
-                    rs[i][p ^ q] = true;
-                }
+                v.push_back({x.ff, x.ss / 2});
             }
-            seen[p] = true;
+            ct += x.ss / 2;
+            v1.push_back({x.ff, 1});
         }
     }
-    for (int j = 0; j < m; ++j)
+    if (v.size() == 0)
     {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    cs[j][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
+        cout << 0 << endl;
+        return;
     }
-    for (int i = 0; i < n; ++i)
+    int s = 0;
+    for (auto x : v)
     {
-        for (int j = 0; j < m; ++j)
+        s += x.ss * x.ff;
+    }
+    int ans = 0;
+    if (ct > 1)
+    {
+        ans = max(s * 2, ans);
+    }
+    sort(rall(v1));
+    // for(int i=0;i<v.size();i++){
+    //     cout<<v[i].ff<<" "<<v[i].ss<<endl;
+    // }
+    // cout<<endl;
+    // for(int i=0;i<v1.size();i++){
+    //     cout<<v1[i].ff<<" "<<v1[i].ss<<endl;
+    // }
+    if (v1.size() > 0)
+    {
+        for (int i = 0; i < v1.size(); i++)
         {
-            int q = b[i][j];
-            if (!rs[i][q] || !cs[j][q])
+            if (v1[i].ff < 2 * s)
             {
-                nah return;
+                ans = max(ans, s * 2 + v1[i].ff);
+            }
+            if (v1.size()>1 and i <= v1.size() - 2 and v1[i].ff - v1[i + 1].ff < 2 * s)
+            {
+                ans = max(ans, s * 2 + v1[i].ff + v1[i + 1].ff);
             }
         }
     }
-    yah
+
+    cout << ans << endl;
 }
 
 int32_t main()
 {
     fast int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

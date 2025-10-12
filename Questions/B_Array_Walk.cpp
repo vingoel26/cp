@@ -81,78 +81,31 @@ May the WA avoid you
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    viv a(n, vi(m)), b(n, vi(m));
-    for (int i = 0; i < n; ++i)
+    int n, k, z;
+    cin >> n >> k >> z;
+    vi a(n);
+    vin(a);
+    int ans = 0;
+    for (int i = 0; i <= z; i++)
     {
-        for (int j = 0; j < m; ++j)
+        int s = 0, p = k - 2 * i,mx=0;
+        for (int j = 0; j <= p; j++)
         {
-            cin >> a[i][j];
-        }
-    }
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> b[i][j];
-        }
-    }
-    vector<vector<bool>> rs(n, vector<bool>(256, false)), cs(m, vector<bool>(256, false));
-    for (int i = 0; i < n; ++i)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int j = 0; j < m; ++j)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
+            s += a[j];
+            if (j < n-1)
             {
-                if (seen[q])
-                {
-                    rs[i][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int j = 0; j < m; ++j)
-    {
-        vector<bool> seen(256, false);
-        seen[0] = true;
-        int p = 0;
-        for (int i = 0; i < n; ++i)
-        {
-            p ^= a[i][j];
-            for (int q = 0; q < 256; ++q)
-            {
-                if (seen[q])
-                {
-                    cs[j][p ^ q] = true;
-                }
-            }
-            seen[p] = true;
-        }
-    }
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < m; ++j)
-        {
-            int q = b[i][j];
-            if (!rs[i][q] || !cs[j][q])
-            {
-                nah return;
+                mx = max(mx, a[j] + a[j + 1]);
             }
         }
+        ans = max(ans, s + mx * i);
     }
-    yah
+    cout << ans << endl;
 }
 
 int32_t main()
 {
     fast int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
