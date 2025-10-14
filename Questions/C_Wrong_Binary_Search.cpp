@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
+#define vin(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a)                 \
+#define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast                          \
+#define fast \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -82,34 +82,35 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin >> n;
-    vi a(n);
-    vin(a);
-    vi d(n);
-    d[0] = 0;
-    for (int i = 1; i < n; i++)
-    {
-        d[i] = d[i - 1];
-        if (a[i] <= a[i - 1])
-        {
-            int t = a[i];
-            while (t < a[i - 1])
-            {
-                d[i]++;
-                t *= 2;
+    cin>>n;
+    string s;
+    cin>>s;
+    int l=0,c=0;
+    s.pb('1');
+    vi ans(n);
+    for(int i=0;i<=n;i++){
+        if(s[i]=='1'){
+            if(i-l==1){
+                nah
+                return;
+            }
+            while(l<i){
+                ans[l]=c;
+                c--;
+                l++;
+            }
+            l=i+1;
+            if(i<n){
+                ans[i]=i+1;
             }
         }
-        else
-        {
-            int t = a[i - 1];
-            while (d[i] - 1 >= 0 and t * 2 <= a[i])
-            {
-                d[i]--;
-                t *= 2;
-            }
+        else{
+            c=i+1;
         }
     }
-    cout << accumulate(all(d), 0LL) << endl;
+    yah
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()
