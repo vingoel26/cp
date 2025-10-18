@@ -64,25 +64,22 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    int n,x,y;
+    cin>>n>>x>>y;
+    x--;
+    y--;
+    vi ans(n,0);
+    for(int i=0;i<n;i++){
+            ans[(x+i)%n]=i%2;
+        }
+    if(n%2==1){
+        ans[x]=2;
+    }
+    else if((x-y)%2==0){
+        ans[x]=2;
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()

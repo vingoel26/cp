@@ -64,25 +64,44 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    string s,s1,s2;
+    cin>>s>>s1>>s2;
+    int n=s.size(),m=s1.size();
+    viv dp(n+1,vi(m+1,1e9));
+    dp[0][0]=0;
+    for(int i=0;i<n;i++){
+        if(s[i]==s2[i]){
+            dp[i+1][0]=dp[i][0];
+        }
+        else{
+            dp[i+1][0]=dp[i][0]+1;
+        }
+    }
+    for(int i=0;i<m;i++){
+        if(s1[i]==s2[i]){
+            dp[0][i+1]=dp[0][i];
+        }
+        else{
+            dp[0][i+1]=dp[0][i]+1;
+        }
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            if(s[i-1]==s2[i+j-1]){
+                dp[i][j]=min(dp[i-1][j],dp[i][j]);
+            }
+            else{
+                dp[i][j]=min(dp[i-1][j]+1,dp[i][j]);
+            }
+            if(s1[j-1]==s2[i+j-1]){
+                dp[i][j]=min(dp[i][j-1],dp[i][j]);
+            }
+            else{
+                dp[i][j]=min(dp[i][j-1]+1,dp[i][j]);
+            }
+        }
+    }
+    cout<<dp[n][m]<<endl;
 }
 
 int32_t main()

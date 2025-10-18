@@ -61,28 +61,42 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+viv adj;
+vi dp;
+map<pair<int,int>,int> ind;
+void dfs(int vert,int par){
+    for(auto &it:adj[vert]){
+        if(it==par){
+            continue;
+        }
+        if (ind[{par, vert}] < ind[{vert, it}]) {
+			dp[it] = dp[vert];
+		} else {
+			dp[it] = dp[vert] + 1;
+		}
+        dfs(it,vert);
+    }
+}
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    adj.assign(n,vi());
+    ind.clear();
+    dp.assign(n,0);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        u--;v--;
+        adj[u].pb(v);
+        adj[v].pb(u);
+        ind[{u,v}]=i;
+        ind[{v,u}]=i;
+    }
+    ind[{-1,0}]=-1;
+    dp[0]=1;
+    dfs(0,-1);
+    cout<<*max_element(all(dp))<<endl;
 }
 
 int32_t main()

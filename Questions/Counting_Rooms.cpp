@@ -46,22 +46,35 @@ void solve()
 {
     int n,m;
     cin>>n>>m;
-    vector<string> v;
+    vector<string> v(n);
     for(int i=0;i<n;i++){
         cin>>v[i];
     }
-    viv df(n*m+1);
+    viv vis(n,vi(m,0));
+    int ans=0;
+    int dr[4]={1,-1,0,0},dc[4]={0,0,1,-1};
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
-            if(v[i][j]=='.'){
-                if(i>0){
-                    if(v[i-1][j]=='.'){
-                        df(i+j)
+            if(v[i][j]=='.' and !vis[i][j]){
+                ans++;
+                stack<pair<int,int>> st;
+                st.push({i,j});
+                vis[i][j]=1;
+                while(!st.empty()){
+                    pair<int,int> p=st.top();
+                    st.pop();
+                    for(int k=0;k<4;k++){
+                        int r=p.ff+dr[k],c=p.ss+dc[k];
+                        if(((r>=0 and r<n) and (c>=0 and c<m)) and v[r][c]=='.' and !vis[r][c]){
+                            st.push({r,c});
+                            vis[r][c]=1;
+                        }
                     }
                 }
             }
         }
     }
+    cout<<ans<<endl;
 }
 
 int32_t main()

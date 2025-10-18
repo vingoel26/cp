@@ -61,28 +61,58 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int node, viv &adj, vector<bool> &visited, set<int> &ans, vi &b){
+    visited[node] = true;
+    int ct=0,ct1=1;
+    if(b[node-1]==1){
+        ct=1;
+    }
+    for(auto &child : adj[node]){
+        if(!visited[child]){
+            dfs(child, adj, visited, ans, b);
+            if(b[child-1]==1){
+                ct++;
+            }
+            ct1++;
+        }
+    }
+    if(ct==ct1){
+        ans.insert(node);
+    }
+}
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    vi a(n),b(n);
+    int r=0;
+    for(int i=0;i<n;i++){
+        cin>>a[i]>>b[i];
+        if(a[i]==-1 and b[i]==0){
+            r=i+1;
+        }
+    }
+    viv adj(n+1);
+    for(int i=0;i<n;i++){
+        if(a[i]==-1){
+            continue;
+        }
+        adj[a[i]].pb(i+1);
+        adj[i+1].pb(a[i]);
+    }
+    vector<bool> visited(n+1,false);
+    set<int> ans;
+    dfs(r,adj,visited,ans,b);
+    // cout<<ans.size()<<endl;
+    ans.erase(r);
+    if(ans.size()==0){
+        cout<<-1<<endl;
+        return;
+    }
+    for(auto &it:ans){
+        cout<<it<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +125,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

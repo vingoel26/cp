@@ -65,24 +65,25 @@ May the WA avoid you
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    vi dp(n,n+1);
+    dp[n-1]=1;
+    for(int i=n-2;i>=0;--i){
+        int k;
+        if(i+a[i]+1<n){
+            k=dp[i+a[i]+1];
+        }
+        else if(i+a[i]+1==n){
+            k=0;
+        }
+        else {
+            k=n+1;
+        }
+        dp[i]=min(dp[i+1]+1,k);
+    }
+    cout<<dp[0]<<endl;
 }
 
 int32_t main()

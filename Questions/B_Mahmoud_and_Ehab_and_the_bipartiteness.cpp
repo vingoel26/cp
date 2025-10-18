@@ -61,28 +61,46 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int node, viv &adj, vi &a, vi &b, int k, vi &vis){
+    vis[node]=1;
+    if(k==1){
+        a.pb(node);
+    } else {
+        b.pb(node);
+    }
+    for(auto child: adj[node]){
+        if(!vis[child]){
+            dfs(child,adj,a,b,3-k,vis);
+        }
+    }
+}
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int x,y;
+        cin>>x>>y;
+        adj[x].pb(y);
+        adj[y].pb(x);
+    }
+    int k=1;
+    vi a,b,vis(n+1,0);
+    for(int i=1;i<=n;i++){
+        if(!vis[i]){
+            dfs(i,adj,a,b,k,vis);
+        }
+    }
+    // for(int i=0;i<a.size();i++){
+    //     cout<<a[i]<<" ";
+    // }
+    // cout<<endl;
+    // for(int i=0;i<b.size();i++){
+    //     cout<<b[i]<<" ";
+    // }
+    // cout<<endl;
+    cout<<a.size()*b.size()-(n-1)<<endl;
 }
 
 int32_t main()
@@ -95,7 +113,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

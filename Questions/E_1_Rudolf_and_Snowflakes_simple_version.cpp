@@ -61,28 +61,17 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+set<int> s;
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    if(s.find(n)!=s.end()){
+        yah
+    } 
+    else {
+        nah
+    }
 }
 
 int32_t main()
@@ -93,7 +82,16 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
+    for(int i=2;i<=1000;i++){
+        int v=1+i;
+        int p=i*i;
+        for(int j=1;j<=20;j++){
+            v+=p;
+            p*=i;
+            if(v>1e6) break;
+            s.insert(v);
+        }
+    }
     int t = 1;
     cin >> t;
     while (t--)

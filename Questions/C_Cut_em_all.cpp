@@ -61,28 +61,37 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int node, int parent, vi &ct, viv &adj, int &ans){
+    ct[node] = 1;
+    for(auto &child : adj[node]){
+        if(child != parent){
+            dfs(child, node, ct, adj, ans);
+            ct[node] += ct[child];
+        }
+    }
+    if(parent != 0 and ct[node] % 2 == 0){
+        ans++;
+    }
+}
 void solve()
 {
     int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    cin>>n;
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+    if(n%2==1){
+        cout<<-1<<endl;
+        return;
+    }
+    int ans=0;
+    vi ct(n+1,0);
+    dfs(1,0, ct, adj, ans);
+    cout<<ans<<endl;
 }
 
 int32_t main()
@@ -95,7 +104,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

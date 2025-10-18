@@ -61,28 +61,58 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int v,vi &comp1,viv &adj,vi &vis){
+    vis[v]=1;
+    comp1.pb(v);
+    for(auto it:adj[v]){
+        if(!vis[it]){
+            dfs(it,comp1,adj,vis);
+        }
+    }
+}
 void solve()
 {
-    int n;
-	cin >> n;
-	vi a(n), b(n);
-	vin(a);
-    vin(b);
-	vi c(n);
-	int sum = 0;
-	multiset<int> s;
-	for(int i = 0; i<n; i++){
-		s.insert(sum + a[i]);
-		while(s.size() && *s.begin() <= sum + b[i]){
-			c[i] += *s.begin() - sum;
-			s.erase(s.begin());
-		}
-		c[i] += b[i]*s.size();
-		sum += b[i];
-	}
-	vout(c);
-	cout << endl;
+    int n,m;
+    cin>>n>>m;
+    viv adj(n+1);
+    for(int i=0;i<m;i++){
+        int n1;
+        cin>>n1;
+        if(n1==0){
+            continue;
+        }
+        vi a(n1);
+        for(int j=0;j<n1;j++){
+            cin>>a[j];
+        }
+        for(int j=0;j<n1-1;j++){
+            adj[a[j]].pb(a[j+1]);
+            adj[a[j+1]].pb(a[j]);
+        }
+    }
+    viv comp;
+    vi vis(n+1,0);
+    for(int i=1;i<=n;i++){
+        if(!vis[i]){
+            vi comp1;
+            dfs(i,comp1,adj,vis);
+            comp.pb(comp1);
+        }
+    }
+    // for(int i=0;i<comp.size();i++){
+    //     for(int j=0;j<comp[i].size();j++){
+    //         cout<<comp[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    vi ans(n);
+    for(int i=0;i<comp.size();i++){
+        for(int j=0;j<comp[i].size();j++){
+            ans[comp[i][j]-1]=comp[i].size();
+        }
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +125,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

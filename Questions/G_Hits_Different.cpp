@@ -61,10 +61,12 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+vi dp(1000005);
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    cout<<dp[n]<<endl;
 }
 
 int32_t main()
@@ -75,7 +77,27 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
+    dp[1]=1;
+    int sz=2;
+    int p=0;
+    for(int i=2;i<=1000000;i++){
+        int l=0,r=0,lr=0;
+        if(p!=0){
+            l=dp[i-sz];
+        }
+        if(p!=sz-1){
+            r=dp[i-sz+1];
+        }
+        if(p!=0 and p!=sz-1){
+            lr=dp[i-2*sz+2];
+        }
+        dp[i]=i*i+r+l-lr;
+        p++;
+        if(p==sz){
+            p=0;
+            sz++;
+        }
+    }
     int t = 1;
     cin >> t;
     while (t--)
