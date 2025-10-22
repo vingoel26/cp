@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -81,7 +81,43 @@ May the WA avoid you
 
 void solve()
 {
-    
+    string s;
+    int n, m;
+    cin >> s >> m;
+    n = s.size();
+    m--;
+    int x = n, k = 0;
+    while (m >= x)
+    {
+        m -= x;
+        x--;
+        k++;
+    }
+    string s1 = "";
+    s1.push_back(s[0]);
+    int i = 1;
+    for (i = 1; i < n; i++)
+    {
+        if (k == 0)
+        {
+            break;
+        }
+        while (s1.size()>0 and s1[s1.size() - 1] > s[i])
+        {
+            s1.pop_back();
+            k--;
+            if (k == 0)
+            {
+                break;
+            }
+        }
+        s1.push_back(s[i]);
+    }
+    for (i; i < n; i++)
+    {
+        s1.push_back(s[i]);
+    }
+    cout << s1[m];
 }
 
 int32_t main()
