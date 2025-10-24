@@ -64,7 +64,32 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    cout<<2<<" "<<1<<" "<<n<<endl;
+    cout.flush();
+    int d;
+    cin>>d;
+    d=d-(n*(n+1))/2-1;
+    int l=1,r=n;
+    while(l<r){
+        int m=(l+r)/2;
+        int s1,s2;
+        cout<<1<<" "<<1<<" "<<m<<endl;
+        cout.flush();
+        cin>>s1;
+        cout<<2<<" "<<1<<" "<<m<<endl;
+        cout.flush();
+        cin>>s2;
+        if(s2>s1){
+            r=m;
+        }
+        else{
+            l=m+1;
+        }
+    }
+    cout<<"! "<<l<<" "<<l+d<<endl;
+    cout.flush();
 }
 
 int32_t main()

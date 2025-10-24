@@ -64,7 +64,33 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    if(n<=2){
+        cout<<"Bob"<<endl;
+        return;
+    }
+    if(n==3){
+        if(s=="101" or s=="010"){
+            cout<<"Alice"<<endl;
+            return;
+        }
+        cout<<"Bob"<<endl;
+        return;
+    }
+    int ct=0;
+    for(int i=0;i<n-1;i++){
+        if((s[i]=='0' and s[i+1]=='1') or (s[i]=='1' and s[i+1]=='0')){
+            ct++;
+        }
+    }
+    if(ct<2){
+        cout<<"Bob"<<endl;
+        return;
+    }
+    cout<<"Alice"<<endl;
 }
 
 int32_t main()

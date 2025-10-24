@@ -64,7 +64,29 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    vi sz;
+    int ct=0;
+    for(int i=0;i<n;i++){
+        if(s[i]=='1'){
+            ct++;
+        }
+        else{
+            if(ct!=0)
+            {sz.pb(ct);}
+            ct=0;
+        }
+    }
+    if(ct!=0)
+    {sz.pb(ct);}
+    if(sz.size()==1 and (sz[0]==2 or sz[0]==3)){
+        nah
+        return;
+    }
+    yah
 }
 
 int32_t main()

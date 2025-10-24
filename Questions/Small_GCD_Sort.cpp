@@ -61,10 +61,25 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+bool cmp(const pair<int, int> &a, const pair<int, int> &b)
+{
+    if (a.first != b.first)
+        return a.first > b.first;  
+    return a.second < b.second;
+}
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    vpi v;
+    for(int i=1;i<=n;i++){
+        v.pb({gcd(i,n),i});
+    }
+    sort(all(v),cmp);
+    for(int i=0;i<n;i++){
+        cout<<v[i].ss<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()

@@ -64,7 +64,45 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n, k;
+    cin >> n >> k;
+    vi a(n), ct(n + 1, 0);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i], ct[a[i]]++;
+    }
+    int x = -1;
+    for (int i = 1; i <= n; i++)
+        if (ct[i] == 0)
+        {
+            x = i;
+            break;
+        }
+
+    if (x == -1)
+    {
+        for (int i = 0; i < k; i++)
+        {
+            cout << a[n - 3 + (i % 3)] << ' ';
+        }
+        cout << '\n';
+    }
+    else
+    {
+        int y = -1;
+        for (int i = 1; i <= n; i++)
+            if (i != x && i != a[n - 1])
+            {
+                y = i;
+                break;
+            }
+        vector<int> v = {x, y, a[n - 1]};
+        for (int i = 0; i < k; i++)
+        {
+            cout << v[i % 3] << ' ';
+        }
+        cout << '\n';
+    }
 }
 
 int32_t main()
