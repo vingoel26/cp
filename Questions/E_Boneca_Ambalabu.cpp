@@ -65,7 +65,6 @@ int nCr(int n, int r)
 ========================================
 Author:         Vinayak Goel
 Institution:    IIITL
-May the WA avoid you
 ========================================
 */
 
@@ -73,63 +72,33 @@ void solve()
 {
     int n;
     cin >> n;
-    vi s, s1, ans(2 * n), vis(2 * n, 0);
-    s.pb(1);
-    for (int i = 2; i <= 2 * n; i++)
+    vi a(n);
+    vin(a);
+    vi ct(31);
+    for (int i = 0; i <= 30; i++)
     {
-        s.pb(i);
-        cout << "? " << s.size() << " ";
-        // cout.flush();
-        for (int j = 0; j < s.size(); j++)
+        for (int j = 0; j < n; j++)
         {
-            cout << s[j] << " ";
-            // cout.flush();
-        }
-        cout<<endl;
-        cout.flush();
-        int x;
-        cin >> x;
-        if (x != 0)
-        {
-            vis[i - 1] = 1;
-            ans[i - 1] = x;
-            s.pop_back();
-        }
-    }
-    s1.pb(2 * n);
-    for (int i = 2 * n - 1; i >= 1; i--)
-    {
-        s1.pb(i);
-        if (!vis[i - 1])
-        {
-            cout << "? " << s1.size() << " ";
-            // cout.flush();
-            for (int j = 0; j < s1.size(); j++)
+            if ((a[j]>>i) & 1)
             {
-                cout << s1[j] << " ";
-                // cout.flush();
-            }
-            cout<<endl;
-            cout.flush();
-            int x;
-            cin >> x;
-            if (x != 0)
-            {
-                vis[i - 1] = 1;
-                ans[i - 1] = x;
-                s1.pop_back();
+                ct[i]++;
             }
         }
     }
-    cout << "! " << " ";
-    // cout.flush();
-    for (int i = 0; i < 2*n; i++)
-    {
-        cout << ans[i] << " ";
-        // cout.flush();
+    int ans=0;
+    for(int i=0;i<n;i++){
+        int ans1=0;
+        for(int j=0;j<=30;j++){
+            if(((a[i]>>j)&1)==1){
+                ans1+=(1<<j)*(n-ct[j]);
+            }
+            else{
+                ans1+=(1<<j)*ct[j];
+            }
+        }
+        ans=max(ans,ans1);
     }
-    cout << endl;
-    cout.flush();
+    cout<<ans<<endl;
 }
 
 int32_t main()

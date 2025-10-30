@@ -78,66 +78,42 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vi r(31);
+viv dp(1001);
+vi bst(1001,LLONG_MAX);
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    vi a(n, 0);
-    for (int i = 0; i < n; i++)
-    {
-        a[i] = n - i;
-    }
-    int k1 = (n * (n - 1)) / 2 - k;
-    if (k1 == 0)
-    {
-        for (int i = 0; i < n; i++)
-        {
-            cout << a[i] << " ";
+    int n,k;
+    cin>>n>>k;
+    if(k==0){
+        for(int i=1;i<=n;i++){
+            cout<<i<<" ";
         }
-        cout << endl;
+        cout<<endl;
         return;
     }
-    viv dp(n+1,vi(k1+1,-1));
-    vector<vector<pair<int,int>>> p(n+1,vector<pair<int,int>>(k1+1,{-1,-1}));
-    dp[0][0]=0;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<=k1;j++){
-            if(dp[i][j]!=-1){
-                for(int k=1;k<=n-i;k++){
-                    int k2=j+(k*(k-1))/2;
-                    int l=i+k;
-                    if(k2<=k1 and dp[l][k2]==-1){
-                        dp[l][k2]=k;
-                        p[l][k2]={i,j};
-                    }
-                }
-            }
+    int k1=((n*(n-1))/2)-k;
+    if(k1==0){
+        for(int i=n;i>=1;i--){
+            cout<<i<<" ";
         }
+        cout<<endl;
+        return;
     }
-    if(dp[n][k1]==-1){
+    if(bst[k1]>n){
         cout<<0<<endl;
         return;
     }
-    vi sz;
-    int l=n;
-    while(l>0){
-        sz.pb(dp[l][k1]);
-        pair<int,int> pr=p[l][k1];
-        l=pr.first;
-        k1=pr.second;
-    }
-    l=n;
-    vi ans;
-    for(int i=sz.size()-1;i>=0;i--){
-        for(int j=l-sz[i]+1;j<=l;j++){
-            ans.pb(j);
+    int nd=n,st=0;
+    for(int i=0;i<dp[k1].size();i++){
+        st=nd-dp[k1][i]+1;
+        for(int j=st;j<=nd;j++){
+            cout<<j<<" ";
         }
-        l-=sz[i];
+        nd=st-1;
     }
-    // reverse(all(ans));
-    for(int i=0;i<n;i++){
-        cout<<ans[i]<<" ";
+    while(nd>0){
+        cout<<nd<<" ";
+        nd--;
     }
     cout<<endl;
 }
@@ -146,9 +122,24 @@ int32_t main()
 {
     fast int t = 1;
     cin >> t;
-    for (int i = 1; i <= 30; i++)
-    {
-        r[i] = i * (i + 1) / 2;
+    bst[0]=0;
+    dp[0]={};
+    vpi a;
+    for(int i=2;((i*(i-1))/2)<=1000;i++){
+        a.pb({i,((i*(i-1))/2)});
+    }
+    for(int i=1;i<=1000;i++){
+        for(int j=0;j<a.size();j++){
+            int l=a[j].ss;
+            int ln=a[j].ff;
+            if(l<=i and bst[i-l]!=LLONG_MAX){
+                if(bst[i-l]+ln<bst[i]){
+                    bst[i]=bst[i-l]+ln;
+                    dp[i]=dp[i-l];
+                    dp[i].pb(ln);
+                }
+            }
+        }
     }
     while (t--)
     {
