@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -36,21 +36,28 @@ using namespace std;
 
 vi fact(200001);
 
-int binExpo(int a, int b, int m){
-    if(b == 0) return 1;
-    if(b % 2 == 0){
-        int res = binExpo(a, b/2, m);
+int binExpo(int a, int b, int m)
+{
+    if (b == 0)
+        return 1;
+    if (b % 2 == 0)
+    {
+        int res = binExpo(a, b / 2, m);
         return (res * res) % m;
-    } else {
-        return (a * binExpo(a, b-1, m)) % m;
+    }
+    else
+    {
+        return (a * binExpo(a, b - 1, m)) % m;
     }
 }
 
-int nCr(int n, int r){
-    if(r > n) return 0;
+int nCr(int n, int r)
+{
+    if (r > n)
+        return 0;
     int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[r], mod - 2, mod)) % mod;
+    res = (res * binExpo(fact[n - r], mod - 2, mod)) % mod;
     return res;
 }
 
@@ -61,57 +68,57 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void dfs(int parent,int child,viv &adj,vi &lvl,vi &vis){
-    vis[child]=1;
-    lvl[child]=lvl[parent]+1;
-    for(auto childs : adj[child]){
-        if(vis[childs]==0){
-            dfs(child,childs,adj,lvl,vis);
+
+int dfs(int u, int f,viv &adj,vi &depth,vi &size1,vi &det)
+{
+    depth[u] = depth[f] + 1;
+    size1[u] = 1;
+    for (int i = 0; i < adj[u].size(); ++i)
+    {
+        int v = adj[u][i];
+        if (v == f)
+        {
+            continue;
         }
+        size1[u] += dfs(v, u,adj,depth,size1,det);
     }
+    det[u] = size1[u] - depth[u];
+    return size1[u];
 }
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
+    int n, k;
+    cin >> n >> k;
+    vi depth(n+1), size1(n+1), det(n+1);
     viv adj(n+1);
-    for(int i=0;i<n-1;i++){
-        int u,v;
-        cin>>u>>v;
+    for (int i = 0; i < n - 1; i++)
+    {
+        int u, v;
+        cin >> u >> v;
         adj[u].pb(v);
         adj[v].pb(u);
     }
-    vi lvl(n+1);
-    vi vis(n+1,0);
-    vi vis1(n+1,0);
-    lvl[0]=0;
-    vis[0]=1;
-    dfs(0,1,adj,lvl,vis);
-    vpi lvl1;
-    for(int i=1;i<=n;i++){
-        lvl1.pb({lvl[i],i});
-    }
-    sort(rall(lvl1));
-    // for(int i=0;i<n;i++){
-    //     cout<<lvl1[i].first<<" "<<lvl1[i].second<<endl;
-    // }
+    dfs(1, 0,adj,depth,size1,det);
+    sort(det.begin()+1,det.end(),greater<int>());
+    // vout(det);
     // cout<<endl;
-    for(int i=0;i<k;i++){
-        vis1[lvl1[i].second]=1;
+    int ans=0;
+    for(int i=1;i<=n-k;i++){
+        ans+=det[i];
     }
-    
+    cout<<ans<<endl;
 }
 
 int32_t main()
 {
     fast
-    // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
+        // Precompute factorials
+        // fact[0] = 1;
+        // for(int i = 1; i <= 200000; ++i){
+        //     fact[i] = (fact[i-1] * i) % mod;
+        // }
 
-    int t = 1;
+        int t = 1;
     // cin >> t;
     while (t--)
     {
