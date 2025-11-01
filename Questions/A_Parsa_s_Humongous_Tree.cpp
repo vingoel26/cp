@@ -61,75 +61,32 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int child,int parent,viv &adj,viv &dp,viv &lr){
+    for(auto childs : adj[child]){
+        if(childs!=parent){
+            dfs(childs,child,adj,dp,lr);
+            dp[child][0]+=max(dp[childs][0]+abs(lr[child][0]-lr[childs][0]),dp[childs][1]+abs(lr[child][0]-lr[childs][1]));
+            dp[child][1]+=max(dp[childs][0]+abs(lr[child][1]-lr[childs][0]),dp[childs][1]+abs(lr[child][1]-lr[childs][1]));
+        }
+    }
+}
 void solve()
 {
-   int n;
-   cin>>n;
-   vpi a;
-   map<int,int>mp;
-   for(int i=0;i<n;i++){
-    int x,y;
-    cin>>x>>y;
-    a.pb({x,y});
-    mp[x]++;
-    mp[y]++;
-   }
-   viv adj(n+1);
-   for(int i=0;i<n;i++){
-    if(a[i].first==a[i].second){
-        nah
-        return;
+    int n;
+    cin>>n;
+    viv adj(n+1),lr(n+1,vi(2));
+    for(int i=1;i<=n;i++){
+        cin>>lr[i][0]>>lr[i][1];
     }
-    adj[a[i].first].pb(a[i].second);
-    adj[a[i].second].pb(a[i].first);
-   }
-   vi vis(n+1,0);
-   viv comp;
-   for(int i=1;i<=n;i++){
-    if(!vis[i]){
-        vi b;
-        stack<int> s;
-        s.push(i);
-        vis[i]=1;
-        b.pb(i);
-        while(!s.empty()){
-            int u=s.top();
-            s.pop();
-            for(auto v : adj[u]){
-                if(!vis[v]){
-                    vis[v]=1;
-                    b.pb(v);
-                    s.push(v);
-                }
-            }
-        }
-        comp.pb(b);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-   }
-   for(auto it : comp){
-    if(it.size()==2){
-        continue;
-    }
-    if(it.size()%2!=0){
-        nah 
-        return;
-    }
-    else{
-        for(auto it2 :it){
-            if(adj[it2].size()!=2){
-                nah return;
-            }
-        }
-    }
-   }
-   for(auto it : mp){
-    if(it.second!=2){
-        nah
-        return;
-    }
-   }
-   yah
+    viv dp(n+1,vi(2,0));
+    dfs(1,-1,adj,dp,lr);
+    cout<<max(dp[1][0],dp[1][1])<<endl;
 }
 
 int32_t main()
