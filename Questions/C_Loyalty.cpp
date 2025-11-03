@@ -61,53 +61,37 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void subs(int p,int c,vi &vis,vector<char> &s,int &ans,int n,int k,string a,string b){
-    if(c>k){
-        return;
-    }
-    if(p==s.size()){
-        if(c==k){
-            int ct=0,tct=0;
-            for(int i=0;i<n;i++){
-                if(a[i]==b[i] or vis[a[i]-'a']==1){
-                    ct++;
-                }
-                else{
-                    tct+=(ct*(ct+1))/2;
-                    ct=0;
-                }
-            }
-            tct+=(ct*(ct+1))/2;
-            ans=max(ans,tct);
-        }
-        return;
-    }
-    subs(p+1,c,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=1;
-    subs(p+1,c+1,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=0;
-}
 
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
-    set<char>s1;
-    string a,b;
-    cin>>a>>b;
-    for(int i=0;i<n;i++){
-        s1.insert(a[i]);
-    }
-    vector<char> s;
-    for(auto it : s1){
-        s.pb(it);
-    }
-    vi vis(26,0);
+    int n,x;
+    cin>>n>>x;
+    vi a(n);
+    vin(a);
+    sort(all(a));
+    int s=0;
     int ans=0;
-    int n1=s1.size();
-    k=min(k,n1);
-    subs(0,0,vis,s,ans,n,k,a,b);
+    vi ansv;
+    int l=0,r=n-1;
+    while(l<=r){
+        if(l!=n and (s+a[l])<x){
+            s+=a[l];
+            ansv.pb(a[l]);
+            l++;
+            continue;
+        }
+        else{
+            if(r!=-1){
+                s=(a[r]+s)%x;
+                ans+=a[r];
+                ansv.pb(a[r]);
+                r--;
+            }
+        }
+    }
     cout<<ans<<endl;
+    vout(ansv);
+    cout<<endl;
 }
 
 int32_t main()

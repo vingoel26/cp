@@ -61,53 +61,60 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void subs(int p,int c,vi &vis,vector<char> &s,int &ans,int n,int k,string a,string b){
-    if(c>k){
-        return;
-    }
-    if(p==s.size()){
-        if(c==k){
-            int ct=0,tct=0;
-            for(int i=0;i<n;i++){
-                if(a[i]==b[i] or vis[a[i]-'a']==1){
-                    ct++;
-                }
-                else{
-                    tct+=(ct*(ct+1))/2;
-                    ct=0;
-                }
-            }
-            tct+=(ct*(ct+1))/2;
-            ans=max(ans,tct);
-        }
-        return;
-    }
-    subs(p+1,c,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=1;
-    subs(p+1,c+1,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=0;
-}
 
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
-    set<char>s1;
-    string a,b;
-    cin>>a>>b;
+    int n;
+    cin>>n;
+    map<int,int>m,m1;
+    vector<string> v(n);
     for(int i=0;i<n;i++){
-        s1.insert(a[i]);
+        cin>>v[i];
     }
-    vector<char> s;
-    for(auto it : s1){
-        s.pb(it);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(v[i][j]=='#'){
+                m[i-j]++;
+                m1[i+j]++;
+            }
+        }
     }
-    vi vis(26,0);
-    int ans=0;
-    int n1=s1.size();
-    k=min(k,n1);
-    subs(0,0,vis,s,ans,n,k,a,b);
-    cout<<ans<<endl;
+    if(m.size()==1 or m1.size()==1){
+        yah
+        return;
+    }
+    if(m.size()==2){
+        auto it=m.begin();
+        auto it1=++m.begin();
+        if(abs((it1->first)-(it->first))<=1){
+            yah
+            return;
+        }
+    }
+    if(m1.size()==2){
+        auto it=m1.begin();
+        auto it1=++m1.begin();
+        if(abs((it1->first)-(it->first))<=1){
+            yah
+            return;
+        }
+    }
+    int mxx=0,mxy=0,mnx=1e9,mny=1e9;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(v[i][j]=='#'){
+                mxx=max(mxx,i);
+                mxy=max(mxy,j);
+                mnx=min(mnx,i);
+                mny=min(mny,j);
+            }
+        }
+    }
+    if(mxx-mnx<=1 and mxy-mny<=1){
+        yah
+        return;
+    }
+    nah
 }
 
 int32_t main()

@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,53 +62,65 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void subs(int p,int c,vi &vis,vector<char> &s,int &ans,int n,int k,string a,string b){
-    if(c>k){
-        return;
-    }
-    if(p==s.size()){
-        if(c==k){
-            int ct=0,tct=0;
-            for(int i=0;i<n;i++){
-                if(a[i]==b[i] or vis[a[i]-'a']==1){
-                    ct++;
-                }
-                else{
-                    tct+=(ct*(ct+1))/2;
-                    ct=0;
-                }
-            }
-            tct+=(ct*(ct+1))/2;
-            ans=max(ans,tct);
-        }
-        return;
-    }
-    subs(p+1,c,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=1;
-    subs(p+1,c+1,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=0;
-}
 
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
-    set<char>s1;
-    string a,b;
-    cin>>a>>b;
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    vi e,o;
     for(int i=0;i<n;i++){
-        s1.insert(a[i]);
+        if(a[i]%2==0){
+            e.pb(a[i]);
+        }
+        else{
+            o.pb(a[i]);
+        }
     }
-    vector<char> s;
-    for(auto it : s1){
-        s.pb(it);
+    sort(all(o));
+    int p1=0,p2=0;
+    int s=0;
+    for(int i=0;i<e.size();i++){
+        s+=e[i];
     }
-    vi vis(26,0);
-    int ans=0;
-    int n1=s1.size();
-    k=min(k,n1);
-    subs(0,0,vis,s,ans,n,k,a,b);
-    cout<<ans<<endl;
+    p1=s/2;
+    p2=s/2;
+    if(o.size()==0){
+        cout<<p1<<" "<<p2<<endl;
+        return;
+    }
+    vpi b;
+    int ct=1;
+    // for(int i=0;i<o.size();i++){
+    //     cout<<o[i]<<" ";
+    // }
+    // cout<<endl;
+    for(int i=0;i<o.size()-1;i++){
+        if(o[i]==o[i+1]){
+            ct++;
+        }
+        else{
+            b.pb({ct,o[i]});
+            ct=1;
+        }
+    }
+    b.pb({ct,o[o.size()-1]});
+    sort(rall(b));
+    // for(int i=0;i<b.size();i++){
+    //     cout<<b[i].ff<<" "<<b[i].ss<<endl;
+    // }
+    for(int i=0;i<b.size();i++){
+        if(i%2==0){
+            p1+=b[i].ff*((b[i].ss/2)+1);
+            p2+=b[i].ff*((b[i].ss/2));
+        }
+        else{
+            p1+=b[i].ff*((b[i].ss/2));
+            p2+=b[i].ff*((b[i].ss/2)+1);
+        }
+    }
+    cout<<p1<<" "<<p2<<endl;
 }
 
 int32_t main()

@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,53 +62,54 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void subs(int p,int c,vi &vis,vector<char> &s,int &ans,int n,int k,string a,string b){
-    if(c>k){
-        return;
-    }
-    if(p==s.size()){
-        if(c==k){
-            int ct=0,tct=0;
-            for(int i=0;i<n;i++){
-                if(a[i]==b[i] or vis[a[i]-'a']==1){
-                    ct++;
-                }
-                else{
-                    tct+=(ct*(ct+1))/2;
-                    ct=0;
-                }
-            }
-            tct+=(ct*(ct+1))/2;
-            ans=max(ans,tct);
-        }
-        return;
-    }
-    subs(p+1,c,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=1;
-    subs(p+1,c+1,vis,s,ans,n,k,a,b);
-    vis[s[p]-'a']=0;
-}
 
 void solve()
 {
-    int n,k;
-    cin>>n>>k;
-    set<char>s1;
-    string a,b;
-    cin>>a>>b;
-    for(int i=0;i<n;i++){
-        s1.insert(a[i]);
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    vi a(n+1,0);
+    viv dp(n+1,vi(2,0));
+    a[0]=1;
+    for(int i=1;i<=n;i++){
+        if(s[i-1]=='1'){
+            if(dp[i-1][0]==1 or a[i-1]==1){
+                a[i]=1;
+            }
+        }
+        else{
+            if(i==1){
+                dp[i][0]=a[i-1];
+            }
+            else{
+                if(s[i-2]=='0'){
+                    if(dp[i-1][0]==1 or dp[i-1][1]==1){
+                        dp[i][0]=1;
+                    }           
+                }
+                else{
+                    if(i-2>=0 and dp[i-2][1]==1){
+                        dp[i][0]=1;
+                    }
+                }
+            }
+            if(i-2>=0 and s[i-2]=='0'){
+                if(dp[i-1][0]==1 or dp[i-1][1]==1){
+                    dp[i][1]=1;
+                } 
+            }
+            else{
+                dp[i][1]=a[i-1];
+            }
+        }
     }
-    vector<char> s;
-    for(auto it : s1){
-        s.pb(it);
+    if(a[n]==1 or dp[n][0]==1 or dp[n][1]==1){
+        yah
     }
-    vi vis(26,0);
-    int ans=0;
-    int n1=s1.size();
-    k=min(k,n1);
-    subs(0,0,vis,s,ans,n,k,a,b);
-    cout<<ans<<endl;
+    else{
+        nah
+    }
 }
 
 int32_t main()
