@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,68 +62,74 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n,m;
+    cin>>n>>m;
+    vi l(m),r(m);
+    for(int i=0;i<m;i++){
+        cin>>l[i]>>r[i];
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    int mxl=0,mnr=1e9;
+    for(int i=0;i<m;i++){
+        mxl=max(mxl,l[i]);
+        mnr=min(mnr,r[i]);
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    if(mxl<=mnr){
+        int k=1;
+        for(int i=1;i<=n;i++){
+            if(i!=mxl){
+                cout<<k<<" ";
+                k++;
+            }
+            else{
+                cout<<0<<" ";
+            }
+        }
+        cout<<endl;
+        return;
     }
+    vi a(n,1e9),b(n,1e9),c(n,1e9),ans(n,-1);
+    int k=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(l[j]<=i+1 and r[j]>=i+1){
+                a[i]=min(a[i],i+2-l[j]);
+                b[i]=min(b[i],r[j]-i);
+            }
+        }
+        if(a[i]==1e9){
+            ans[i] = k++;
+            break;
+        }
+        else if(a[i]>1){
+            ans[i] = k++;
+            ans[i-1]= k++;
+            break;
+        }
+        else if(b[i]>1){
+            ans[i] = k++;
+            ans[i+1]= k++;
+            break;
+        }
+    }
+    if(k==0){
+        cout<<0<<" ";
+        for(int i=n-1;i>=1;i--){
+            cout<<i<<" ";
+        }
+        cout<<endl;
+        return;
+    }
+    for(int i=0;i<n;i++){
+        if(ans[i]==-1){
+            ans[i]=k;
+            k++;
+        }
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()

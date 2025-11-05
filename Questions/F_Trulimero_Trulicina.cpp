@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,67 +62,73 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n,m,k;
+    cin>>n>>m>>k;
+    if((n*m)/k==1){
+        int q=1;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                cout<<q<<" ";
+                q++;
+            }
+            cout<<endl;
+        }
+        return;
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    if(m%k==0){
+        vi a(k);
+        for(int i=0;i<k;i++){
+            a[i]=i+1;
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m/k;j++){
+                for(int k1=0;k1<k;k1++){
+                    cout<<a[k1]<<" ";
+                }
+            }
+            cout<<endl;
+            rotate(a.begin(),a.end()-1,a.end());
+        }
+        return;
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    if(n%k==0){
+        vi a(k);
+        for(int i=0;i<k;i++){
+            a[i]=i+1;
+        }
+        viv ans(n,vi(m));
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n/k;j++){
+                for(int k1=0;k1<k;k1++){
+                    ans[j*k+k1][i]=a[k1];
+                }
+            }
+            cout<<endl;
+            rotate(a.begin(),a.end()-1,a.end());
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                cout<<ans[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        return;
+    }
+    int k2=1;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(k2==k){
+                cout<<k2<<" ";
+                k2=1;
+                continue;
+            }
+            cout<<k2<<" ";
+            k2++;
+        }
+        cout<<endl;
     }
 }
 

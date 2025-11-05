@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -31,7 +32,7 @@
 #define vpi vector<pair<int, int>>
 #define up upper_bound
 #define low lower_bound
-#define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -45,7 +46,10 @@ int binExpo(int a, int b, int m){
         return (a * binExpo(a, b-1, m)) % m;
     }
 }
-
+int modInverse(int n, int p)
+{
+    return binExpo(n, p - 2, p);
+}
 int nCr(int n, int r){
     if(r > n) return 0;
     int res = fact[n];
@@ -61,68 +65,40 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n,m;
+    cin>>n>>m;
+    vi l(n),r(n),p(n),q(n);
+    for (int i = 0; i < n; i++) {
+        cin>>l[i]>>r[i]>>p[i]>>q[i];
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    vi w(n);
+    for (int i = 0; i < n; i++) {
+        int den = (q[i] - p[i] + mod) % mod;
+        w[i] = p[i] * modInverse(den, mod) % mod;
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    int po = 1;
+    for (int i = 0; i < n; i++) {
+        int den = (q[i] - p[i] + mod) % mod;
+        int h = den * modInverse(q[i], mod) % mod;
+        po = po * h % mod;
     }
+    viv r1(m + 1);
+    for (int i = 0; i < n; i++) {
+        r1[r[i]].pb(i);
+    }
+    vi dp(m + 1);
+    dp[0] = 1;
+    for (int i = 1; i <= m; i++) {
+        int s = 0;
+        for (int it : r1[i]) {
+            s = (s + dp[l[it] - 1] * w[it] % mod) % mod;
+        }
+        dp[i] = s;
+    }
+    cout << po * dp[m] % mod << '\n';
 }
 
 int32_t main()
@@ -135,7 +111,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

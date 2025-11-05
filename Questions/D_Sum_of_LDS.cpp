@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,68 +62,23 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    int ans=n;
+    for(int i=0;i<n-1;i++){
+        if(a[i]<a[i+1]){
+            ans+=i+1;
+        }
+        else{
+            ans+=(i+1)*(n-i);
+        }
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
-    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,68 +62,51 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    vi b(n,-1);
+    set<int>s;
+    for(int i=0;i<n;i++){
+        s.insert(a[i]);
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    int k;
+    if(a[0]==1){
+        b[0]=0;
+        k=1;
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    else if(a[0]==0){
+        b[0]=1;
+        k=1;
     }
+    else{
+        cout<<-1<<endl;
+        return;
+    }
+    for(int i=1;i<n-1;i++){
+        if(a[i]!=a[i+1]){
+            b[i]=a[i+1]-1;
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(b[i]==-1){
+            if(s.find(k)!=s.end()){
+                b[i]=k;
+                k++;
+            }
+            else{
+                k++;
+                b[i]=k;
+                k++;
+            }
+        }
+    }
+    vout(b);
+    cout<<endl;
 }
 
 int32_t main()
@@ -135,7 +119,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

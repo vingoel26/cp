@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,68 +62,53 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n;
+    cin>>n;
+    vi a(n),b(n);
+    vin(a);
+    vin(b);
+    int ans=0;
+    for(int i=n-1;i>=0;i--){
+        if(i==n-1){
+            if(a[i]==b[i]){
+                ans=n;
+                break;
+            }
+        }
+        else if(i==n-2){
+            if(a[i]==b[i] or b[i]==b[i+1] or a[i]==a[i+1]){
+                ans=n-1;
+                break;
+            }
+        }
+        else{
+            if(a[i]==b[i]){
+                ans=i+1;
+                break;
+            }
+            else if(a[i]==a[i+1] or b[i]==b[i+1]){
+                ans=i+1;
+                break;
+            }
+            else if(a[i]==a[i+2] or b[i]==b[i+2]){
+                ans=i+1;
+                break;
+            }
+        }
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    map<int,int>m;
+    for(int i=n-3;i>=0;i--){
+        m[a[i+2]]++;
+        m[b[i+2]]++;
+        if(m[a[i]]!=0 or m[b[i]]!=0){
+            ans=max(ans,i+1);
+            break;
+        }
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
-    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

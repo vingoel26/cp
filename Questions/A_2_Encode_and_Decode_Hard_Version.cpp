@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,67 +62,43 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    string s;
+    cin>>s;
+    if(s=="first"){
+        int n;
+        cin>>n;
+        vi a(n);
+        vin(a);
+        string ans="";
+        for(int i=0;i<n;i++){
+            int k=10;
+            for(int j=0;j<=9;j++){
+                ans.pb(char(a[i]%k)+97);
+                a[i]/=10;
+            }
+            // ans.pb(' ');
+        }
+        cout<<ans<<endl;
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    else{
+        string s1;
+        cin>>s1;
+        vi ans(s1.size()/10,0);
+        for(int i=0;i<s1.size();i=i+10){
+            int k=1;
+            for(int j=0;j<10;j++){
+                ans[i/10]+=(s1[i+j]-'a')*k;
+                k*=10;
+            }
+        }
+        cout<<s1.size()/10<<endl;
+        for(int i=0;i<s1.size()/10;i++){
+            cout<<ans[i]<<" ";
+        }
+        cout<<endl;
     }
 }
 
@@ -135,7 +112,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

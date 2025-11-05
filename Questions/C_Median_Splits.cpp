@@ -19,6 +19,7 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -61,68 +62,72 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-vector<int> adj[N];
-int height[N];
-int c1 = 0;
- 
-void dfs(int v, int p, int h){
-    height[v] = h;
-    for (int u : adj[v]){
-        if (u != p){
-            dfs(u, v, h ^ 1);
-        }
-    }
-}
- 
-vector<pair<int, int>> ans;
- 
-int cHeight = 0;
- 
-void dfsRemove(int v, int p){
- 
-    for (int u : adj[v]){
-        if (u != p) dfsRemove(u, v);
-    }
- 
-    if (v != p){
-        if (cHeight == height[v]){
-            ans.push_back({1, 0});
-            cHeight ^= 1;
-        }
-        else{
-            ans.push_back({1, 0});
-            ans.push_back({1, 0});
-        }
-        ans.push_back({2, v});
-    }
-}
+
 void solve()
 {
-    int n; cin >> n;
-    for (int i = 0; i <= n; i++){
-        adj[i].clear();
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
+    vin(a);
+    for(int i=0;i<n;i++){
+        if(a[i]<=k){
+            a[i]=1;
+        }
+        else{
+            a[i]=-1;
+        }
     }
- 
-    for (int i = 0; i < n - 1; i++){
-        int x, y; cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+    // for(int i=1;i<n;i++){
+    //     a[i]=a[i-1]+a[i];
+    // }
+    // vout(a);
+    // cout<<endl;
+    vi pr(n+1),sf(n+1);
+    for(int i=1;i<=n;i++){
+        pr[i]=pr[i-1]+a[i-1];
     }
- 
-    dfs(n, n, 0);
- 
-    ans.clear();
- 
-    cHeight = height[1];
- 
-    dfsRemove(n, n);
- 
-    cout << ans.size() << '\n';
-    for (auto f : ans){
-        cout << f.first << ' ';
-        if (f.first == 2) cout << f.second << ' ';
-        cout << '\n';
+    for(int i=n-1;i>=0;i--){
+        sf[i]=sf[i+1]+a[i];
     }
+    int p=n+1,q=-1;
+    for(int i=1;i<=n;i++){
+        if(pr[i]>=0){
+            p=i;
+            break;
+        }
+    }
+    for(int i=n-1;i>=0;i--){
+        if(sf[i]>=0){
+            q=i+1;
+            break;
+        }
+    }
+    if(p+1<q){
+        yah
+        return;
+    }
+    vi mxprsf(n+1),mxsfpr(n+1);
+    mxprsf[n]=pr[n];
+    for(int i=n-1;i>=1;i--){
+        mxprsf[i]=max(pr[i],mxprsf[i+1]);
+    }
+    mxsfpr[0]=sf[0];
+    for(int i=1;i<n;i++){
+        mxsfpr[i]=max(sf[i],mxsfpr[i-1]);
+    }
+    for(int i=1;i<=n;i++){
+        if(i!=n and pr[i]>=0 and mxprsf[i+1]>=pr[i]){
+            yah
+            return;
+        }
+    }
+    for(int i=n-1;i>=0;i--){
+        if(i!=0 and sf[i]>=0 and mxsfpr[i-1]>=sf[i]){
+            yah
+            return;
+        }
+    }
+    nah
 }
 
 int32_t main()
