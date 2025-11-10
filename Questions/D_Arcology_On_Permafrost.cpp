@@ -72,40 +72,32 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n+1);
-    for (int i = 1; i <= n; i++)
+    int n, m, k;
+    cin >> n >> m >> k;
+    int c = 0;
+    if (n - m * k < k)
     {
-        cin >> a[i];
-    }
-    vi b(n + 1, -1), vis(n + 2);
-    for (int i = 1; i <= n; i++)
-    {
-        if (a[i] != a[i - 1])
+        for (int i = 0; i < m; i++)
         {
-            b[i] = a[i - 1];
-            vis[b[i]] = 1;
+            int c1 = 0;
+            for (int j = 0; j < k; j++)
+            {
+                cout << c1++ << " ";
+                c++;
+            }
+        }
+        int k1 = 0;
+        while (c < n)
+        {
+            cout << k1++ << " ";
+            c++;
         }
     }
-    vis[a[n]] = 1;
-    int m = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        while (vis[m])
-        {
-            m++;
+    else{
+        for(int i=0;i<n;i++){
+            cout<<i%(n/(m+1))<<" ";
         }
-        if (b[i] == -1)
-        {
-            b[i] = m;
-            vis[m] = 1;
-        }
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        cout << b[i] << " ";
-    }
+    }    
     cout << endl;
 }
 
@@ -119,7 +111,7 @@ int32_t main()
         // }
 
         int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

@@ -81,15 +81,7 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    set<int>s;
-    for(int i=0;i<n;i++){
-        s.insert(a[i]);
-    }
-    cout<<2*s.size()-1<<endl;
+    
 }
 
 int32_t main()

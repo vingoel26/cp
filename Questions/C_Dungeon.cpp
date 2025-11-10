@@ -72,41 +72,59 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n+1);
-    for (int i = 1; i <= n; i++)
+    int n, m;
+    cin >> n >> m;
+    multiset<int> mm;
+    for (int i = 0; i < n; i++)
     {
-        cin >> a[i];
+        int a;
+        cin >> a;
+        mm.insert(a);
     }
-    vi b(n + 1, -1), vis(n + 2);
-    for (int i = 1; i <= n; i++)
+    vi v2(m), v3(m);
+    for (int i = 0; i < m; i++)
     {
-        if (a[i] != a[i - 1])
+        cin >> v2[i];
+    }
+
+    for (int i = 0; i < m; i++)
+    {
+        cin >> v3[i];
+    }
+    vpi vp(m);
+    for (int i = 0; i < m; i++)
+    {
+        vp[i] = {v2[i], v3[i]};
+    }
+    sort(all(vp));
+    priority_queue<int> pq;
+    int idx = 0;
+    int ans = 0;
+    while (!mm.empty())
+    {
+        int x = *mm.begin();
+        while (idx < m && vp[idx].ff <= x)
         {
-            b[i] = a[i - 1];
-            vis[b[i]] = 1;
+            pq.push(vp[idx].ss);
+            idx++;
+        }
+        if (pq.empty())
+        {
+            mm.erase(mm.begin());
+        }
+        else
+        {
+            int best = pq.top();
+            pq.pop();
+            mm.erase(mm.begin());
+            ans++;
+            if (best > 0)
+            {
+                mm.insert(max(x, best));
+            }
         }
     }
-    vis[a[n]] = 1;
-    int m = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        while (vis[m])
-        {
-            m++;
-        }
-        if (b[i] == -1)
-        {
-            b[i] = m;
-            vis[m] = 1;
-        }
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        cout << b[i] << " ";
-    }
-    cout << endl;
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -118,8 +136,8 @@ int32_t main()
         //     fact[i] = (fact[i-1] * i) % mod;
         // }
 
-        int t = 1;
-    // cin >> t;
+    int t = 1;
+    cin >> t;
     while (t--)
     {
         solve();

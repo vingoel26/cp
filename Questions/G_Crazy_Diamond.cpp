@@ -3,17 +3,18 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a)                  \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cin >> a[i];            \
+#define vin(a)                   \
+    for (int i = 1; i <= n; ++i) \
+    {                            \
+        cin >> a[i];             \
     }
-#define vout(a)                 \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cout << a[i] << ' ';    \
+#define vout(a)                  \
+    for (int i = 1; i <= n; ++i) \
+    {                            \
+        cout << a[i] << ' ';     \
     }
 #define pb push_back
+#define eb emplace_back
 #define ff first
 #define ss second
 #define viv vector<vector<int>>
@@ -69,44 +70,67 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void plt(vpi &ans,vi &a,vi &pos,int u,int v){
+    ans.eb(u,v);
+    swap(a[u],a[v]);
+    pos[a[u]]=u;
+    pos[a[v]]=v;
+}
 void solve()
 {
     int n;
     cin >> n;
-    vi a(n+1);
-    for (int i = 1; i <= n; i++)
-    {
-        cin >> a[i];
+    vi a(n + 1),pos(n+1);
+    vin(a);
+    vpi ans;
+    for(int i=1;i<=n;i++){
+        pos[a[i]]=i;
     }
-    vi b(n + 1, -1), vis(n + 2);
     for (int i = 1; i <= n; i++)
     {
-        if (a[i] != a[i - 1])
+        if (a[i] != i)
         {
-            b[i] = a[i - 1];
-            vis[b[i]] = 1;
+            int k=pos[i];
+            int t=i;
+            if (2 * abs(k-t) >= n)
+            {
+                plt(ans,a,pos,k,t);
+            }
+            else if (k <= n / 2 and t <= n / 2)
+            {
+                plt(ans,a,pos,k,n);
+                plt(ans,a,pos,t,n);
+                plt(ans,a,pos,k,n);
+                
+            }
+            else if(k>n/2 and t>n/2){
+                plt(ans,a,pos,k,1);
+                plt(ans,a,pos,t,1);
+                plt(ans,a,pos,k,1);
+            }
+            else if(k<=n/2 and t>n/2){
+                plt(ans,a,pos,k,n);
+                plt(ans,a,pos,1,n);
+                plt(ans,a,pos,t,1);
+                plt(ans,a,pos,1,n);
+                plt(ans,a,pos,k,n);
+            }
+            else{
+                plt(ans,a,pos,k,1);
+                plt(ans,a,pos,1,n);
+                plt(ans,a,pos,t,n);
+                plt(ans,a,pos,1,n);
+                plt(ans,a,pos,k,1);
+            }
         }
     }
-    vis[a[n]] = 1;
-    int m = 0;
-    for (int i = 1; i <= n; i++)
+    // vout(a);
+    // cout << endl;
+    cout << ans.size() << endl;
+    for (int i = 0; i < ans.size(); i++)
     {
-        while (vis[m])
-        {
-            m++;
-        }
-        if (b[i] == -1)
-        {
-            b[i] = m;
-            vis[m] = 1;
-        }
+        cout << ans[i].ff << " " << ans[i].ss << endl;
     }
-    for (int i = 1; i <= n; i++)
-    {
-        cout << b[i] << " ";
-    }
-    cout << endl;
 }
 
 int32_t main()
