@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-bool isSafe(int n, vector<string> &nQueens, int row, int col)
+bool isPossible(int n, vector<string> &nQueens, int row, int col)
 {
     for (int i = 0; i < n; i++)
     {
@@ -34,7 +34,7 @@ void board(int n, vector<vector<string>> &ans, vector<string> &nQueens, int row)
     }
     for (int col = 0; col < n; col++)
     {
-        if (isSafe(n, nQueens, row, col))
+        if (isPossible(n, nQueens, row, col))
         {
             nQueens[row][col] = 'Q';
             board(n, ans, nQueens, row + 1);
@@ -42,7 +42,6 @@ void board(int n, vector<vector<string>> &ans, vector<string> &nQueens, int row)
         }
     }
 }
-
 int main()
 {
     int n;
@@ -50,22 +49,14 @@ int main()
     vector<vector<string>> ans;
     vector<string> nQueens(n, string(n, '.'));
     board(n, ans, nQueens, 0);
-    if (ans.empty())
+    int n1=ans.size();
+    cout << n1 << endl;
+    for (int i=0;i<n1;i++)
     {
+        for (int j=0;j<ans[i].size();j++)
         {
-            cout << 0 << endl;
+            cout << ans[i][j] << endl;
         }
-    }
-    else
-    {
-        cout << ans.size() << endl;
-        for (auto &board : ans)
-        {
-            for (auto &row : board)
-            {
-                cout << row << endl;
-            }
-            cout << endl;
-        }
+        cout << endl;
     }
 }
