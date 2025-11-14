@@ -62,66 +62,56 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+bool hasSubsequenceWithSum(const vector<int>& arr, int X) {
+    int n = arr.size();
+    vector<vector<bool>> dp(n + 1, vector<bool>(X + 1, false));
+    for (int i = 0; i <= n; i++) {
+        dp[i][0] = true;
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= X; j++) {
+            if (arr[i - 1] > j) {
+                dp[i][j] = dp[i - 1][j];
+            } else {
+                dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i - 1]];
+            }
+        }
+    }
+    
+    return dp[n][X];
+}
 void solve()
 {
-    int n,m;
-    cin>>n>>m;
-    vector<string> g(n);
-    pair<int ,int> s,e;
+    int n;
+    cin>>n;
+    vi a(n);
+    int s=0;
     for(int i=0;i<n;i++){
-        cin>>g[i];
-        for(int j=0;j<m;j++){
-            if(g[i][j]=='S'){
-                s={i,j};
-            }
-            if(g[i][j]=='T'){
-                e={i,j};
-            }
-        }
+        cin>>a[i];
+        s+=a[i];
     }
-    vi dr={0,0,1,-1},dc={1,-1,0,0};
-    vector<vector<vector<vector<bool>>>> vis(n,vector<vector<vector<bool>>>(m,vector<vector<bool>>(4,vector<bool>(4,false))));
-    queue<vi> q;
-    for(int i=0;i<4;i++){
-        int x=s.ff+dr[i];
-        int y=s.ss+dc[i];
-        if(x>=0 and y>=0 and x<=n and y<=m and g[x][y]=='.'){
-            q.push({x,y,i,1,1});
-            vis[x][y][i][1]=true;
-        }
+    if(s%2==1){
+        cout<<0<<endl;
+        return;
     }
-    while(!q.empty()){
-        auto it =q.front();
-        q.pop();
-        int x=it[0],y=it[1],dir=it[2],ct=it[3],dst=it[4];
-        pair<int,int> k={x,y};
-        if(k==e){
-            cout<<dst<<endl;
+    // sort(all(a));
+    // vector<vector<bool>> dp(n+1,vi(s/2+1,false);
+    if(!hasSubsequenceWithSum(a,s/2)){
+        cout<<0<<endl;
+        return;
+    }
+    int g=a[0];
+    for(int i=0;i<n;i++){
+        g=gcd(g,a[i]);
+    }
+    for(int i=0;i<n;i++){
+        a[i]=a[i]/g;
+        if(a[i]%2==1){
+            cout<<1<<endl;
+            cout<<i+1<<endl;
             return;
         }
-        for(int i=0;i<4;i++){
-            int x1=x+dr[i];
-            int y1=y+dc[i];
-            int ct1;
-            if(i==dir){
-                ct1=ct+1;
-            }
-            else{
-                ct1=1;
-            }
-            if(ct1>3 or x1<0 or y1<0 or x1>=n or y1>=m or g[x1][y1]=='#'){
-                continue;
-            }
-            if(vis[x1][y1][i][ct1]){
-                continue;
-            }
-            vis[x1][y1][i][ct1]=true;
-            q.push({x1,y1,i,ct1,dst+1});
-        }
     }
-    cout<<-1<<endl;
-
 }
 
 int32_t main()

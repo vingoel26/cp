@@ -65,63 +65,25 @@ May the WA avoid you
 
 void solve()
 {
-    int n,m;
-    cin>>n>>m;
-    vector<string> g(n);
-    pair<int ,int> s,e;
-    for(int i=0;i<n;i++){
-        cin>>g[i];
-        for(int j=0;j<m;j++){
-            if(g[i][j]=='S'){
-                s={i,j};
-            }
-            if(g[i][j]=='T'){
-                e={i,j};
-            }
+    int l=1,r=999;
+    while(l+2<r){
+        int m1=(2*l+r)/3;
+        int m2=((l+2*r)/3);
+        cout<<"? "<<m1<<" "<<m2<<endl;
+        int x;
+        cin>>x;
+        if(x==m1*m2){
+            l=m2;
         }
-    }
-    vi dr={0,0,1,-1},dc={1,-1,0,0};
-    vector<vector<vector<vector<bool>>>> vis(n,vector<vector<vector<bool>>>(m,vector<vector<bool>>(4,vector<bool>(4,false))));
-    queue<vi> q;
-    for(int i=0;i<4;i++){
-        int x=s.ff+dr[i];
-        int y=s.ss+dc[i];
-        if(x>=0 and y>=0 and x<=n and y<=m and g[x][y]=='.'){
-            q.push({x,y,i,1,1});
-            vis[x][y][i][1]=true;
+        else if(x==m1*(m2+1)){
+            l=m1,r=m2;
         }
-    }
-    while(!q.empty()){
-        auto it =q.front();
-        q.pop();
-        int x=it[0],y=it[1],dir=it[2],ct=it[3],dst=it[4];
-        pair<int,int> k={x,y};
-        if(k==e){
-            cout<<dst<<endl;
-            return;
+        else{
+            r=m1;
         }
-        for(int i=0;i<4;i++){
-            int x1=x+dr[i];
-            int y1=y+dc[i];
-            int ct1;
-            if(i==dir){
-                ct1=ct+1;
-            }
-            else{
-                ct1=1;
-            }
-            if(ct1>3 or x1<0 or y1<0 or x1>=n or y1>=m or g[x1][y1]=='#'){
-                continue;
-            }
-            if(vis[x1][y1][i][ct1]){
-                continue;
-            }
-            vis[x1][y1][i][ct1]=true;
-            q.push({x1,y1,i,ct1,dst+1});
-        }
-    }
-    cout<<-1<<endl;
 
+    }
+    cout<<"! "<<l<<" "<<r-1<<endl;
 }
 
 int32_t main()
@@ -134,7 +96,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

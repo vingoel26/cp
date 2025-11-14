@@ -62,66 +62,59 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+auto cmp = [](const pair<int,int>& a, const pair<int,int>& b) {
+    return a.ff == b.ff ? a.ss > b.ss : a.ff < b.ff;
+};   
 void solve()
 {
-    int n,m;
-    cin>>n>>m;
-    vector<string> g(n);
-    pair<int ,int> s,e;
-    for(int i=0;i<n;i++){
-        cin>>g[i];
-        for(int j=0;j<m;j++){
-            if(g[i][j]=='S'){
-                s={i,j};
-            }
-            if(g[i][j]=='T'){
-                e={i,j};
+    int n,q;
+    cin>>n>>q;
+    vpi a;
+    for(int i=0;i<q;i++){
+        int u,v;
+        cin>>u>>v;
+        a.pb({u,v});
+    }
+    sort(all(a),cmp);
+    vpi b;
+    for(auto it : a){
+        if(b.empty() or it.ss>b[b.size()-1].ss){
+            b.pb(it);
+        }
+    }
+    // for(auto it : b){
+    //     cout<<it.ff<<" "<<it.ss<<endl;
+    // }
+    cout<<"? "<<1<<" "<<(n+1)/2<<endl;
+    int x;
+    cin>>x;
+    vpi c;
+    int n1=b.size();
+    if(x==0){
+        for(int i=0;i<n1;i++){
+            if(b[i].ss>(n+1)/2){
+                c.pb(b[i]);
             }
         }
     }
-    vi dr={0,0,1,-1},dc={1,-1,0,0};
-    vector<vector<vector<vector<bool>>>> vis(n,vector<vector<vector<bool>>>(m,vector<vector<bool>>(4,vector<bool>(4,false))));
-    queue<vi> q;
-    for(int i=0;i<4;i++){
-        int x=s.ff+dr[i];
-        int y=s.ss+dc[i];
-        if(x>=0 and y>=0 and x<=n and y<=m and g[x][y]=='.'){
-            q.push({x,y,i,1,1});
-            vis[x][y][i][1]=true;
+    else{
+        for(int i=0;i<n1;i++){
+            if(b[i].ff<=(n+1)/2){
+                c.pb(b[i]);
+            }
         }
     }
-    while(!q.empty()){
-        auto it =q.front();
-        q.pop();
-        int x=it[0],y=it[1],dir=it[2],ct=it[3],dst=it[4];
-        pair<int,int> k={x,y};
-        if(k==e){
-            cout<<dst<<endl;
-            return;
-        }
-        for(int i=0;i<4;i++){
-            int x1=x+dr[i];
-            int y1=y+dc[i];
-            int ct1;
-            if(i==dir){
-                ct1=ct+1;
-            }
-            else{
-                ct1=1;
-            }
-            if(ct1>3 or x1<0 or y1<0 or x1>=n or y1>=m or g[x1][y1]=='#'){
-                continue;
-            }
-            if(vis[x1][y1][i][ct1]){
-                continue;
-            }
-            vis[x1][y1][i][ct1]=true;
-            q.push({x1,y1,i,ct1,dst+1});
-        }
+    // for(auto it : c){
+    //     cout<<it.ff<<" "<<it.ss<<endl;
+    // }
+    int ans=0;
+    for(int i=0;i<c.size();i++){
+        cout<<"? "<<c[i].ff<<" "<<c[i].ss<<endl;
+        int x;
+        cin>>x;
+        ans=max(ans,x);
     }
-    cout<<-1<<endl;
-
+    cout<<"! "<<ans<<endl;
 }
 
 int32_t main()
@@ -134,7 +127,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
