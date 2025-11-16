@@ -65,20 +65,18 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int k=0;
-    int n1=n;
-    while(n1>0){
-        n1/=2;
-        k++;
+    int a,b,n;
+    cin>>a>>b>>n;
+    int k=n*b;
+    if(a==b){
+        cout<<1<<endl;
     }
-    // cout<<k<<endl;
-    // int k=63-__builtin_clzll(n);/
-    if((n & (n-1)) == 0){
-        k--;
+    else if(k>a){
+        cout<<2<<endl;
     }
-    cout<<k<<endl;
+    else{
+        cout<<1<<endl;
+    }
 }
 
 int32_t main()
@@ -91,7 +89,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
