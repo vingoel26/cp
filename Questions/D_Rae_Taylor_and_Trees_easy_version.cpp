@@ -54,6 +54,7 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
+
 /*
 ========================================
 Author:         Vinayak Goel
@@ -68,37 +69,47 @@ void solve()
     cin>>n;
     vi a(n);
     vin(a);
-    multiset<pair<int,int>> m;
-    for(int i=0;i<n;i++){
-        m.insert({a[i],i});
+    vi prmn(n+1),sfmx(n+2);
+    prmn[0] = INT_MAX;
+    for(int i = 1; i <= n; ++i){
+        prmn[i] = min(prmn[i-1], a[i-1]);
     }
-    vi l(n),r(n);
-    for(int i=0;i<n;i++){
-        if(i==0){
-            l[i]=n-1;
-        }
-        else{
-            l[i]=i-1;
-        }
-        if(i==n-1){
-            r[i]=0;
-        }
-        else{
-            r[i]=i+1;
+    sfmx[n+1] = INT_MIN;
+    for(int i = n; i >= 1; --i){
+        sfmx[i] = max(sfmx[i+1], a[i-1]);
+    }
+    for(int i=2; i <= n; ++i){
+        if(prmn[i-1] > sfmx[i]){
+            nah
+            return;
         }
     }
-    int ans=0,r11=0;
-    while(r11<n-1){
-        pair<int,int> k=*m.begin();
-        m.erase(m.begin()); 
-        ans+=min(a[l[k.ss]],a[r[k.ss]]);
-        int l1=l[k.ss];
-        int r1=r[k.ss];
-        r[l1]=r1;
-        l[r1]=l1;
-        r11++;
+    yah
+    int mx = 0;
+    map<int,int> mp;
+    vpi ans;
+    for (int i = 0; i < n; i++) {
+        mp[a[i]] = i;
     }
-    cout<<ans<<endl;
+    for (int i = 0; i < n; i++) {
+        int x, y;
+        if (mp.upper_bound(a[i]) != mp.end()) {
+            x = mp.upper_bound(a[i])->second;
+            for (int j = mx + 1; j <= x; j++) {
+                if (a[j] > a[i]) {
+                    ans.push_back({a[j], a[i]});
+                }
+                else {
+                    ans.push_back({a[j], a[x]});
+                }
+            }
+            mx = max(mx, x);
+        }
+        mp.erase(a[i]);
+    }
+    for (auto i : ans) {
+        cout << i.ff << ' ' << i.ss << endl;
+    }
 }
 
 int32_t main()

@@ -54,6 +54,7 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
+
 /*
 ========================================
 Author:         Vinayak Goel
@@ -68,37 +69,20 @@ void solve()
     cin>>n;
     vi a(n);
     vin(a);
-    multiset<pair<int,int>> m;
+    if(a[0]==-1){
+        a[0]=a[n-1];
+    }
+    if(a[n-1]==-1){
+        a[n-1]=a[0];
+    }
     for(int i=0;i<n;i++){
-        m.insert({a[i],i});
-    }
-    vi l(n),r(n);
-    for(int i=0;i<n;i++){
-        if(i==0){
-            l[i]=n-1;
-        }
-        else{
-            l[i]=i-1;
-        }
-        if(i==n-1){
-            r[i]=0;
-        }
-        else{
-            r[i]=i+1;
+        if(a[i]==-1){
+            a[i]=0;
         }
     }
-    int ans=0,r11=0;
-    while(r11<n-1){
-        pair<int,int> k=*m.begin();
-        m.erase(m.begin()); 
-        ans+=min(a[l[k.ss]],a[r[k.ss]]);
-        int l1=l[k.ss];
-        int r1=r[k.ss];
-        r[l1]=r1;
-        l[r1]=l1;
-        r11++;
-    }
-    cout<<ans<<endl;
+    cout<<abs(a[n-1]-a[0])<<endl;
+    vout(a);
+    cout<<endl;
 }
 
 int32_t main()

@@ -3,12 +3,13 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
+        ct = ct ^ a[i];         \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -19,12 +20,12 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
-#define pt(x) cout<<x<<endl;
+#define pt(x) cout << x << endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -37,23 +38,31 @@ using namespace std;
 
 vi fact(200001);
 
-int binExpo(int a, int b, int m){
-    if(b == 0) return 1;
-    if(b % 2 == 0){
-        int res = binExpo(a, b/2, m);
+int binExpo(int a, int b, int m)
+{
+    if (b == 0)
+        return 1;
+    if (b % 2 == 0)
+    {
+        int res = binExpo(a, b / 2, m);
         return (res * res) % m;
-    } else {
-        return (a * binExpo(a, b-1, m)) % m;
+    }
+    else
+    {
+        return (a * binExpo(a, b - 1, m)) % m;
     }
 }
 
-int nCr(int n, int r){
-    if(r > n) return 0;
+int nCr(int n, int r)
+{
+    if (r > n)
+        return 0;
     int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[r], mod - 2, mod)) % mod;
+    res = (res * binExpo(fact[n - r], mod - 2, mod)) % mod;
     return res;
 }
+
 /*
 ========================================
 Author:         Vinayak Goel
@@ -65,52 +74,53 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin>>n;
-    vi a(n);
+    cin >> n;
+    vi a(n), b(n);
+    int ct = 0;
     vin(a);
-    multiset<pair<int,int>> m;
-    for(int i=0;i<n;i++){
-        m.insert({a[i],i});
+    vin(b);
+    if (ct == 0)
+    {
+        cout << "Tie" << endl;
     }
-    vi l(n),r(n);
-    for(int i=0;i<n;i++){
-        if(i==0){
-            l[i]=n-1;
+    else
+    {
+        int k = -1;
+        for (int i = 0; i < 20; i++)
+        {
+            if (ct & 1 << i)
+            {
+                k = i;
+            }
+        }
+        int k1 = 1 << k;
+        int k2=-1;
+        for (int i = 0; i < n; i++)
+        {
+            if ((a[i] ^ b[i]) & k1)
+            {
+                k2 = i;
+            }
+        }
+        if(k2%2==0){
+            cout<<"Ajisai"<<endl;
         }
         else{
-            l[i]=i-1;
-        }
-        if(i==n-1){
-            r[i]=0;
-        }
-        else{
-            r[i]=i+1;
+            cout<<"Mai"<<endl;
         }
     }
-    int ans=0,r11=0;
-    while(r11<n-1){
-        pair<int,int> k=*m.begin();
-        m.erase(m.begin()); 
-        ans+=min(a[l[k.ss]],a[r[k.ss]]);
-        int l1=l[k.ss];
-        int r1=r[k.ss];
-        r[l1]=r1;
-        l[r1]=l1;
-        r11++;
-    }
-    cout<<ans<<endl;
 }
 
 int32_t main()
 {
     fast
-    // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
+        // Precompute factorials
+        // fact[0] = 1;
+        // for(int i = 1; i <= 200000; ++i){
+        //     fact[i] = (fact[i-1] * i) % mod;
+        // }
 
-    int t = 1;
+        int t = 1;
     cin >> t;
     while (t--)
     {
