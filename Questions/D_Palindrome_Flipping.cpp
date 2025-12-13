@@ -62,74 +62,103 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
     int n;
     cin>>n;
-    vi a(n),b(n);
-    vin(a);
-    vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
-    for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
-            return;
+    string s,t;
+    cin>>s>>t;
+    vpi a,b;
+    int p=-1;
+    for(int i=0;i<n-1;i++){
+        if(s[i]==s[i+1]){
+            p=i;
         }
     }
-    if(ct%2==0){
-        yah
+    if(p==-1){
+        if(s[0]=='0' and s[1]=='1' and s[2]=='0'){
+            a.pb({1,3});
+            s[0]='1';
+            s[2]='1';
+            s[1]='0';
+            p=2;
+        }
+        else{
+            a.pb({1,3});
+            s[1]='1';
+            s[2]='0';
+            s[0]='0';
+            p=2;
+        }
     }
-    else{
-        nah
+    char k=s[p+1];
+    int l=p,r=p+1;
+    while(r+1<n){
+        if(s[r+1]!=k){
+            a.pb({l+1,r+1});
+        }
+        k=s[r+1];
+        r++;
+    }
+    while(l>0){
+        if(s[l-1]!=k){
+            a.pb({l+1,r+1});
+        }
+        k=s[l-1];
+        l--;
+    }
+    if(k=='1'){
+        a.pb({1,n});
+    }
+    p=-1;
+    for(int i=0;i<n-1;i++){
+        if(t[i]==t[i+1]){
+            p=i;
+        }
+    }
+    if(p==-1){
+        if(t[0]=='0' and t[1]=='1' and t[2]=='0'){
+            b.pb({1,3});
+            t[0]='1';
+            t[2]='1';
+            t[1]='0';
+            p=2;
+        }
+        else{
+            b.pb({1,3});
+            t[1]='1';
+            t[2]='0';
+            t[0]='0';
+            p=2;
+        }
+    }
+    k=t[p+1];
+    l=p,r=p+1;
+    while(r+1<n){
+        if(t[r+1]!=k){
+            b.pb({l+1,r+1});
+        }
+        k=t[r+1];
+        r++;
+    }
+    while(l>0){
+        if(t[l-1]!=k){
+            b.pb({l+1,r+1});
+        }
+        k=t[l-1];
+        l--;
+    }
+    if(k=='1'){
+        b.pb({1,n});
+    }
+    cout<<a.size()+b.size()<<endl;
+    reverse(all(b));
+    for(auto x:a){
+        cout<<x.ff<<" "<<x.ss<<endl;
+    }
+    for(auto x:b){
+        cout<<x.ff<<" "<<x.ss<<endl;
     }
 }
 

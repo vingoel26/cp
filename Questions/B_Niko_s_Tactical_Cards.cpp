@@ -62,53 +62,7 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
     int n;
@@ -116,21 +70,13 @@ void solve()
     vi a(n),b(n);
     vin(a);
     vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
+    int mx=0,mn=0;
     for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
-            return;
-        }
+        int mx1=max(mx-a[i],b[i]-mn);
+        int mn1=min(mn-a[i],b[i]-mx);
+        mx=mx1,mn=mn1;
     }
-    if(ct%2==0){
-        yah
-    }
-    else{
-        nah
-    }
+    cout<<mx<<endl;
 }
 
 int32_t main()

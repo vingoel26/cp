@@ -65,8 +65,50 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n,k;
+    cin>>n>>k;
+    viv s(k,vi(n));
+    vi a(k);
+    for(int i=0;i<k;i++){
+        for(int j=0;j<n;j++){
+            cin>>s[i][j];
+        }
+        a[i]=s[i][0];
+    }
+    viv adj(n+1);
+    vi ct(n+1,0);
+    for(int i=0;i<k;i++){
+        for(int j=1;j<n-1;j++){
+            adj[s[i][j]].pb(s[i][j+1]);
+            ct[s[i][j+1]]++;
+        }
+    }
+    queue<int> q;
+    for(int i=1;i<=n;i++){
+        if(ct[i]==0){
+            q.push(i);
+        }
+    }
+    int ct1=0;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        ct1++;
+        for(auto v: adj[u]){
+            ct[v]--;
+            if(ct[v]==0){
+                q.push(v);
+            }
+        }
+    }
+    if(ct1==n){
+        yah
+    }
+    else {
+        nah
+    }
 }
+
 
 int32_t main()
 {

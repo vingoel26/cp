@@ -62,75 +62,59 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n),b(n);
-    vin(a);
-    vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
+    string s,t;
+    cin>>s>>t;
+    map<char,int>mp,mp1;
+    int n=s.size();
+    int m=t.size();
+    for(int i=0;i<m;i++){
+        mp1[t[i]]++;
+    }
     for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
+        mp[s[i]]++;
+    }
+    set<char>st;
+    for(int i=0;i<n;i++){
+        st.insert(s[i]);
+    }
+    for(auto it:st){
+        if(mp1[it]<mp[it]){
+            cout<<"Impossible"<<endl;
             return;
         }
+        else{
+            mp1[it]-=mp[it];
+            if(mp1[it]==0){
+                mp1.erase(it);
+            }
+        }
     }
-    if(ct%2==0){
-        yah
+    string ans="";
+    int i=0;
+    while(i<n){
+        if(!mp1.empty() and mp1.begin()->ff<s[i]){
+            ans+=mp1.begin()->ff;
+            mp1.begin()->ss--;
+            if(mp1.begin()->ss==0){
+                mp1.erase(mp1.begin()->ff);
+            }
+        }
+        else{
+            ans+=s[i];
+            i++;
+        }
     }
-    else{
-        nah
+    while(!mp1.empty()){
+        ans+=mp1.begin()->ff;
+        mp1.begin()->ss--;
+        if(mp1.begin()->ss==0){
+            mp1.erase(mp1.begin()->ff);
+        }
     }
+    cout<<ans<<endl;
 }
 
 int32_t main()

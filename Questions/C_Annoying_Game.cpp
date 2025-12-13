@@ -62,75 +62,44 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n),b(n);
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
     vin(a);
+    vi b(n);
     vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
+    vi s1(n),s2(n);
     for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
-            return;
+        if(i>0 and s1[i-1]>0){
+            s1[i]=s1[i-1]+a[i];
+        }
+        else{
+            s1[i]=a[i];
         }
     }
-    if(ct%2==0){
-        yah
+    for(int i=n-1;i>=0;i--){
+        if(i<n-1 and s2[i+1]>0){
+            s2[i]=s2[i+1]+a[i];
+        }
+        else{
+            s2[i]=a[i];
+        }
+    }
+    int ans=LLONG_MIN;
+    if(k%2==0){
+        for(int i=0;i<n;i++){
+            ans=max(ans,s1[i]);
+        }
     }
     else{
-        nah
+        for(int i=0;i<n;i++){
+            ans=max(ans,s1[i]+s2[i]-a[i]+b[i]);
+        }
     }
+    cout<<ans<<endl;
 }
 
 int32_t main()

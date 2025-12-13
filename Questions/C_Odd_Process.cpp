@@ -16,7 +16,7 @@
 #define pb push_back
 #define ff first
 #define ss second
-#define viv vector<vector<int>>
+#define viv vector<vi>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
 #define pt(x) cout<<x<<endl;
@@ -62,75 +62,95 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
     int n;
-    cin>>n;
-    vi a(n),b(n);
-    vin(a);
-    vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
-    for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
-            return;
+    cin >> n;
+    vi a(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+    }
+    sort(all(a), greater<>());
+    vi e, o;
+    for (int i = 0; i < n; i++)
+    {
+        if (a[i] % 2 == 0)
+        {
+            e.pb(a[i]);
+        }
+        else
+        {
+            o.pb(a[i]);
         }
     }
-    if(ct%2==0){
-        yah
+    int x = o.size(), y = e.size();
+    if (x == 0)
+    {
+        for (int i = 1; i <= n; i++)
+        {
+            cout << 0 << " ";
+        }
     }
-    else{
-        nah
+    else if (y == 0)
+    {
+        for (int i = 1; i <= n; i++)
+        {
+            if (i % 2 != 0)
+            {
+                cout << o[0] << " ";
+            }
+            else
+            {
+                cout << 0 << " ";
+            }
+        }
     }
+    else
+    {
+        vi es(y);
+        es[0] = e[0];
+        for (int i = 1; i < y; i++)
+        {
+            es[i] = es[i - 1] + e[i];
+        }
+        for (int i = 1; i <= n; i++)
+        {
+            int ans;
+            if (y + 1 >= i)
+            {
+                if (i == 1)
+                {
+                    ans = o[0];
+                }
+                else
+                {
+                    ans = es[i - 2] + o[0];
+                }
+            }
+            else
+            {
+                if (abs(i - y) % 2 != 0)
+                {
+                    ans = es[y - 1] + o[0];
+                }
+                else
+                {
+                    if (i == n)
+                    {
+                        ans = 0;
+                    }
+                    else
+                    {
+                        ans = es[y - 1] - e[y - 1] + o[0];
+                    }
+                }
+            }
+            cout << ans << " ";
+        }
+    }
+    cout << endl;
 }
 
 int32_t main()

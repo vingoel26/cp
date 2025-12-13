@@ -62,70 +62,68 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int ct;
-void merge(vector<int>& arr, int left, 
-                     int mid, int right){
-                         
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    vector<int> L(n1), R(n2);
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
 
-    int i = 0, j = 0;
-    int k = left;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-            ct += (n1 - i);
-        }
-        k++;
-    }
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-void mergeSort(vector<int>& arr, int left, int right){
-    
-    if (left >= right)
-        return;
-
-    int mid = left + (right - left) / 2;
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
-}
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n),b(n);
-    vin(a);
-    vin(b);
-    ct=0;
-    mergeSort(a,0,n-1);
-    mergeSort(b,0,n-1);
+    int n,m,k;
+    cin>>n>>m>>k;
+    viv a(n,vi(m));
     for(int i=0;i<n;i++){
-        if(a[i]!=b[i]){
-            nah
-            return;
+        for(int j=0;j<m;j++){
+            cin>>a[i][j];
         }
     }
-    if(ct%2==0){
+    vector<string>grid(n);
+    for(int i=0;i<n;i++){
+        cin>>grid[i];
+    }
+    viv d(n,vi(m));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            d[i][j]=(grid[i][j]-'0');
+        }
+    }
+    int s=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(d[i][j]==1){
+                s+=a[i][j];
+            }
+            else{
+                s-=a[i][j];
+            }
+        }
+    }
+    if(s==0){
+        yah
+        return;
+    }
+    viv prd(n+1,vi(m+1,0));
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            prd[i][j]=d[i-1][j-1]+prd[i-1][j]+prd[i][j-1]-prd[i-1][j-1];
+        }
+    }
+    set<int>diff;
+    for(int i=k;i<=n;i++){
+        for(int j=k;j<=m;j++){
+            int k1=prd[i][j]-prd[i-k][j]-prd[i][j-k]+prd[i-k][j-k];
+            k1=(k*k - k1)-k1;
+            diff.insert(abs(k1));
+        }
+    }
+    if(diff.find(0)!=diff.end()){
+        diff.erase(0);
+    }
+    if(diff.size()==0){
+        nah
+        return;
+    }
+    int gcd=*diff.begin();
+    for(auto it:diff){
+        gcd=__gcd(gcd,it);
+    }
+    if(s%gcd==0){
         yah
     }
     else{
