@@ -81,25 +81,30 @@ May the WA avoid you
 // vi a1(36);
 void solve()
 {
-    int n, q;
-    cin >> n >> q;
+    int n,q;
+    cin>>n>>q;
     vi a(n);
     vin(a);
-    vi pr(n + 1, 0), pr1(n + 1, 0), pr2(n + 1, 0);
+    vi pr(n+1,0),pr1(n+1,0),pr2(n+1,0);
     for(int i=1;i<=n;i++){
         int ct=63-__builtin_clzll(a[i-1]);
         pr[i]=pr[i-1]+ct;
     }
     for(int i=1;i<=n;i++){
-        int ct=0,ct1=0;
         if((a[i-1]&(a[i-1]-1))==0){
-            ct=1;
+            pr1[i]=pr1[i-1]+1;
         }
+        else{
+            pr1[i]=pr1[i-1];
+        }
+    }
+    for(int i=1;i<=n;i++){
         if(((a[i-1]-1)&(a[i-1]-2))==0 and a[i-1]>2){
-            ct1=1;
+            pr2[i]=pr2[i-1]+1;
         }
-        pr1[i]=pr1[i-1]+ct;
-        pr2[i]=pr2[i-1]+ct1;
+        else{
+            pr2[i]=pr2[i-1];
+        }
     }
     for(int i=0;i<q;i++){
         int l,r;
