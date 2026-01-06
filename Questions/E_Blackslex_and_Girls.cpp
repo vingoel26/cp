@@ -65,36 +65,52 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,x,y;
+    cin>>n>>x>>y;
+    string s;
+    cin>>s;
+    vi a(n);
+    vin(a);
+    if(accumulate(all(a),0LL)>x+y){
+        nah
+        return;
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int one=0,zero=0;
+    int x1=0,y1=0;
+    for(int i=0;i<n;i++){
+        if(s[i]=='0'){
+            x1+=a[i]/2+1;
+            zero++;
+        }
+        else{
+            y1+=a[i]/2+1;
+            one++;
+        }
+    }
+    if(zero==n){
+        if(x<x1 or x<y+n){
+            nah
+        }
+        else{
+            yah
+        }
+        return;
+    }
+    if(one==n){
+        if(y<y1 or y<x+n){
+            nah
+        }
+        else{
+            yah
+        }
+        return;
+    }
+    if(x1<=x and y1<=y){
+        yah
+    }
+    else{
+        nah
+    }
 }
 
 int32_t main()

@@ -4,12 +4,12 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,6 +33,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -67,34 +68,45 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    vi a(n);
+    vin(a);
+    map<int,vi> mp;
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        mp[a[i]].pb(i);
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ans=-1,ans1=-1;
+    for(auto it:mp){
+        int mx=1,mx1=1;
+        vi v=it.ss;
+        for(int i=1;i<v.size();i++){
+            mx1=max(1LL,mx1+1-(v[i]-v[i-1]-1));
+            mx=max(mx,mx1);
+        }
+        if(ans1<mx){
+            ans1=mx;
+            ans=it.ff;
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(a[i]==ans)
+            a[i]=1;
+        else
+            a[i]=-1;
+    }
+    int mx=-1,mx1=0,l=0,r=0,s=0;
+    for(int i=0;i<n;i++){
+        mx1+=a[i];
+        if(mx<mx1){
+            mx=mx1;
+            l=s;
+            r=i;
+        }
+        if(mx1<0){
+            mx1=0;
+            s=i+1;
+        }
+    }
+    cout<<ans<<" "<<l+1<<" "<<r+1<<endl;
 }
 
 int32_t main()

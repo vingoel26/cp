@@ -4,12 +4,12 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,6 +33,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -62,39 +63,64 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int n,int p,int no,vector<vector<pair<int,int>>>& g,vector<int>& childa){
+    for(auto i:g[n]){
+        if(i.first == no){
+            if(childa[n]^i.second == 0) childa[i.first] = childa[n]^i.second;
+            continue;
+        }
+        if(i.first == p) continue;
+        childa[i.first] = childa[n]^i.second;
+        dfs(i.first,n,no,g,childa);
+    }
+}
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,a,b;
+    cin>>n>>a>>b;
+    vector<vector<pair<int,int>>> g(n+1);
+    int u, v, w;
+    for(int i = 0; i < n-1; i++) {
+        cin>>u>>v>>w;
+        g[u].push_back({v, w});
+        g[v].push_back({u, w});
+    } 
+    vector<int> childa(n+1,-1);
+    childa[a]=0;
+    dfs(a,a,b,g,childa);
+    if(childa[b]==0){
+        yah
+        return;
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    vector<int> childb(n+1,-1);
+    childb[b]=0;
+    dfs(b,b,0,g,childb);
+        map<int,int> m;
+        for(int i=1;i<=n;i++){
+            if(i==a or i==b or childa[i]==-1){
+                continue;
+            }
+            m[childa[i]]++;
+        }
+        bool ans=false;
+        for(int i=1;i<=n;i++){
+            if(i==a or i==b or childb[i]==-1) {
+                continue;
+            };
+            if(childb[i]==0) {
+                ans=true;
+            }
+            if(m[childb[i]]>0) {
+                ans=true;
+            }
+        }
+ 
+    if(ans){
+        yah
+    }
+    else{
+        nah
+    }
 }
 
 int32_t main()

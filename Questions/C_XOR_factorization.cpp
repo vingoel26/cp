@@ -65,36 +65,40 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,k;
+    cin>>n>>k;
+    if(k%2==1){
+        for(int i=0;i<k;i++){
+            cout<<n<<" ";
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    else{
+       int ct=0;
+       vi ans(k,0);
+       for(int i=30;i>=0;i--){
+        if(n&(1LL<<i)){
+            for(int j=0;j<k;j++){
+                if(j==min(ct,k-1)){
+                    continue;
+                }
+                ans[j]+=(1LL<<i);
+            }
+            if(ct<k){
+                ct++;
+            }
+        }
+        else{
+            for(int j=0;j<(ct/2)*2;j++){
+                ans[j]+=(1LL<<i);
+            }
+        }
+       }
+       for(int i=0;i<k;i++){
+        cout<<ans[i]<<" ";
+    }
+    }
+    
+    cout<<endl;
 }
 
 int32_t main()

@@ -11,7 +11,7 @@
 #define vout(a) \
     for (int i = 0; i < n; ++i) \
     {                           \
-        cout << a[i] << ' ';    \
+        cout << a[i];    \
     }
 #define pb push_back
 #define ff first
@@ -67,34 +67,21 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    vector<string> v(n);
+    vin(v);
+    string ans="";
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        string ans1=ans;
+        string ans2=v[i];
+        for(int j=0;j<v[i].size();j++){
+            ans1.push_back(v[i][j]);
+        }
+        for(int j=0;j<ans.size();j++){
+            ans2.push_back(ans[j]);
+        }
+        ans=min(ans1,ans2);
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    cout<<ans<<endl;
 }
 
 int32_t main()

@@ -67,34 +67,17 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    vi a(n);
+    vin(a);
+    int ans=max(abs(a[1]-a[0]),abs(a[n-1]-a[n-2]));
+    for(int i=0;i<n-2;i++){
+        ans=max(ans,abs(a[i+1]-a[i])+abs(a[i+2]-a[i+1])-abs(a[i+2]-a[i]));
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int d=0;
+    for(int i=0;i<n-1;i++){
+        d+=abs(a[i+1]-a[i]);
+    }
+    cout<<d-ans<<endl;
 }
 
 int32_t main()

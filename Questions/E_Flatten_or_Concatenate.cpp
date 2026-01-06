@@ -62,39 +62,45 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
+int q(int l,int r){
+    cout<<"? "<<l<<" "<<r<<endl;
+    int res;
+    cin>>res;
+    return res;
+}
 
 void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int s=q(1,n);
+    int l=1,r=n;
+    while(l!=r){
+        int l1=l;
+        int r1=r;
+        while(true){
+            int m=(l1+r1)/2;
+            int t=q(l,m);
+            if(t==s/2){
+                s=t;
+                if(m-l>=r-(m+1)){
+                    l=m+1;
+                }
+                else{
+                    r=m;
+                }
+                break;
+            }
+            else if(t>s/2){
+                r1=m-1;
+            }
+            else{
+                l1=m+1;
+            }
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ans=q(l,r);
+    cout<<"! "<<ans<<endl;
 }
 
 int32_t main()

@@ -62,39 +62,48 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+viv pr(501,vi(501,0));
+int check(int i,int mx) {
+	return min(max(i,0LL),mx);
+}
+int pref(int i,int j,int n,int m) {
+	return pr[check(i,n)][check(j,m)];
+}
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    int n,m,k;
+    cin>>n>>m>>k;
+    k--;
+    int ct=0;
+    vector<vector<char>> mine(n,vector<char>(m));
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        for(int j=0;j<m;j++){
+            cin>>mine[i][j];
+            if(mine[i][j]=='g'){
+                ct++;
+            }
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            if(mine[i-1][j-1]=='g'){
+                pr[i][j]=pr[i-1][j]+pr[i][j-1]-pr[i-1][j-1]+1;
+            }
+            else{
+                pr[i][j]=pr[i-1][j]+pr[i][j-1]-pr[i-1][j-1];
+            }
+        }
+    }
+    int ans=LLONG_MAX;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(mine[i][j]=='.'){
+                int a=i-k,b=i+k+1,c=j-k,d=j+k+1;
+                ans=min(ans,pref(b,d,n,m)-pref(a,d,n,m)-pref(b,c,n,m)+pref(a,c,n,m));
+            }
+        }
+    }
+    cout<<ct-ans<<endl;
 }
 
 int32_t main()

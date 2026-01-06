@@ -4,7 +4,7 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
@@ -32,7 +32,7 @@
 #define vpi vector<pair<int, int>>
 #define up upper_bound
 #define low lower_bound
-#define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -54,7 +54,9 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
+int modinv(int a, int m) {
+    return binExpo(a, m - 2, m);
+}
 /*
 ========================================
 Author:         Vinayak Goel
@@ -67,44 +69,40 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    vi a(n+1);
+    vin(a);
+    int s=accumulate(all(a),0LL);
+    int mn=s/n;
+    int rem=s%n;
+    int ct1=0,ct2=0;
+    for(int i=1;i<=n;i++){
+        if(a[i]>mn+1){
+            cout<<0<<endl;
+            return;
+        }
+        if(a[i]<mn+1){
+            ct1++;
+        }
+        else{
+            ct2++;
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    if(ct1<n-rem){
+        cout<<0<<endl;
+        return;
+    }
+    int ans=(((fact[rem]*fact[ct1])%mod)*modinv(fact[rem-ct2],mod))%mod;
+    cout<<ans<<endl;
 }
 
 int32_t main()
 {
     fast
     // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
+    fact[0] = 1;
+    for(int i = 1; i <= 100; ++i){
+        fact[i] = (fact[i-1] * i) % mod;
+    }
 
     int t = 1;
     cin >> t;

@@ -65,36 +65,19 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
-    }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int k,a,b,x,y;
+    cin>>k>>a>>b>>x>>y;
+    int ans1=0;
+    int k1=k;
+    ans1+=max((k1-a+x)/x,0LL);
+    k1=k1-max((k1-a+x)/x,0LL)*x;
+    ans1+=max((k1-b+y)/y,0LL);
+    int ans2=0;
+    int k2=k;
+    ans2+=max((k2-b+y)/y,0LL);
+    k2=k2-max((k2-b+y)/y,0LL)*y;
+    ans2+=max((k2-a+x)/x,0LL);
+    cout<<max(ans1,ans2)<<endl;
 }
 
 int32_t main()

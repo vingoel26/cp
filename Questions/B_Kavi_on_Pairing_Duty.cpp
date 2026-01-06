@@ -32,7 +32,7 @@
 #define vpi vector<pair<int, int>>
 #define up upper_bound
 #define low lower_bound
-#define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -67,34 +67,18 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    vi dp(n+1);
+    for(int i=1;i<=n;i++){
+        for(int j=2*i;j<=n;j+=i){
+            dp[j]++;
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int s=1;
+    for(int i=1;i<=n;i++){
+        dp[i]=(dp[i]+s)%mod;
+        s=(dp[i]+s)%mod;
+    }
+    cout<<dp[n]<<endl;
 }
 
 int32_t main()
@@ -107,7 +91,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

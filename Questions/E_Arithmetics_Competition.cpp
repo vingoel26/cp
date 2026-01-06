@@ -4,7 +4,7 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
@@ -65,36 +65,53 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,m,q;
+    cin>>n>>m>>q;
+    vi a(n),b(m);
+    vin(a);
+    vin(b);
+    sort(rall(a));
+    sort(rall(b));
+    vi pra(n+1),prb(m+1);
+    for(int i=1;i<=n;i++){
+        pra[i]=pra[i-1]+a[i-1];
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    for(int i=1;i<=m;i++){
+        prb[i]=prb[i-1]+b[i-1];
+    }
+    viv ans(n+m+1,vi(2,0));
+    int n1=0,m1=0;
+    for(int i=1;i<n+m+1;i++){
+        if(n1<n and m1<m){
+            if(a[n1]<b[m1]){
+                m1++;
+            }
+            else{
+                n1++;
+            }
+        }
+        else if(n1==n){
+            m1++;
+        }
+        else if(m1==m){
+            n1++;
+        }
+        ans[i][0]=n1,ans[i][1]=m1;
+    }
+    for(int i=0;i<q;i++){
+        int x,y,z;
+        cin>>x>>y>>z;
+        int l=ans[z][0],r=ans[z][1];
+        if(l>x){
+            cout<<pra[x]+prb[z-x]<<endl;
+        }
+        else if(r>y){
+            cout<<pra[z-y]+prb[y]<<endl;
+        }
+        else{
+            cout<<pra[l]+prb[r]<<endl;
+        }
+    }
 }
 
 int32_t main()

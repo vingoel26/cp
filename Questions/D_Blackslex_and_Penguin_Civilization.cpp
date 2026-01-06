@@ -66,35 +66,27 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    cin >> n;
+    map<int, int> mp;
+    vi ans(1);
+    ans[0] = (1 << n) - 1;
+    int x = (1 << (n - 1));
+    while (x > 0)
+    {
+        vi tmp;
+        for(int num : ans){
+                tmp.push_back(num - x);
+            }
+        sort(all(tmp));
+        for(int num : tmp){
+                ans.push_back(num);
+            }
+        x =x/2;
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    for(int num : ans){
+            cout << num << " ";
+        }
+    cout << endl;
 }
 
 int32_t main()

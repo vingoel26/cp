@@ -65,36 +65,59 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,m;
+    cin>>n>>m;
+    vector<vector<pair<int,int>>> adj(n+m+1);
+    vi colour(n+m+1,-1);
+    int f=n+1;
+    for(int i=0;i<m;i++){
+        int a,b;
+        cin>>a>>b;
+        string s;
+        cin>>s;
+        if(s=="crewmate"){
+            adj[a].pb({f,1});
+            adj[f].pb({a,1});
+            adj[f].pb({b,1});
+            adj[b].pb({f,1});
+            f++;
+        }
+        else{
+            adj[b].pb({a,1});
+            adj[a].pb({b,1});
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ans=0;
+    for(int i=1;i<=n;i++){
+        if(colour[i]==-1){
+            vi c(2);
+            colour[i]=1;
+            stack<int> st;
+            st.push(i);
+            while(!st.empty()){
+                int u = st.top(); 
+                st.pop();
+                if(u <= n) {
+                    c[colour[u]]++;
+                }
+                for(auto &pr : adj[u]){
+                    int v = pr.ff;
+                    int w = pr.ss;
+                    int c1 = colour[u] ^ w;
+                    if(colour[v] == -1){
+                        colour[v] = c1;
+                        st.push(v);
+                    } 
+                    else if(colour[v] != c1){
+                        cout<<-1<<endl;
+                        return;
+                    }
+                }
+            }
+            ans += max(c[0], c[1]);
+        }
+    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

@@ -67,34 +67,53 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    if(n==2){
+        cout<<-1<<endl;
+        return;
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(j==2){
+                cout<<1<<" ";
+            }
+            else if(i==0){
+                if(j==0 or j==1 or j==2){
+                    cout<<1<<" ";
+                }
+                else{
+                    cout<<0<<" ";
+                }
+            }
+            else if(i==1){
+                if(j==1 or j==2){
+                    cout<<1<<" ";
+                }
+                else{
+                    cout<<0<<" ";
+                }
+            }
+            else if(i==2){
+                if(j==1 or j==2){
+                    cout<<1<<" ";
+                }
+                else{
+                    cout<<0<<" ";
+                }
+            }
+            else if(i==n-1){
+                if(j==0 or j==1){
+                    cout<<0<<" ";
+                }
+                else{
+                    cout<<1<<" ";
+                }
+            }
+            else{
+                cout<<0<<" ";
+            }
+        }
+        cout<<endl;
+    }
 }
 
 int32_t main()

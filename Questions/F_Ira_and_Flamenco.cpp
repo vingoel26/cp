@@ -54,7 +54,9 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
+int modinv(int n){
+    return binExpo(n,mod-2,mod);
+}
 /*
 ========================================
 Author:         Vinayak Goel
@@ -65,36 +67,47 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    int n,m;
+    cin>>n>>m;
+    vi a(n);
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        cin>>a[i];
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    sort(all(a));
+    map<int,int> ct;
+    for(int i=0;i<n;i++){
+        ct[a[i]]++;
+    }
+    set<int>s1;
+    for(int i=0;i<n;i++){
+        s1.insert(a[i]);
+    }
+    n=s1.size();
+    set<int> s;
+    int ans=0;
+    int res=1;
+    a.erase(unique(a.begin(), a.end()), a.end());
+    for(int i=0;i<n;i++){
+        s.insert(a[i]);
+        res*= ct[a[i]];
+        res%=mod;
+        if(s.size()>m){ 
+            res*=(modinv( ct[*s.begin()] ));
+            s.erase(*s.begin());
+            res%=mod;
+        }
+        if(s.size()==m){
+            if((*s.begin()+m ) > *s.rbegin()){
+                ans+=res;
+                ans%=mod;
+            }else {
+                s.clear();
+                res=1;
+            }
+        }
+    }
+    ans%=mod;
+    cout<<ans<<endl;
 }
 
 int32_t main()

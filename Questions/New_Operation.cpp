@@ -67,34 +67,33 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    vi a(n);
+    vin(a);
+    viv dpmn(n,vi(n,LLONG_MAX));
+    viv dpmx(n,vi(n,LLONG_MIN));
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        dpmn[i][i]=a[i];
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    for(int i=2;i<=n;i++){
+        for(int j=0;j<n-i+1;j++){
+            int r=j+i-1;
+            for(int k=j;k<r;k++){
+                dpmn[j][r]=min(dpmn[j][r],dpmn[j][k]+2*dpmn[k+1][r]);
+            }
+        }
+    }
+    for(int i=0;i<n;i++){
+        dpmx[i][i]=a[i];
+    }
+    for(int i=2;i<=n;i++){
+        for(int j=0;j<n-i+1;j++){
+            int r=j+i-1;
+            for(int k=j;k<r;k++){
+                dpmx[j][r]=max(dpmx[j][r],dpmx[j][k]+2*dpmx[k+1][r]);
+            }
+        }
+    }
+    cout<<dpmn[0][n-1]<<" "<<dpmx[0][n-1]<<endl;
 }
 
 int32_t main()

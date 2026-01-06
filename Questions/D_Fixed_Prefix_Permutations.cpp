@@ -65,36 +65,38 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    int n,m;
+    cin>>n>>m;
+    viv a(n,vi(m));
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        for(int j=0;j<m;j++){
+            cin>>a[i][j];
+            a[i][j]--;
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    viv b(n,vi(m));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            b[i][a[i][j]]=j;
+        }
+    }
+    sort(all(b));
+    for(int i=0;i<n;i++){
+        int j=lower_bound(all(b),a[i])-b.begin();
+        int ans1=0,ans2=0;
+        if(j>0){
+            while(ans1<a[i].size() and a[i][ans1]==b[j-1][ans1]){
+                ans1++;
+            }
+        }
+        if(j<n){
+            while(ans2<a[i].size() and a[i][ans2]==b[j][ans2]){
+                ans2++;
+            }
+        }
+        cout<<max(ans1,ans2)<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()

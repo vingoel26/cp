@@ -65,36 +65,34 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    string s;
+    cin>>s;
+    vi p;
+    for(int i=0;i<s.size();i++){
+        if(s[i]=='s'){
+            p.pb(i);
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ans=0;
+    if(p.size()==0){
+        p.pb(0);
+        p.pb(s.size()-1);
+        ans=2;
+    }
+    if(p[0]!=0){
+        ans++;
+        p.pb(0);
+        sort(all(p));
+    }
+    if(p[p.size()-1]!=s.size()-1){
+        ans++;
+        p.pb(s.size()-1);
+        sort(all(p));
+    }
+    for(int i=0;i<p.size()-1;i++){
+        ans+=(p[i+1]-p[i]+1)/2-1;
+    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

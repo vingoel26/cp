@@ -62,39 +62,52 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+vector<int>spf(1e5+2);
+vector<int>p;
+vector<int> spfi(int max){
+     vector<int>ans(max+1);
+     for(int i=0;i<=max;i++){
+         ans[i]=i;
+     }
+     for(int i=2;i*i<=max;i++){
+      if(ans[i]==i){
+          for(int j=i*i;j<=max;j+=i) ans[j]=i;
+       }
+    }
+    return ans;
+}
 void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    vector<int>ans(n+1),b(n+1);
+    vector<int>a;
+    for(auto it:p){
+        if(it>n) break;
+        a.push_back(it);
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    sort(rall(a));
+    vector<int>c;
+    for(auto it:a){
+        c.clear();
+        for(int i=it;i<=n;i+=it){
+            if(b[i]==0){
+                 c.push_back(i);
+                 b[i]=1;
+            }
+        }
+        int m=c.size();
+        ans[c[0]]=c[m-1];
+        for(int i=1;i<m;i++){
+            ans[c[i]]=c[i-1];
+        }
+    }
+    for(int i=1;i<=n;i++){
+        if(ans[i]==0) ans[i]=i;
+        cout<<ans[i]<<" ";
+    }
+    cout<<endl;
+
 }
 
 int32_t main()
@@ -108,6 +121,10 @@ int32_t main()
 
     int t = 1;
     cin >> t;
+    spf=spfi(1e5+2);
+    for(int i=2;i<=1e5;i++){
+        if(spf[i]==i) p.push_back(i);
+    }
     while (t--)
     {
         solve();

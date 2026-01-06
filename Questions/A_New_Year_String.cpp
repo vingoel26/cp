@@ -67,34 +67,35 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    string s;
+    cin>>s;
+    int ans=LLONG_MAX;
+    for(int i=0;i<n-3;i++){
+        int ct=0;
+        string k="2026";
+        for(int j=0;j<4;j++){
+            if(s[i+j]!=k[j]){
+                ct++;
+            }
+        }
+        ans=min(ans,ct);
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ct=0;
+    int lst=-1;
+    string k="2025";
+    for(int i=0;i<n-3;i++){
+        int ct1=0;
+        for(int j=0;j<4;j++){ 
+            if(s[i+j]!=k[j]){
+                ct1++;
+            }
+        }
+        if(ct1==0 and lst<i){
+            ct++;
+            lst=i+3;
+        }
+    }
+    cout<<min(ans,ct)<<endl;
 }
 
 int32_t main()

@@ -65,36 +65,66 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n, m;
+    cin >> n >> m;
+    vi a(n);
+    vin(a);
+    vpi b;
+    for (int i = 0; i < n; i++)
+    {
+        b.pb({a[i], i + 1});
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    sort(all(b));
+    if (2 * m > n)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    if (m == 0)
+    {
+        if (n == 2)
+        {
+            cout << -1 << endl;
+            return;
+        }
+        vpi ans;
+        sort(rall(b));
+        int x = b[0].ff;
+        int s = 0;
+        int idx = -1;
+        for(int i=1;i<n;i++){
+            s+=b[i].ff;
+            if(s>=x){
+                idx=i;
+                break;
+            }
+        }
+        if(idx==-1){
+            cout<<-1<<endl;
+            return;
+        }
+        for(int i=idx+1;i<n;i++){
+            ans.pb({b[i].ss,b[i-1].ss});
+        }
+        if(!ans.empty()){
+            reverse(all(ans));
+        }
+        for(int i=idx;i>=1;i--){
+            ans.pb({b[i].ss,b[0].ss});
+        }
+        cout<<ans.size()<<endl;
+        for(int i=0;i<ans.size();i++){
+            cout<<ans[i].ff<<" "<<ans[i].ss<<endl;
+        }
+    }
+    else
+    {
+        cout << n - m << endl;
+        for (int i = 0; i < n - m; i++)
+        {
+            cout << b[m + i].ss << " " << b[i].ss << endl;
+        }
+    }
 }
 
 int32_t main()

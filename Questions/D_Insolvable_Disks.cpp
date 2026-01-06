@@ -67,34 +67,34 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    vi a(n);
+    vin(a);
+    sort(all(a));
+    int ans=n-1;
+    int l=0,r=LLONG_MAX;
+    int rad=0,c=1;
+    for(int i=1;i<n;i++){
+        rad=a[i]-a[i-1]-rad;
+        if(i%2==c%2){
+            r=min(r,rad);
+            if(i<n-1){
+                l=max(l,rad-(a[i+1]-a[i]));
+            }
+        }
+        else{
+            l=max(l,-rad);
+            if(i<n-1){
+                r=min(r,a[i+1]-a[i]-rad);
+            }
+        }
+        if(l>=r){
+            ans--;
+            rad=0;
+            c=i+1;
+            l=0,r=LLONG_MAX;
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    cout<<ans<<endl;
 }
 
 int32_t main()

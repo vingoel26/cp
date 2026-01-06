@@ -65,36 +65,60 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int a,b;
+    cin>>a>>b;
+    int ans=0;
+    int a1=a,b1=b;
+    int c=1,ct=0;
+    bool q=true;
+    while(true){
+        if(q){
+            if(a>=c){
+                a-=c;
+            }
+            else{
+                break;
+            }
+        }
+        else{
+            if(b>=c){
+                b-=c;
+            }
+            else{
+                break;
+            }
+        }
+        ct++;
+        c*=2;
+        q=!q;
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    ans=max(ans,ct);
+    ct=0,c=1;
+    q=false;
+    a=a1,b=b1;
+    while(true){
+        if(q){
+            if(a>=c){
+                a-=c;
+            }
+            else{
+                break;
+            }
+        }
+        else{
+            if(b>=c){
+                b-=c;
+            }
+            else{
+                break;
+            }
+        }
+        ct++;
+        c*=2;
+        q=!q;
+    }
+    ans=max(ans,ct);
+    cout<<ans<<endl;
 }
 
 int32_t main()

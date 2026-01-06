@@ -67,34 +67,33 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    string s;
+    cin>>s;
+    vi p;
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        if(s[i]=='1'){
+            p.pb(i+1);
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ct=p.size();
+    int ans1=min(n,2*ct);
+    int ans2=0;
+    int idx=0,k=0;
+    for(int i=1;i<=ans1;i++){
+        if(idx<ct and p[idx]==i){
+            idx++;
+            k++;
+        }
+        else{
+            int ans=(i+1)/2;
+            if(k<ans){
+                ans2+=p[idx]-i;
+                idx++;
+                k++;
+            }
+        }
+    }
+    cout<<ans1<<" "<<ans2<<endl;
 }
 
 int32_t main()

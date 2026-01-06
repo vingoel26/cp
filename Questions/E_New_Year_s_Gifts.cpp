@@ -4,7 +4,7 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
@@ -65,36 +65,51 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    int n,m,k;
+    cin>>n>>m>>k;
+    vi a(m),x(n),y(n),z(n);
+    vin(a);
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        cin>>x[i]>>y[i]>>z[i];
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int s=accumulate(all(y),0LL);
+    if(s>k){
+        cout<<0<<endl;
+        return;
+    }
+    s=k-s;
+    vpi b;
+    for(int i=0;i<n;i++){
+        b.pb({x[i],z[i]-y[i]});
+    }
+    sort(all(a));
+    sort(all(b));
+    int idx=0,ans=0;
+    multiset<int>mp;
+    for(int i=0;i<m;i++){
+        while(idx<n and b[idx].ff<=a[i]){
+            mp.insert(b[idx].ss);
+            idx++;
+        }
+        if(mp.size()!=0){
+            mp.erase(prev(mp.end()));
+            ans++;
+        }
+    }
+    while(idx<n){
+        mp.insert(b[idx].ss);
+        idx++;
+    }
+    for(auto it:mp){
+        if(s>=it){
+            s-=it;
+            ans++;
+        }
+        else{
+            break;
+        }
+    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

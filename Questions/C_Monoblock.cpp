@@ -4,12 +4,12 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,6 +33,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
 
 vi fact(200001);
@@ -65,36 +66,36 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+    int n,m;
+    cin>>n>>m;
+    vi a(n+2,0);
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ans=0;
+    for(int i=1;i<=n;i++){
+        if(a[i]!=a[i+1]){
+            ans+=(n-i)*i;
+        }
+    }
+    for(int j=0;j<m;j++){
+        int i,x;
+        cin>>i>>x;
+        if(a[i]!=a[i-1]){
+            ans-=(n-i+1)*(i-1);
+        }
+        if(a[i]!=a[i+1]){
+            ans-=(n-i)*i;
+        }
+        a[i]=x;
+        if(a[i]!=a[i-1]){
+            ans+=(n-i+1)*(i-1);
+        }
+        if(a[i]!=a[i+1]){
+            ans+=(n-i)*i;
+        }
+        cout<<ans+n*(n+1)/2<<endl;
+    }
 }
 
 int32_t main()
@@ -107,7 +108,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

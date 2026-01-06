@@ -9,7 +9,7 @@
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 1; i <= n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -62,39 +62,69 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
+int merge_count(vector<int> &a, vector<int> &tmp, int l, int r) {
+    if (r - l <= 1) return 0;
 
+    int m = (l + r) / 2;
+    int inv = 0;
+
+    inv ^= merge_count(a, tmp, l, m);
+    inv ^= merge_count(a, tmp, m, r);
+
+    int i = l, j = m, k = l;
+    while (i < m || j < r) {
+        if (j == r || (i < m && a[i] < a[j])) {
+            tmp[k++] = a[i++];
+        } else {
+            tmp[k++] = a[j++];
+            inv ^= ((m - i) & 1);
+        }
+    }
+
+    for (int p = l; p < r; p++) a[p] = tmp[p];
+    return inv;
+}
+
+int check(vector<int> a) {
+    vector<int> tmp(a.size());
+    return merge_count(a, tmp, 0, a.size());
+}
 void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    vi a(n);
+    vin(a);
+    vi o,e;
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        if(i%2==1){
+            e.pb(a[i]);
+        }
+        else{
+            o.pb(a[i]);
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    vi o1=o;
+    vi e1=e;
+    vi ans(n+1);
+    sort(all(o1));
+    sort(all(e1));
+    int j=0,k=0;
+    for(int i=1;i<=n;i++){
+        if(i%2==0){
+            ans[i]=e1[j];
+            j++;
+        }
+        else{
+            ans[i]=o1[k];
+            k++;
+        }
+    }
+    if(check(e)!=check(o)){
+        swap(ans[n],ans[n-2]);
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()

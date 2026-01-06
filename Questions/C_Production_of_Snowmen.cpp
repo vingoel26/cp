@@ -67,34 +67,37 @@ void solve()
 {
     int n;
     cin>>n;
-    int mn=LLONG_MAX,mx=-LLONG_MAX;
+    vi a(n),b(n),c(n);
+    vin(a);
+    vin(b);
+    vin(c);
+    int ct=0;
     for(int i=0;i<n;i++){
-        int x,y;
-        cin>>x>>y;
-        mn=min(mn,y-x);
-        mx=max(mx,x+y);
+        bool q=true;
+        for(int j=0;j<n;j++){
+            if(a[j]>=b[(j+i)%n]){
+                q=false;
+                break;
+            }
+        }
+        if(q){
+            ct++;
+        }
     }
-    int k;
-    int c=1000000000;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? R "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    cout<<"? D "<<c<<endl;
-    cin>>k;
-    int ans1=mn-k+4*c;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    cout<<"? U "<<c<<endl;
-    cin>>k;
-    int ans2=k+mx-4*c;
-    cout<<"! "<<(ans2-ans1)/2<<" "<<(ans1+ans2)/2<<endl;
+    int ct1=0;
+    for(int i=0;i<n;i++){
+        bool q=true;
+        for(int j=0;j<n;j++){
+            if(b[j]>=c[(j+i)%n]){
+                q=false;
+                break;
+            }
+        }
+        if(q){
+            ct1++;
+        }
+    }
+    cout<<n*ct*ct1<<endl;
 }
 
 int32_t main()
