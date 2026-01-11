@@ -63,57 +63,50 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int mxlr(int l, int r, viv &sps)
-{
-    int j=30;
-    int res=0;
-    while(l<=r)
-    {
-        if(l+((1<<j)-1)<=r)
-            res=max(res,sps[l][j]),l+=(1<<j);
-        j--;
-    }
-    return res;
+int power(int x, int y){
+    if (y == 0)
+        return 1;
+    if (y % 2 == 0)
+        return power(x, y / 2) * power(x, y / 2);
+    return x * power(x, y / 2) * power(x, y / 2);
 }
 
+
+int order(int n){
+    int t = 0;
+    while (n) {
+        t++;
+        n = n / 10;
+    }
+    return t;
+}
+
+// Function to check whether the given 
+// number is Armstrong number or not
+bool armstrong(int n){
+    
+    // Calling order function
+    int x = order(n);
+    int temp = n, sum = 0;
+    while (temp) {
+        int r = temp % 10;
+        sum += power(r, x);
+        temp = temp / 10;
+    }
+
+    return (sum == n);
+}
 void solve()
 {
-    int n,i,j,m,q;
-    cin >> n >> m;
-    vi a(m+1);
-    for(i=1;i<=m;i++)
-        cin >> a[i];
-    viv sparse(m+1,vi(31,0));
-    for(i=1;i<=m;i++)
-        sparse[i][0]=a[i];
-    for(j=1;j<=30;j++)
-        for(i=1;i+(1<<(j-1))<=m;i++)
-            sparse[i][j]=max(sparse[i][j-1],sparse[i+(1<<(j-1))][j-1]);
-    cin >> q;
-    while(q--)
-    {
-        int xs,ys,xe,ye,k,mxx,l=0,r=n,mid;
-        cin >> xs >> ys >> xe >> ye >> k;
-        while(r-l>1)
-        {
-            mid=(l+r)/2;
-            if(xs+k*mid<=n)
-                l=mid;
-            else
-                r=mid-1;
+    int l,r;
+    cin>>l>>r;
+    int ans=0;
+    for(int i=l;i<=r;i++){
+        if(armstrong(i)){
+            ans++;
         }
-        if(xs+k*r<=n)
-            mxx=xs+k*r;
-        else
-            mxx=xs+k*(r-1);
-        if(ye<ys){
-            swap(ye,ys);
-        }
-        if(mxx>mxlr(ys,ye,sparse) && abs(ye-ys)%k==0 && abs(mxx-xe)%k==0)
-            cout << "YES\n";
-        else
-            cout << "NO\n";
     }
+    cout<<ans<<endl;
 }
 
 int32_t main()

@@ -63,56 +63,64 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int mxlr(int l, int r, viv &sps)
-{
-    int j=30;
-    int res=0;
-    while(l<=r)
-    {
-        if(l+((1<<j)-1)<=r)
-            res=max(res,sps[l][j]),l+=(1<<j);
-        j--;
-    }
-    return res;
+void query(int n,int k, vi &p, vi &d){
+    int dir=1;
+        viv vis(n,vi(2,0));
+        int pst;
+        cin>>pst;
+        int t=0;
+        while(true){
+            int id=-1;
+            if(dir==1){
+                id=lower_bound(all(p),pst)-p.begin();
+                if(id==n){
+                    yah
+                    return;
+                }
+            }
+            else{
+                id=upper_bound(all(p),pst)-p.begin()-1;
+                if(id<0){
+                    yah
+                    return;
+                }
+            }
+            int d1=abs(pst-p[id]);
+            t+=d1;
+            pst=p[id];
+            if(((t-d[id])%k+k)%k==0){
+                if(dir==1){
+                    if(vis[id][0]==1){
+                        nah
+                        return;
+                    }
+                    vis[id][0]=1;
+                    dir=-1;
+                }
+                else{
+                    if(vis[id][1]==1){
+                        nah
+                        return;
+                    }
+                    vis[id][1]=1;
+                    dir=1;
+                }
+            }
+            pst+=dir;
+            t++;
+        }
 }
-
 void solve()
 {
-    int n,i,j,m,q;
-    cin >> n >> m;
-    vi a(m+1);
-    for(i=1;i<=m;i++)
-        cin >> a[i];
-    viv sparse(m+1,vi(31,0));
-    for(i=1;i<=m;i++)
-        sparse[i][0]=a[i];
-    for(j=1;j<=30;j++)
-        for(i=1;i+(1<<(j-1))<=m;i++)
-            sparse[i][j]=max(sparse[i][j-1],sparse[i+(1<<(j-1))][j-1]);
-    cin >> q;
-    while(q--)
-    {
-        int xs,ys,xe,ye,k,mxx,l=0,r=n,mid;
-        cin >> xs >> ys >> xe >> ye >> k;
-        while(r-l>1)
-        {
-            mid=(l+r)/2;
-            if(xs+k*mid<=n)
-                l=mid;
-            else
-                r=mid-1;
-        }
-        if(xs+k*r<=n)
-            mxx=xs+k*r;
-        else
-            mxx=xs+k*(r-1);
-        if(ye<ys){
-            swap(ye,ys);
-        }
-        if(mxx>mxlr(ys,ye,sparse) && abs(ye-ys)%k==0 && abs(mxx-xe)%k==0)
-            cout << "YES\n";
-        else
-            cout << "NO\n";
+    int n,k;
+    cin>>n>>k;
+    vi p(n),d(n);
+    vin(p);
+    vin(d);
+    int q;
+    cin>>q;
+    while(q--){
+        query(n,k,p,d);
     }
 }
 
@@ -126,7 +134,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

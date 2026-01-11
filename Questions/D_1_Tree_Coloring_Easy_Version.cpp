@@ -63,57 +63,57 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int mxlr(int l, int r, viv &sps)
-{
-    int j=30;
-    int res=0;
-    while(l<=r)
-    {
-        if(l+((1<<j)-1)<=r)
-            res=max(res,sps[l][j]),l+=(1<<j);
-        j--;
-    }
-    return res;
-}
 
 void solve()
 {
-    int n,i,j,m,q;
-    cin >> n >> m;
-    vi a(m+1);
-    for(i=1;i<=m;i++)
-        cin >> a[i];
-    viv sparse(m+1,vi(31,0));
-    for(i=1;i<=m;i++)
-        sparse[i][0]=a[i];
-    for(j=1;j<=30;j++)
-        for(i=1;i+(1<<(j-1))<=m;i++)
-            sparse[i][j]=max(sparse[i][j-1],sparse[i+(1<<(j-1))][j-1]);
-    cin >> q;
-    while(q--)
-    {
-        int xs,ys,xe,ye,k,mxx,l=0,r=n,mid;
-        cin >> xs >> ys >> xe >> ye >> k;
-        while(r-l>1)
-        {
-            mid=(l+r)/2;
-            if(xs+k*mid<=n)
-                l=mid;
-            else
-                r=mid-1;
-        }
-        if(xs+k*r<=n)
-            mxx=xs+k*r;
-        else
-            mxx=xs+k*(r-1);
-        if(ye<ys){
-            swap(ye,ys);
-        }
-        if(mxx>mxlr(ys,ye,sparse) && abs(ye-ys)%k==0 && abs(mxx-xe)%k==0)
-            cout << "YES\n";
-        else
-            cout << "NO\n";
+    int n;
+    cin>>n;
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
+    vector<int> parent(n + 1, -1);
+    vector<int> level(n + 1, -1);
+    viv levels;
+    queue<int> q;
+    q.push(1);
+    level[1] = 0;
+    parent[1] = 0;
+    while (!q.empty()) {
+        int sz = q.size();
+        vector<int> curr_level;
+        for (int i = 0; i < sz; ++i) {
+            int node = q.front(); q.pop();
+            curr_level.pb(node);
+            for (int nei : adj[node]) {
+                if (level[nei] == -1) {
+                    level[nei] = level[node] + 1;
+                    parent[nei] = node;
+                    q.push(nei);
+                }
+            }
+        }
+        if (!curr_level.empty()) levels.pb(curr_level);
+    }
+    int ans=0;
+    for(int i=0;i<levels.size();i++){
+        int ct=0;
+        for(int j=0;j<levels[i].size();j++){
+            if(parent[levels[i][j]]==parent[levels[i][0]]){
+                ct++;
+            }
+        }
+        if(ct==levels[i].size()){
+            ans=max(ans,(int)levels[i].size()+1);
+        }
+        else{
+            ans=max(ans,(int)levels[i].size());
+        }
+    }
+    cout<<ans<<endl;
 }
 
 int32_t main()
@@ -126,7 +126,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

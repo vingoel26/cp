@@ -63,57 +63,27 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-int mxlr(int l, int r, viv &sps)
-{
-    int j=30;
-    int res=0;
-    while(l<=r)
-    {
-        if(l+((1<<j)-1)<=r)
-            res=max(res,sps[l][j]),l+=(1<<j);
-        j--;
-    }
-    return res;
-}
 
 void solve()
 {
-    int n,i,j,m,q;
-    cin >> n >> m;
-    vi a(m+1);
-    for(i=1;i<=m;i++)
-        cin >> a[i];
-    viv sparse(m+1,vi(31,0));
-    for(i=1;i<=m;i++)
-        sparse[i][0]=a[i];
-    for(j=1;j<=30;j++)
-        for(i=1;i+(1<<(j-1))<=m;i++)
-            sparse[i][j]=max(sparse[i][j-1],sparse[i+(1<<(j-1))][j-1]);
-    cin >> q;
-    while(q--)
-    {
-        int xs,ys,xe,ye,k,mxx,l=0,r=n,mid;
-        cin >> xs >> ys >> xe >> ye >> k;
-        while(r-l>1)
-        {
-            mid=(l+r)/2;
-            if(xs+k*mid<=n)
-                l=mid;
-            else
-                r=mid-1;
-        }
-        if(xs+k*r<=n)
-            mxx=xs+k*r;
-        else
-            mxx=xs+k*(r-1);
-        if(ye<ys){
-            swap(ye,ys);
-        }
-        if(mxx>mxlr(ys,ye,sparse) && abs(ye-ys)%k==0 && abs(mxx-xe)%k==0)
-            cout << "YES\n";
-        else
-            cout << "NO\n";
+    int n,m,k;
+    cin>>n>>m>>k;
+    if(k-1<n-k){
+        k=n+1-k;
     }
+    int a=0,b=0;
+    while(true){
+        if(b<n-k && a+(b+1)+max(a,b+1)-1<=m){
+            b++;
+        }
+        if(a<k-1&&(a+1)+b+max(a+1,b)-1<=m){
+            a++;
+        }
+        else{
+            break;
+        }
+    }
+    cout<<a+b+1<<endl;
 }
 
 int32_t main()
@@ -126,7 +96,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();
