@@ -1,92 +1,70 @@
 #include <bits/stdc++.h>
-#define int long long
-#define inp(n) \
-    int n;     \
-    cin >> n
-#define vin(a) \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cin >> a[i];            \
-    }
-#define vout(a) \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cout << a[i] << ' ';    \
-    }
-#define pb push_back
-#define ff first
-#define ss second
-#define viv vector<vector<int>>
-#define nah cout << "NO\n";
-#define yah cout << "YES\n";
-#define be begin()
-#define en end()
-#define all(x) x.begin(), x.end()
-#define rall(x) x.rbegin(), x.rend()
-#define fast \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);                    \
-    cout.tie(NULL);
-#define vi vector<int>
-#define vpi vector<pair<int, int>>
-#define up upper_bound
-#define low lower_bound
-#define mod 1000000007
 using namespace std;
 
-/*
-========================================
-Author:         Vinayak Goel
-Institution:    IIITL
-May the WA avoid you
-========================================
-*/
-const int N = 2*1e5 + 9;
-bool vis[N];
-viv df(N);
-vi ct(N,0);
-void dfs(int u)
-{
-    vis[u] = true;
-    for (auto v : df[u])
-    {
-        if (!vis[v])
-        {
-            dfs(v);
-            ct[u]+=1;
-            ct[u]+=ct[v];
-        }
-    }
-}
-void solve()
-{
+int main() {
     int n;
     cin >> n;
-    for (int i = 2; i <= n; i++)
-    {
-        int x;
-        cin >> x;
-        df[i].pb(x);
-        df[x].pb(i);
+    vector<int> at(n), bt(n), rt(n), ct(n), wt(n), tat(n);
+    for(int i = 0; i < n; i++) {
+        cin >> at[i] >> bt[i];
+        rt[i] = bt[i]; 
     }
-    for (int u = 1; u <= n; u++)
-    {
-        if (!vis[u])
-        {
-            dfs(u);
+    int count = 0, t = 0;
+    while(count < n) {
+        int idx = -1;
+        int min_rt = 1000000000;
+        for(int i = 0; i < n; i++) {
+            if(at[i] <= t && rt[i] > 0 && rt[i] < min_rt) {
+                min_rt = rt[i];
+                idx = i;
+            }
+        }
+        if(idx == -1) {
+            t++;
+            continue;
+        }
+        rt[idx]--;
+        t++;
+        if(rt[idx] == 0) {
+            count++;
+            ct[idx] = t;
+            tat[idx] = ct[idx] - at[idx];
+            wt[idx]  = tat[idx] - bt[idx];
         }
     }
-    for(int i=1;i<=n;i++){
-        cout<<ct[i]<<" ";
+    cout << "SJF PREEMPTIVE"<<endl;
+    cout << "P  AT  BT  CT  WT  TAT"<<endl;
+    for(int i = 0; i < n; i++) {
+        cout << "P" << i+1 << "  "<< at[i] << "  "<< bt[i] << "  "<< ct[i] << "  "<< wt[i] << "  "<< tat[i] << endl;
     }
-}
-int32_t main()
-{
-    fast int t = 1;
-    // cin >> t;
-    while (t--)
-    {
-        solve();
+    vector<int> ct2(n), wt2(n), tat2(n);
+    vector<bool> vis(n,false);
+    int count1 = 0;
+    t = 0;
+    while(count1 < n) {
+        int idx = -1;
+        int min_bt = 1000000000;
+        for(int i = 0; i < n; i++) {
+            if(at[i] <= t && !vis[i] && bt[i] < min_bt) {
+                min_bt = bt[i];
+                idx = i;
+            }
+        }
+        if(idx == -1) {
+            t++;
+            continue;
+        }
+        t += bt[idx];
+        ct2[idx] = t;
+        tat2[idx] = ct2[idx] - at[idx];
+        wt2[idx] = tat2[idx] - bt[idx];
+        vis[idx] = true;
+        count1++;
+    }
+    cout <<"SJF NON-PREEMPTIVE"<<endl;
+    cout << "P  AT  BT  CT  WT  TAT"<<endl;
+    for(int i = 0; i < n; i++) {
+        cout << "P" << i+1 << "  "<< at[i] << "  "<< bt[i] << "  "<< ct2[i] << "  "<< wt2[i] << "  "<< tat2[i] << endl;
     }
     return 0;
 }

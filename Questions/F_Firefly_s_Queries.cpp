@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -62,29 +68,56 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
-void solve()
-{
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
+int sum(int idx,vi &pre,vi& v,int n){
+    if(idx%n==0){
+        return pre[n-1]*(idx/n);
     }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+    else{
+        int cycle = idx/n;
+        int preSum = pre[n-1]*cycle;
+        idx = idx%n;
+        idx--;
+        if(cycle==0){
+            return pre[idx];
+        }
+        int start = pre[n-1]-pre[cycle-1];
+        int remVal = n-cycle;
+        if(idx<remVal){
+            return preSum+pre[idx+cycle]-pre[cycle-1];
+        }
+        else{
+            int total = preSum + start;
+            idx-=remVal;
+            total += pre[idx];
+            return total;
         }
     }
-    cout<<ans<<endl;
+}
+ 
+ 
+void solve(){
+    int n,q;
+    cin>>n>>q;
+    vi v(n);
+    vin(v);
+    vi pre(n,0);
+    pre[0]=v[0];
+    for(int i=1;i<n;i++){
+        pre[i]=pre[i-1]+v[i];
+    }
+    while(q--){
+        int l,r;
+        cin>>l>>r;
+        if(l==1){
+            cout<<sum(r,pre,v,n)<<endl;
+            continue;
+        }
+        int r1 = sum(r,pre,v,n);
+        int l1 = sum(l-1,pre,v,n);
+        cout<<r1-l1<<endl;
+    }    
+ 
+ 
 }
 
 int32_t main()

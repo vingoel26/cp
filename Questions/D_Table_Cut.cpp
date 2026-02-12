@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -65,26 +71,71 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
+    int n,m ;
+    cin>>n>>m;
+    viv a(n,vi(m));
+    int ct=0;
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
+        for(int j=0;j<m;j++){
+            cin>>a[i][j];
+            if(a[i][j]==1){
+                ct++;
             }
         }
     }
-    cout<<ans<<endl;
+    if(ct<=1){
+        cout<<0<<endl;
+        for(int i=0;i<min(n,m);i++){
+            cout<<"DR";
+        }
+        if(n>m){
+            for(int i=0;i<n-m;i++){
+                cout<<'D';
+            }
+        }
+        else{
+            for(int i=0;i<m-n;i++){
+                cout<<'R';
+            }
+        }
+        cout<<endl;
+        return;
+    }
+    int ct1=ct;
+    ct=ct/2;
+    int k=-1,k1=-1;
+    for(int i=0;i<n;i++){
+        bool q=false;
+        for(int j=m-1;j>=0;j--){
+            if(a[i][j]==1){
+                ct--;
+            }
+            if(ct==0){
+                q=true;
+                k1=j;
+                break;
+            }
+        }
+        if(q){
+            k=i;
+            break;
+        }
+    }
+    cout<<(ct1/2)*(ct1-ct1/2)<<endl;
+    for(int i=0;i<k;i++){
+        cout<<'D';
+    }
+    for(int i=0;i<k1;i++){
+        cout<<'R';
+    }
+    cout<<'D';
+    for(int i=k1;i<m;i++){
+        cout<<'R';
+    }
+    for(int i=k+1;i<n;i++){
+        cout<<'D';
+    }
+    cout<<endl;
 }
 
 int32_t main()

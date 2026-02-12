@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -65,23 +71,24 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
     vi a(n);
     vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+    int ans=0;
+    int mx=a[0]+k,mn=a[0]-k;
+    bool q=true;
+    for(int i=1;i<n;i++){
+        if(a[i]>mx or a[i]<mn){
+            ans++;
+            if(i<n-1){
+                mx=a[i+1]+k;
+                mn=a[i+1]-k;
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+        }
+        else{
+            mx=min(a[i]+k,mx);
+            mn=max(a[i]-k,mn);
         }
     }
     cout<<ans<<endl;

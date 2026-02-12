@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -67,24 +73,53 @@ void solve()
 {
     int n;
     cin>>n;
-    vi a(n);
+    vi a(n),b(n);
     vin(a);
-    map<int,int> mp;
+    vin(b);
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+        if(b[i]<a[i]){
+            nah;
+            return;
         }
     }
-    cout<<ans<<endl;
+    stack<int> st,st1;
+    vi r(n),l(n);
+    for(int i=0;i<n;i++){
+        while(!st.empty() and a[st.top()]<a[i]){
+            st.pop();
+        }
+        if(st.empty()){
+            l[i]=-1;
+        }
+        else{
+            l[i]=st.top();
+        }
+        st.push(i);
+    }
+    for(int i=n-1;i>=0;i--){
+        while(!st1.empty() and a[st1.top()]<a[i]){
+            st1.pop();
+        }
+        if(st1.empty()){
+            r[i]=n;
+        }
+        else{
+            r[i]=st1.top();
+        }
+        st1.push(i);
+    }
+    int ct=0;
+    for(int i=0;i<n;i++){
+        while(ct<n and b[ct]==a[i] and ct>l[i] and ct<r[i]){
+            ct++;
+        }
+    }
+    if(ct==n){
+        yah
+    }
+    else{
+        nah
+    }
 }
 
 int32_t main()

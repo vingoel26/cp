@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -65,26 +71,43 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
+    int n,k;
+    cin>>n>>k;
+    string s,t;
+    cin>>s>>t;
+    int j=n-1;
+    vector<int> d(n,0);
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
+        d[i]=i;
+    } 
+    int kmx=0;
+    int i=n-1;
+    while(i>=0){
+        if(s[i]==t[j]){
+            d[i]=max(d[i],j);
+            kmx=max(kmx,j-i);
+            j--;
+        } 
+        else{
+            i--;
+        }
+        i=min(i,j);
     }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
+    if(j>=0 or kmx>k){
+        cout<<"-1"<<endl;
+        return;
+    }
+    cout<<kmx<<endl;
+    for(int i=0;i<kmx;i++){
+        for(int j=n-1;j>=0;j--){
+            if(d[j]!=j){
+                s[j+1]=s[j];
+                d[j+1]=d[j];
+                d[j]=j;
             }
         }
+        cout<<s<<endl;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main()

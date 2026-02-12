@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,9 +35,13 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
-vi fact(200001);
+// vi fact(200001);
 
 int binExpo(int a, int b, int m){
     if(b == 0) return 1;
@@ -47,13 +53,13 @@ int binExpo(int a, int b, int m){
     }
 }
 
-int nCr(int n, int r){
-    if(r > n) return 0;
-    int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
-    return res;
-}
+// int nCr(int n, int r){
+//     if(r > n) return 0;
+//     int res = fact[n];
+//     res = (res * binExpo(fact[r], mod-2, mod)) % mod;
+//     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+//     return res;
+// }
 
 /*
 ========================================
@@ -63,28 +69,51 @@ May the WA avoid you
 ========================================
 */
 
+
+
+void sieve(int n,vector<vector<int>> &fact){
+    fact.resize(n+1);
+    for(int i=1;i<=n;i++){
+        for(int j=i;j<=n;j+=i){
+            fact[j].push_back(i);
+        }
+    }
+}
+ 
 void solve()
 {
     int n;
     cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
+    vi v(n);
+    vin(v);
+    viv fact;
+    sieve(n,fact);
+    set<pair<int,int>> st;
+    vi mp(n+1,0);
+    int s = 0;
+    int s1 = 0;
+    int mx1 = 0;
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+        s = __gcd(s,v[i]);
+        for(int j=0;j<fact[v[i]].size();j++){
+            if(fact[v[i]][j]==1){
+                continue;
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
+            if(fact[v[i]][j]<=n){
+                mp[fact[v[i]][j]]++;
+                if(mp[fact[v[i]][j]]<=i){
+                    mx1 = max(mx1,mp[fact[v[i]][j]]);
+                }
             }
         }
+        if(s!=s1){
+            mx1 = i;
+        }
+        s1 = s;
+        cout<<mx1<<" ";
     }
-    cout<<ans<<endl;
+    cout<<endl;
+    
 }
 
 int32_t main()

@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -62,29 +68,51 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+vi poss(vi &a,int n, int x){
+    multiset<int> se;
+    for(int i=0;i<n;i++){
+        se.insert(a[i]);
+    }
+    vi ans;
+    while(!se.empty()){
+        auto it=se.end();
+        it--;
+        int mx=*it;
+        se.erase(it);
+        if(se.find(x-mx)==se.end()){
+            return {};
+        }
+        auto it1=se.find(x-mx);   
+        ans.pb(mx);
+        ans.pb(x-mx);
+        se.erase(it1);
+        mx=max(mx,x-mx);
+        x=mx;
+    }
+    return ans;
+}
 void solve()
 {
     int n;
     cin>>n;
+    n=2*n;
     vi a(n);
     vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+    sort(all(a));
+    int mx=a[n-1];
+    for(int i=0;i<n-1;i++){
+        int x=mx+a[i];
+        vi k=poss(a,n,x);
+        if(k.size()==n){
+            yah
+            cout<<x<<endl;
+            for(int j=0;j<n/2;j++){
+                cout<<k[2*j]<<" "<<k[2*j+1]<<endl;
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+            return;
         }
     }
-    cout<<ans<<endl;
+    nah
 }
 
 int32_t main()

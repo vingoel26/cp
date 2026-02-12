@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
-#define int long long
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define ll long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -63,29 +69,29 @@ May the WA avoid you
 ========================================
 */
 
-void solve()
-{
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+void solve() {
+        int k1, z;
+        cin >> k1 >> z;
+        vector<ll> p(k1);
+        for (int i = 0; i < k1; ++i) {
+            cin >> p[i];
+        }
+        for (int q = 0; q < z; ++q) {
+            ll x, T;
+            cin >> x >> T;
+            int result = 0;
+            for (ll start : p) {
+                ll diff = x - start;
+                if (abs(diff) > T) continue;
+                if ((T + diff) % 2 != 0) continue;
+                ll k = (T + diff) / 2;
+                if ((T & k) == k) {
+                    result ^= 1;
+                }
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+            cout << result << endl;
         }
     }
-    cout<<ans<<endl;
-}
 
 int32_t main()
 {

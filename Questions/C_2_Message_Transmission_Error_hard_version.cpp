@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -54,7 +60,24 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
+vector<int> z_function(string s) {
+    int n = s.size();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for(int i = 1; i < n; i++) {
+        if(i < r) {
+            z[i] = min(r - i, z[i - l]);
+        }
+        while(i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+            z[i]++;
+        }
+        if(i + z[i] > r) {
+            l = i;
+            r = i + z[i];
+        }
+    }
+    return z;
+}
 /*
 ========================================
 Author:         Vinayak Goel
@@ -62,29 +85,22 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+    string s;
+    cin>>s;
+    vi z=z_function(s);
+    int n=s.size();
+    for(int i=1;i<n;i++){
+        if(z[i]==n-i && z[i]>i){
+            yah
+            for(int j=i;j<n;j++){
+                cout<<s[j];
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+            return;
         }
     }
-    cout<<ans<<endl;
+    nah
 }
 
 int32_t main()
@@ -95,9 +111,8 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

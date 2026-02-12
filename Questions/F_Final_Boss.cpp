@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -62,26 +68,41 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+bool check(int m,vi &a,vi &b,int n,int h){
+    int dmg=0;
+    for(int i=0;i<n;i++){
+        if((((m-1)/b[i])+1)>=h){
+            return true;
+        }
+        dmg+=a[i]*(((m-1)/b[i])+1);
+        if(dmg>=h){
+            return true;
+        }
+    }
+    if(dmg>=h){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
+    int n,h;
+    cin>>h>>n;
+    vi a(n),b(n);
     vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+    vin(b);
+    int l=1,r=1e18;
+    int ans=0;
+    while(l<=r){
+        int m=(l+r)/2;
+        if(check(m,a,b,n,h)){
+            ans=m;
+            r=m-1;
+        }
+        else{
+            l=m+1;
         }
     }
     cout<<ans<<endl;

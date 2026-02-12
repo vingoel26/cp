@@ -34,33 +34,7 @@
 #define mod 1000000007
 using namespace std;
 
-vi fact(200001);
 
-int binExpo(int a, int b, int m){
-    if(b == 0) return 1;
-    if(b % 2 == 0){
-        int res = binExpo(a, b/2, m);
-        return (res * res) % m;
-    } else {
-        return (a * binExpo(a, b-1, m)) % m;
-    }
-}
-
-int nCr(int n, int r){
-    if(r > n) return 0;
-    int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
-    return res;
-}
-
-/*
-========================================
-Author:         Vinayak Goel
-Institution:    IIITL
-May the WA avoid you
-========================================
-*/
 
 void solve()
 {
@@ -122,12 +96,6 @@ void solve()
 int32_t main()
 {
     fast
-    // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
-
     int t = 1;
     cin >> t;
     while (t--)

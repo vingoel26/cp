@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -65,26 +71,50 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
+    int n,m;
+    cin>>n>>m;
+    vector<string> v(n);
+    vi a(26),c(26);
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+        cin>>v[i];
+        int m1=v[i].size();
+        for(int j=0;j<m1;j++){
+            a[v[i][j]-'A']++;
+            c[v[i][j]-'A']++;
         }
     }
-    cout<<ans<<endl;
+    for(int j=0;j<26;j++){
+        a[j]*=m;
+    }
+    for(int i=0;i<n;i++){
+        vi b=a;
+        vi d=c;
+        int m1=v[i].size();
+        bool ch=false;
+        for(int j=0;j<m1;j++){
+            b[v[i][j]-'A']-=m;
+            if(b[v[i][j]-'A']<=0){
+                ch=true;
+                break;
+            }
+            b[v[i][j]-'A']--;
+            d[v[i][j]-'A']--;
+        }
+        if(ch==true) {
+            cout<<-1<<" ";
+        }
+        else{
+            int mn=m;
+            for(int j=0;j<26;j++){
+                if(d[j]==0) {
+                    continue;
+                }
+                int m2=b[j]/d[j];
+                mn=min(mn,m2);
+            }
+            cout<<mn<<" ";
+        }
+    }
 }
 
 int32_t main()
@@ -97,7 +127,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

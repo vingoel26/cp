@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -65,23 +71,67 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
+    int n,k;
+    cin>>n>>k;
     vi a(n);
     vin(a);
-    map<int,int> mp;
+    map<int,vi> mp;
     for(int i=0;i<n;i++){
-        mp[a[i]]++;
+        mp[a[i]%k].pb(a[i]/k);
     }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+    int ct1=0,ct2=0;
+    for(auto &it:mp){
+        sort(all(it.ss));
+        if(it.ss.size()%2==0){
+            ct1++;
+        }
+        else{
+            ct2++;
+        }
+    }
+    if(ct2>1){
+        cout<<-1<<endl;
+        return;
+    }
+    int ans=0;
+    for(auto it:mp){
+        vi a1=it.ss;
+        int n1=it.ss.size();
+        if(a1.size()%2==0){
+            for(int i=0;i<a1.size();i=i+2){
+                ans+=a1[i+1]-a1[i];
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
+        }
+        else{
+            vi pr1(n1,0),pr2(n1,0);
+            pr1[0]=-a1[0];
+            pr2[0]=a1[0];
+            for(int i=1;i<n1;i++){
+                if(i%2==1){
+                    pr1[i]=pr1[i-1]+a1[i];
+                }
+                else{
+                    pr1[i]=pr1[i-1]-a1[i];
+                }
             }
+            for(int i=1;i<n1;i++){
+                if(i%2==1){
+                    pr2[i]=pr2[i-1]-a1[i];
+                }
+                else{
+                    pr2[i]=pr2[i-1]+a1[i];
+                }
+            }
+            int ans1=LLONG_MAX;
+            for(int i=0;i<n1;i++){
+                int l=0;
+                if(i>0){
+                    l=pr1[i-1];
+                }
+                int r=pr2[n1-1]-pr2[i];
+                ans1=min(ans1,l+r);
+            }
+            ans+=ans1;
         }
     }
     cout<<ans<<endl;

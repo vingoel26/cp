@@ -1,15 +1,17 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 #define int long long
 #define inp(n) \
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < n; ++i) \
+    for (int i = 0; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -33,7 +35,11 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
+#define mod 998244353
 using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
 vi fact(200001);
 
@@ -62,29 +68,59 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
-void solve()
-{
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
+vector<int> printDivisors(int n) {
+    vector<int>divisors;
+    for (int i = 1; i*i <= n; i++) {
+        if (n % i == 0) {
+            if (n / i == i) {
+                divisors.push_back(i) ;
             }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
+            else {
+                divisors.push_back(i) ;
+                divisors.push_back(n/i) ;
             }
         }
     }
-    cout<<ans<<endl;
+    return divisors;
+}
+void solve()
+{
+    int n,m;
+    cin>>n>>m;
+    vi a(n);
+    vin(a);
+    map<int,vector<int>> mp;
+    for(int i=0;i<n;i++){
+        mp[a[i]].pb(i);
+    }
+    while(m--){
+        int k,l,r;
+        cin>>k>>l>>r;
+        vi fat=printDivisors(k);
+        vpi di;
+        for(int j = 0; j < fat.size(); j++) {
+            int d = fat[j];
+            if(mp.count(d)) {
+                auto& vec = mp[d];
+                auto it = lower_bound(vec.begin(), vec.end(), l-1);
+                if(it != vec.end() && *it <= r-1) {
+                    di.pb({*it,d});        
+                }
+            }
+        }
+        sort(all(di));
+        int ans=0;
+        int prev=l-1;
+        for(int i=0;i<di.size();i++){
+            ans+=(di[i].ff-prev)*k;
+            while(k%di[i].ss==0){
+                k/=di[i].ss;
+            }
+            prev=di[i].ff;
+        }
+        ans+=(r-prev)*k;
+        cout<<ans<<endl;
+    }
 }
 
 int32_t main()

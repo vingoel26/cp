@@ -19,7 +19,6 @@
 #define viv vector<vector<int>>
 #define nah cout << "NO\n";
 #define yah cout << "YES\n";
-#define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
 #define all(x) x.begin(), x.end()
@@ -65,26 +64,30 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    map<int,int> mp;
-    for(int i=0;i<n;i++){
-        mp[a[i]]++;
-    }
-    int ans=0,mx=*max_element(all(a));
-    for(int i=0;i<n;i++){
-        for(int j=1;j*j*a[i]<=mx;j++){
-            if(j==1){
-                ans+=(mp[a[i]]-1)*(mp[a[i]]-2);
-            }
-            else{
-                ans+=mp[a[i]*j]*mp[a[i]*j*j];
-            }
+    int n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    int i=1;
+    int j=0;
+    while(i<n){
+        if(s[i]>s[j]){
+            break;
+        }
+        if(s[i]<s[j]){
+            j=0;
+            i++;
+        }
+        else{
+            i++;
+            j++;
         }
     }
-    cout<<ans<<endl;
+    int sz=i-j;
+    for(int i=0;i<k;i++){
+        cout<<s[i%sz];
+    }
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,9 +98,8 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();
