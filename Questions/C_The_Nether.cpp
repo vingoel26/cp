@@ -71,18 +71,41 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
+    int n;
+    cin >> n;
+    map<int,vector<int> >  ans;
+    int ans1=0;
+    for (int i=1;i<=n;i++){
+        cout << "? " << i << " "<< n << " ";
+        for (int j=1;j<=n;j++){
+            cout << j << " ";
+        }
+        cout << endl;
         int x;
-        cin>>x;
-        a.pb(x);
+        cin >> x;
+        ans[x].push_back(i);
+        ans1=max(ans1,x);
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    int lst=ans[ans1][0];
+    vector<int> ans2;
+    ans2.push_back(lst);
+    for (int i=ans1-1;i>0;i--){
+        for (int j=0;j<ans[i].size();j++){
+            cout << "? "<< lst << " 2 " << lst << " " << ans[i][j] << endl;
+            int x;
+            cin >> x;
+            if (x==2){
+                lst=ans[i][j];
+                ans2.push_back(lst);
+                break;
+            }
+        }
     }
-    cout<<s<<endl;
+    cout << "! "<< ans1 << " ";
+    for (int i=0;i<ans2.size();i++){
+        cout << ans2[i] << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
@@ -95,7 +118,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

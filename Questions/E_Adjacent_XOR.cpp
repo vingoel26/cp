@@ -71,18 +71,32 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    vi b(n);
+    vin(b);
+    if(a[n-1]!=b[n-1]){
+        nah
+        return;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(int i=0;i<n-1;i++){
+        if(a[i]==b[i]){
+            continue;
+        }
+        if((a[i]^a[i+1])==b[i]){
+            continue;
+        }
+        if((a[i]^b[i+1])==b[i]){
+            continue;
+        }
+        else{
+            nah
+            return;
+        }
     }
-    cout<<s<<endl;
+    yah
 }
 
 int32_t main()
@@ -95,7 +109,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

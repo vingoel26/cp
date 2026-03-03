@@ -71,18 +71,22 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    vector<string> a(n);
+    vin(a);
+    int mnr=n,mnc=m,mxr=-1,mxc=-1;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(a[i][j]=='#'){
+                mnr=min(mnr,i);
+                mnc=min(mnc,j);
+                mxr=max(mxr,i);
+                mxc=max(mxc,j);
+            }
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
+    cout<<((mnr+mxr)/2)+1<<" "<<(mnc+mxc)/2+1<<endl;
 }
 
 int32_t main()
@@ -95,7 +99,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

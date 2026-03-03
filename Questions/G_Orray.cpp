@@ -71,18 +71,38 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    vi used(n);
+    int orr=0;
+    for(int i=0;i<min(n,32LL);i++){
+        int orr1=orr;
+        int idx=-1;
+        int mxor=orr;
+        for(int j=0;j<n;j++){
+            if(used[j]){
+                continue;
+            }
+            if((orr1|a[j])>mxor){
+                mxor=orr1|a[j];
+                idx=j;
+            }
+        }
+        if(idx==-1){
+            break;
+        }
+        used[idx]=1;
+        orr=mxor;
+        cout<<a[idx]<<' ';
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(int i=0;i<n;i++){
+        if(!used[i]){
+            cout<<a[i]<<' ';
+        }
     }
-    cout<<s<<endl;
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +115,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

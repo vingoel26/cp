@@ -68,21 +68,55 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+bool comp (pair<int,int> &a, pair<int,int> &b){
+    if(a.first!=b.first){return a.first<b.first;}
+    else{return a.second<b.second;}
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,k;
+    cin>>n>>k;
+    vector<int> a(n);
+    for(int i=0; i<n; i++){
+        cin>>a[i];
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    vector<int> b(n);
+    for(int i=0; i<n; i++){
+        cin>>b[i];
     }
-    cout<<s<<endl;
+    for(int i=0; i<n; i++){
+        if(a[i]<b[i]){
+            swap(a[i],b[i]);
+        }
+    }
+    vector<pair<int,int>> p;
+    for(int i=0; i<n; i++){
+        p.pb({a[i],b[i]});
+    }
+    sort(p.begin(),p.end(),comp);
+    bool flag = false;
+    for(int i=0; i<n-1; i++){
+        if(p[i].first>p[i+1].second){
+            flag = true;
+            break;
+        }
+    }
+    int sum = 0;
+    for(int i=0; i<n; i++){
+        sum+=p[i].first-p[i].second;
+    }
+    if(flag==false){
+        vector<int> v;
+        for(int i=0; i<n-1; i++){
+            int sum1 = p[i].first-p[i].second;
+            int sum2 = p[i+1].first-p[i+1].second;
+            int sum3 = p[i+1].first-p[i].first;
+            int sum4 = p[i+1].second-p[i].second;
+            v.pb(sum-(sum1+sum2)+(sum3+sum4));
+        }
+        sum = *(min_element(v.begin(),v.end()));
+    }
+    cout<<sum<<endl;
 }
 
 int32_t main()
@@ -95,7 +129,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

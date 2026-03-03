@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-#define int long long
 #define inp(n) \
     int n;     \
     cin >> n
@@ -15,6 +14,7 @@
     {                           \
         cout << a[i] << ' ';    \
     }
+#define int long long
 #define pb push_back
 #define ff first
 #define ss second
@@ -71,18 +71,35 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    double l,x,y;
+    cin>>l>>x>>y;
+    vpi bus(n);
+    for(int i=0;i<n;i++){
+        cin>>bus[i].ff>>bus[i].ss;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    sort(all(bus));
+    vector<double> prmn(n);
+    double mn=1e18;
+    for(int i=0;i<n;i++){
+        double s=bus[i].ff,t=bus[i].ss;
+        double time=(t-s)/x+(l-t)/y;
+        mn=min(mn,time);
+        prmn[i]=mn;
     }
-    cout<<s<<endl;
+    cout<<fixed<<setprecision(8);
+    for(int i=0;i<m;i++){
+        int p;
+        cin>>p;
+        double ans=(l-p)/y;
+        auto it=upper_bound(all(bus),make_pair(p,LLONG_MAX));
+        int idx=it-bus.begin()-1;
+        if(idx>=0){
+            ans=min(ans,prmn[idx]);
+        }
+        cout<<ans<<endl;
+    }
 }
 
 int32_t main()

@@ -71,18 +71,51 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
+    int q;
+    cin>>q;
+    bool a=false,b=false;
+    int ct1=0,ct2=0;
+    while(q--){
         int x;
         cin>>x;
-        a.pb(x);
+        if(x==1){
+            int k;
+            cin>>k;
+            string s;
+            cin>>s;
+            for(auto it : s){
+                if(it!='a'){
+                    a=true;
+                }
+                else{
+                    ct1=ct1+k;
+                }
+            }
+        }
+        else{
+            int k;
+            cin>>k;
+            string s;
+            cin>>s;
+            for(auto it : s){
+                if(it!='a'){
+                    b=true;
+                }
+                else{
+                    ct2=ct2+k;
+                }
+            }
+        }
+        if(b){
+            yah
+        }
+        else if(!a and ct1<ct2){
+            yah
+        }
+        else{
+            nah
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
 }
 
 int32_t main()
@@ -95,7 +128,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

@@ -71,18 +71,48 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    viv adj(n+2);
+    for(int i=0;i<n;i++){
+        int x,y;
+        cin>>x>>y;
+        adj[y].pb(x);
     }
+    vpi q(m);
+    for(int i=0;i<m;i++){
+        cin>>q[i].ff>>q[i].ss;
+    }
+    int ans=0;
+    vi a(n+2,0);
     int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    priority_queue<int,vi,greater<int>>pq;
+    for(int i=n+1;i>=1;i--){
+        for(auto x:adj[i-1]){
+            pq.push(x);
+            s+=x;
+        }
+        while(pq.size()>i){
+            s-=pq.top();
+            pq.pop();
+        }
+        if(pq.size()==i){
+            ans=max(ans,s);
+            a[i]=s-pq.top();
+        }
+        else{
+            a[i]=s;
+        }
     }
-    cout<<s<<endl;
+    vi pr(n+2,0);
+    pr=a;
+    for(int i=1;i<=n;i++){
+        pr[i]=max(pr[i-1],a[i+1]);
+    }
+    for(int i=0;i<m;i++){
+        cout<<max(ans,q[i].ff+pr[q[i].ss])<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +125,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

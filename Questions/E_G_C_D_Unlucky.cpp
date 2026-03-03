@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -45,50 +45,58 @@ May the WA avoid you
 void solve()
 {
     int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    int a=0,b=0;
-    for(int i=0;i<n;i++){
-        if(s[i]=='a'){
-            a++;
-        }
-        else{
-            b++;
+    cin >> n;
+    vi p(n), s(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> p[i];
+    }
+    for (int i = 0; i < n; i++)
+    {
+        cin >> s[i];
+    }
+    bool ok = true;
+    for (int i = 1; i < n; i++)
+    {
+        if (p[i - 1] % p[i] != 0)
+        {
+            ok = false;
+            break;
         }
     }
-    if(a==b){
-        cout<<0<<endl;
-        return;
-    }
-    vi pr(n+1,0);
-    for(int i=1;i<=n;i++){
-        int ct;
-        if(s[i-1]=='a'){
-            ct=1;
+    if (ok)
+    {
+        for (int i = 0; i + 1 < n; i++)
+        {
+            if (s[i + 1] % s[i] != 0)
+            {
+                ok = false;
+                break;
+            }
         }
-        else{
-            ct=-1;
+    }
+    if (ok and p[n - 1] != s[0])
+    {
+        ok = false;
+    }
+    if (ok)
+    {
+        for (int i = 0; i + 1 < n; i++)
+        {
+            if (__gcd(p[i], s[i + 1]) != p[n - 1])
+            {
+                ok = false;
+                break;
+            }
         }
-        pr[i]=pr[i-1]+ct;
     }
-    int d=a-b;
-    map<int,int> m;
-    m[0]=0;
-    int ans=1e9;
-    for(int i=1;i<=n;i++){
-        int d1=pr[i]-d;
-        if(m.find(d1)!=m.end()){
-            int j=m[d1];
-            ans=min(ans,i-j);
-        }
-        m[pr[i]]=i;
+    if (ok)
+    {
+        yah
     }
-    if(ans>=n){
-        cout<<-1<<endl;
-    }
-    else{
-        cout<<ans<<endl;
+    else
+    {
+        nah
     }
 }
 

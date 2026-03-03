@@ -35,7 +35,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
@@ -68,21 +68,65 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi a(n+1),b(n+1),deg(n+1,0);
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
+        deg[a[i]]++;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(int i=1;i<=n;i++){
+        cin>>b[i];
+        deg[b[i]]++;
     }
-    cout<<s<<endl;
+    for(int i=1;i<=n;i++){
+        if(deg[i]%2!=0){
+            cout<<-1<<"\n";
+            return;
+        }
+    }
+    vector<vpi> adj(n+1);
+    for(int i=1;i<=n;i++){
+        if(a[i]!=b[i]){
+            adj[a[i]].pb({b[i],i});
+            adj[b[i]].pb({a[i],-i});
+        }
+    }
+    vi vis(n+1),ans;
+    for(int i=1;i<=n;i++){
+        while(!adj[i].empty()){
+            auto [nxt,id]=adj[i].back();
+            adj[i].pop_back();
+            int id1=abs(id);
+            if(vis[id1]){ 
+                continue;
+            }
+            vis[id1]=true;
+            if(id<0){
+                ans.pb(id1);
+            }
+            int curr=nxt;
+            while(curr!=i){
+                while(!adj[curr].empty()){
+                    auto [nnxt,nid]=adj[curr].back();
+                    adj[curr].pop_back();
+                    int nid1=abs(nid);
+                    if(vis[nid1]){
+                        continue;
+                    }
+                    vis[nid1]=true;
+                    if(nid<0) ans.pb(nid1);
+                    curr=nnxt;
+                    break;
+                }
+            }
+        }
+    }
+    cout<<ans.size()<<endl;
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +139,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

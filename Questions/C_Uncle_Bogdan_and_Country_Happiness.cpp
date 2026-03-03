@@ -6,7 +6,7 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < a.size(); ++i) \
+    for (int i = 1; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
@@ -68,21 +68,50 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int u,int p,viv &adj,bool &ans,vi &a,vi &b,vi &ct,vi &ct1){
+    ct[u]=a[u];
+    int s=0;
+    for(auto v : adj[u]){
+        if(v!=p){
+            dfs(v,u,adj,ans,a,b,ct,ct1);
+            s+=ct1[v];
+            ct[u]+=ct[v];
+        }
+    }
+    if((ct[u]+b[u])%2!=0){
+        ans=false;
+    }
+    ct1[u]=(ct[u]+b[u])/2;
+    if(!(ct1[u]>=0 and ct1[u]<=ct[u])){
+        ans=false;
+    }
+    if(s>ct1[u]){
+        ans=false;
+    }
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    vi a(n+1),b(n+1);
+    vin(a);
+    vin(b);
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    bool ans=true;
+    vi ct(n+1),ct1(n+1);
+    dfs(1,0,adj,ans,a,b,ct,ct1);
+    if(ans){
+        yah
     }
-    cout<<s<<endl;
+    else{
+        nah
+    }
 }
 
 int32_t main()
@@ -95,7 +124,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

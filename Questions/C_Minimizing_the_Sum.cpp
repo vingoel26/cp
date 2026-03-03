@@ -71,18 +71,25 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
+    vin(a);
+    viv dp(n+1,vi(k+1,1e18));
+    dp[0][0]=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<=k;j++){
+            int mn=1e18;
+            for(int k1=0;k1<=k-j;k1++){
+                if(i+k1==n){
+                    break;
+                }
+                mn=min(mn,a[i+k1]);
+                dp[i+k1+1][j+k1]=min(dp[i+k1+1][j+k1],dp[i][j]+(k1+1)*mn);
+            }
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
+    cout<<*min_element(all(dp[n]))<<endl;
 }
 
 int32_t main()
@@ -95,7 +102,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

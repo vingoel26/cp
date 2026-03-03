@@ -71,18 +71,65 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    vi a(n);
+    vin(a);
+    vi b(m);
+    vin(b);
+    int mx=*max_element(all(b));
+    mx=max(mx, *max_element(all(a)));
+    int ct1=0,ct2=0,ct3=0;
+    int l=a[0];
+    bool q=true;
+    for(int i=0;i<n;i++){
+        l=(l/__gcd(l,a[i]))*a[i];
+        if(l>mx){
+            q=false;
+            break;
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    if(q){
+        for(int i=0;i<m;i++){
+            if(b[i]%l==0){
+                ct1++;
+            }
+        }
     }
-    cout<<s<<endl;
+    vi vis(mx+1,0);
+    for(int i=0;i<n;i++){
+        vis[a[i]]=1;
+    }
+    vi div(mx+1,0);
+    for(int i=1;i<=mx;i++){
+        if(vis[i] and !div[i]){
+            for(int j=i;j<=mx;j+=i){
+                div[j]=1;
+            }
+        }
+    }
+    for(int i=0;i<m;i++){
+        if(!div[b[i]] and b[i]%l!=0){
+            ct2++;
+        }
+    }
+    ct3=m-ct1-ct2;
+    if(ct3%2==0){
+        if(ct1>ct2){
+            cout<<"Alice\n";
+        }
+        else{
+            cout<<"Bob\n";
+        }
+    }
+    else{
+        if(ct1>=ct2){
+            cout<<"Alice\n";
+        }
+        else{
+            cout<<"Bob\n";
+        }
+    }
 }
 
 int32_t main()
@@ -95,7 +142,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

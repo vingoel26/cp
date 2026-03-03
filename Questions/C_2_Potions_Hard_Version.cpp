@@ -71,18 +71,29 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
-    }
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
     int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    multiset<int> ms;
+    for(int i=0;i<n;i++){
+        if(s+a[i]>=0 or a[i]>=0){
+            s+=a[i];
+            ms.insert(a[i]);
+        }
+        else{
+            auto it=ms.begin();
+            int val=*it;
+            if(a[i]>=val){
+                s+=a[i];
+                s-=val;
+                ms.erase(it);
+                ms.insert(a[i]);
+            }
+        }
     }
-    cout<<s<<endl;
+    cout<<ms.size()<<endl;
 }
 
 int32_t main()

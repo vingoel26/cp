@@ -11,7 +11,7 @@
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < a.size(); ++i) \
+    for (int i = 1; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -60,7 +60,6 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
 /*
 ========================================
 Author:         Vinayak Goel
@@ -68,21 +67,59 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int u,int p,viv &adj,vi &s,vi &dp1,vi &dp2,vi &dep,vi &a){
+    s[u]=a[u];
+    int d1=0,d2=0;
+    for(auto v:adj[u]){
+        if(v==p){
+            continue;
+        }
+        dfs(v,u,adj,s,dp1,dp2,dep,a);
+        s[u]+=s[v];
+        dp1[u]+=dp1[v]+s[v];
+        int dep1=dep[v]+1;
+        if(dep1>=d1){
+            d2=d1;
+            d1=dep1;
+        }
+        else if(dep1>=d2){
+            d2=dep1;
+        }
+    }
+    dep[u]=d1;
+    dp2[u]=dp1[u];
+    for(auto v:adj[u]){
+        if(v==p){
+            continue;
+        }
+        dp2[u]=max(dp2[u],dp1[u]-dp1[v]+dp2[v]);
+        if(dep[v]+1==d1){
+            dp2[u]=max(dp2[u],dp1[u]+s[v]*d2);
+        }
+        else{
+            dp2[u]=max(dp2[u],dp1[u]+s[v]*d1);
+        }
+    }
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi a(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    cout<<s<<endl;
+    vi s(n+1),dp1(n+1),dp2(n+1),dep(n+1);
+    dfs(1,0,adj,s,dp1,dp2,dep,a);
+    vout(dp2);
+    cout<<endl;
 }
 
 int32_t main()
@@ -93,9 +130,8 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

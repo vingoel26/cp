@@ -71,18 +71,66 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    // int n; cin >> n;
+    // vector<int>v(n);
+    // map<int,int>f;
+    // bool possible = false;
+    // for(auto &i : v){
+    //     cin >> i;
+    //     f[i]++;
+    //     if(f[i] >= 4){
+    //         possible = true;
+    //     }
+    // }
+    // if(possible){ py; return;}
+    // map<int,bool>fix;
+    // for(auto &i : f){
+    //     if(i.second >= 2 and (fix[i.first+1] || fix[i.first + 2])){
+    //         py; return;
+    //     }
+    //     if(i.second >= 1 and fix[i.first + 1]){
+    //         i.second -= 1;
+    //         fix[i.first + 2] = true;
+    //     }
+    //     else if(i.second >= 2){
+    //         i.second -= 2;
+    //         fix[i.first + 2] = true;
+    //     }
+    // }
+    // pn;
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    map<int,int>mp;
+    for(int i=0;i<n;i++){
+        mp[a[i]]++;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(auto it: mp){
+        if(it.ss>=4){
+            yah
+            return;
+        }
     }
-    cout<<s<<endl;
+    map<int,int>mp1;
+    for(auto &it: mp){
+        if(it.ss>=2){
+            if(mp1[it.ff+1] or mp1[it.ff+2]){
+                yah
+                return;
+            }
+        }
+        if(it.ss>=1 and mp1[it.ff+1]){
+            it.ss-=1;
+            mp1[it.ff+2]=1;
+        }
+        else if(it.ss>=2){
+            it.ss-=2;
+            mp1[it.ff+2]=1;
+        }
+    }
+    nah
+    cout<<"hah";
 }
 
 int32_t main()
@@ -95,7 +143,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

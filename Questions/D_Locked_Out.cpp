@@ -69,60 +69,48 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-void dfs(int u, viv &adj, vi &vis, vi &col, vi &ar,int k,map<int,int>m)
-{
-    vis[u]=1;
-    col[u]=k;
-    ar[k-1]+=m[u];
-    for(auto v : adj[u]){
-        if(!vis[v]){
-            dfs(v, adj, vis, col, ar,3-k,m);
-        }
-    }
 
-}
 void solve()
 {
     int n;
-    cin >> n;
-    vi a(n);
-    vin(a);
-    if (n == 1)
-    {
-        pt(0);
-        return;
+    cin>>n;
+    viv dp(n+1);
+    viv idx(n+1);
+    for(int i=1;i<=n;i++){
+        dp[i].pb(0);
     }
-    viv adj(n + 1);
-    map<int, int> m;
-    m[a[0]]++;
-    for (int i = 1; i < n; i++)
-    {
-        m[a[i]]++;
-        if (m[a[i] - 1] != 0)
-        {
-            for (int j = 0; j < max(m[a[i] - 1], m[a[i]]); j++)
-            {
-                adj[a[i] - 1].pb((a[i]));
-                adj[a[i]].pb((a[i] - 1));
+    for(int i=1;i<=n;i++){
+        int x;
+        cin>>x;
+        idx[x].pb(i);
+        dp[x].pb(0);
+    }
+    for(int i=n-1;i>=1;i--){
+        int s=idx[i].size();
+        int i1=0,j1=0;
+        while(i1<s and j1<idx[i+1].size()){
+            if(idx[i][i1]>idx[i+1][j1]){
+                j1++;
+            }
+            else{
+                i1++;
+                j1++;
+            }
+        }
+        for(int j=0;j<=s;j++){
+            if(j==0){
+                dp[i][j]=dp[i+1].back();
+            }
+            else{
+                if(j<=i1){
+                    dp[i][j]=dp[i+1][dp[i+1].size()-(j+1)]+j;
+                }
+                dp[i][j]=max(dp[i][j],dp[i][j-1]);
             }
         }
     }
-    //     for(int i=1;i<=n;i++){
-    //         for(auto it : adj[i]){
-    //             cout<<it<<" ";
-    //         }
-    //         cout<<endl;
-    //     }
-    // }
-    vi vis(n + 1, 0), col(n + 1), ar(2);
-    for (int i = 1; i <= n; i++)
-    {
-        if (!vis[i])
-        {
-            dfs(i, adj, vis, col, ar,1,m);
-        }
-    }
-    cout<<min(ar[0],ar[1])<<endl;
+    int ans=dp[1].back();
+    cout<<ans<<endl;
 }
 
 int32_t main()

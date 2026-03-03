@@ -3,12 +3,12 @@
 #define inp(n) \
     int n;     \
     cin >> n
-#define vin(a) \
+#define vin(a)                  \
     for (int i = 0; i < n; ++i) \
     {                           \
         cin >> a[i];            \
     }
-#define vout(a) \
+#define vout(a)                 \
     for (int i = 0; i < n; ++i) \
     {                           \
         cout << a[i] << ' ';    \
@@ -23,7 +23,7 @@
 #define en end()
 #define all(x) x.begin(), x.end()
 #define rall(x) x.rbegin(), x.rend()
-#define fast \
+#define fast                          \
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);                    \
     cout.tie(NULL);
@@ -36,21 +36,28 @@ using namespace std;
 
 vi fact(200001);
 
-int binExpo(int a, int b, int m){
-    if(b == 0) return 1;
-    if(b % 2 == 0){
-        int res = binExpo(a, b/2, m);
+int binExpo(int a, int b, int m)
+{
+    if (b == 0)
+        return 1;
+    if (b % 2 == 0)
+    {
+        int res = binExpo(a, b / 2, m);
         return (res * res) % m;
-    } else {
-        return (a * binExpo(a, b-1, m)) % m;
+    }
+    else
+    {
+        return (a * binExpo(a, b - 1, m)) % m;
     }
 }
 
-int nCr(int n, int r){
-    if(r > n) return 0;
+int nCr(int n, int r)
+{
+    if (r > n)
+        return 0;
     int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[r], mod - 2, mod)) % mod;
+    res = (res * binExpo(fact[n - r], mod - 2, mod)) % mod;
     return res;
 }
 
@@ -61,10 +68,13 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-string to_binary(unsigned int n) {
-    if (n == 0) return "0";
+string to_binary(unsigned int n)
+{
+    if (n == 0)
+        return "0";
     string s;
-    while (n) {
+    while (n)
+    {
         s.push_back('0' + (n & 1));
         n >>= 1;
     }
@@ -74,52 +84,57 @@ string to_binary(unsigned int n) {
 void solve()
 {
     int n;
-    cin>>n;
-    if(n==0){
-        yah
-        return;
+    cin >> n;
+    if (n == 0)
+    {
+        yah return;
     }
-    string s=to_binary(n);
-    for(int i=s.size();i<60;i++){
-        string s1(i-s.size(),'0');
-        s=s1+s;
-        bool q=true;
-        for(int j=0;j<i/2;j++){
-            if(s[j]!=s[i-j-1]){
-                q=false;
+    string s = to_binary(n);
+    for (int i = s.size(); i < 60; i++)
+    {
+        string s1(i - s.size(), '0');
+        s = s1 + s;
+        bool q = true;
+        for (int j = 0; j < i / 2; j++)
+        {
+            if (s[j] != s[i - j - 1])
+            {
+                q = false;
                 break;
             }
         }
-        if(q){
-            if(i%2==1){
-                if(s[i/2]=='1'){
+        if (q)
+        {
+            if (i % 2 == 1)
+            {
+                if (s[i / 2] == '1')
+                {
                     continue;
                 }
-                else{
-                    yah
-                    return;
+                else
+                {
+                    yah return;
                 }
             }
-            else{
-                yah
-                return;
+            else
+            {
+                yah return;
             }
         }
     }
     nah
-
 }
 
 int32_t main()
 {
     fast
-    // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
+        // Precompute factorials
+        // fact[0] = 1;
+        // for(int i = 1; i <= 200000; ++i){
+        //     fact[i] = (fact[i-1] * i) % mod;
+        // }
 
-    int t = 1;
+        int t = 1;
     cin >> t;
     while (t--)
     {

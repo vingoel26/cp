@@ -71,18 +71,52 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin >> n;
+    vi p(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> p[i];
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    int ans1 = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (p[i] > p[j])
+            {
+                ans1++;
+            }
+        }
     }
-    cout<<s<<endl;
+    vi ct1(n, 0), ct2(n, 0);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (p[j] < p[i])
+            {
+                ct1[i]++;
+            }
+        }
+        for (int j = 0; j < i; j++)
+        {
+            if (p[j] > p[i])
+            {
+                ct2[i]++;
+            }
+        }
+    }
+    int ans = ans1;
+    for (int i = 0; i < n; i++)
+    {
+        int s = ((n - 1 - i) - ct1[i]) - ct2[i];
+        if (s < 0)
+        {
+            ans += s;
+        }
+    }
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -95,7 +129,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

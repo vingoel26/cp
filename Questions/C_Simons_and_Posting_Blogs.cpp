@@ -71,18 +71,52 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vector<vector<int>> v(n);
+    for(int i=0;i<n;i++){
+        int m;
+        cin >> m;
+        for(int j=0;j<m;j++){
+            int x;
+            cin >> x;
+            v[i].push_back(x);
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    vector<vector<int>> a;
+    set<int> s;
+    vector<int> used(n,0);
+    for (int i=0;i<n;i++){
+        vector<int> ans;
+        int mn=-1;
+        for (int j=0;j<n;j++){
+            if (used[j]==0){
+                vector<int> temp;
+                set<int> temp1;
+                for (int k=v[j].size()-1;k>=0;k--){
+                    if (s.find(v[j][k])==s.end() && temp1.find(v[j][k])==temp1.end()){
+                        temp.push_back(v[j][k]);
+                        temp1.insert(v[j][k]);
+                    }
+                }
+                if (mn==-1 || temp<ans){
+                    mn=j;
+                    ans=temp;
+                }
+            }
+        }
+        a.push_back(ans);
+        used[mn]=1;
+        for (int j=0;j<ans.size();j++){
+            s.insert(ans[j]);
+        }
     }
-    cout<<s<<endl;
+    for (int i=0;i<n;i++){
+        for (int j=0;j<a[i].size();j++){
+            cout << a[i][j] << " ";
+        }
+    }
+    cout << endl;
 }
 
 int32_t main()
@@ -95,7 +129,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

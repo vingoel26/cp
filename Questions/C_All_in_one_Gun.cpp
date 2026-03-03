@@ -71,18 +71,38 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,h,k;
+    cin>>n>>h>>k;
+    vi a(n);
+    vin(a);
+    vi pr(n+1),prmn(n+1,LLONG_MAX),sfmx(n+2);
+    for(int i=1;i<=n;++i){
+        pr[i] = pr[i-1]+a[i-1];
+        prmn[i] = min(prmn[i-1],a[i-1]);
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    sfmx[n] = a[n-1];
+    for(int i=n-1;i>=1;--i){
+        sfmx[i] = max(a[i-1], sfmx[i+1]);
     }
-    cout<<s<<endl;
+    int h1=h%pr[n];
+    if(h1==0){
+        cout<<(h/pr[n])*(n)+(h/pr[n]-1)*(k)<<endl;
+        return;
+    }
+    int ans=0;
+    for(int i=1;i<=n;i++){
+        int s=pr[i]-prmn[i]+sfmx[i+1];
+        // cout<<s<<" "<<pr[i]<<" "<<prmn[i]<<" "<<sfmx[i]<<endl;
+        if(s>pr[i] and s>=h1){
+            ans=i;
+            break;
+        }
+        else if(pr[i]>=h1){
+            ans=i;
+            break;
+        }
+    }
+    cout<<(ans+(h/pr[n])*(n+k))<<endl;
 }
 
 int32_t main()
@@ -95,7 +115,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

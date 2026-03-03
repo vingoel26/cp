@@ -71,7 +71,23 @@ May the WA avoid you
 
 void solve()
 {
-    
+    int n;
+    cin>>n;
+    vi d(n+1);
+    vi ct(n+1);
+    int mx=0;
+    for(int i=2;i<=n;i++){
+        inp(p);
+        d[i]=d[p]+1;
+        ct[d[i]]++;
+        mx=max(d[i],mx);
+    }
+    int ans=1,ans1=1;
+    for(int i=1;i<=mx;i++){
+        ans=(ans+(ct[i]*ans1)%mod)%mod;
+        ans1=(ans1*(ct[i]-1))%mod;
+    }
+    cout<<ans<<endl;
 }
 
 int32_t main()

@@ -71,18 +71,39 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m;
+    cin>>n>>m;
+    vi a(n);
+    vin(a);
+    vi b(m);
+    vin(b);
+    sort(all(a));
+    sort(all(b));
+    int l=0,r=1e9;
+    int ans=r;
+    bool q=true;
+    while(l<=r){
+        int mid=(l+r)/2;
+        int j=0;
+        for(int i=0;i<n;i++){
+            while(j<m and b[j]<a[i]-mid){
+                j++;
+            }
+            if(j==m or b[j]>a[i]+mid){
+                q=false;
+                break;
+            }
+            j++;
+        }
+        if(q){
+            ans=mid;
+            r=mid-1;
+        } else {
+            l=mid+1;
+        }
+        q=true;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
+    cout<<ans<<endl;
 }
 
 int32_t main()

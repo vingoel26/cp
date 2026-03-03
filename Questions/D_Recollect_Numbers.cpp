@@ -68,23 +68,40 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,k;
+    cin>>n>>k;
+    if(k<n){
+        nah
+        return;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    if(k>2*n-1){
+        nah
+        return;
     }
-    cout<<s<<endl;
+    yah
+    if(k==n){
+        for(int i=1;i<=n;i++){
+            cout<<i<<" "<<i<<" ";
+        }
+        cout<<endl;
+        return;
+    }
+    int k1=k-n+1;
+    for(int i=2;i<=k1;i++){
+        if(i==2){
+            cout<<i-1<<" "<<i<<" ";
+            continue;
+        }
+        cout<<i<<" "<<i-1<<" ";
+    }
+    cout<<1<<" "<<k1<<" ";
+    for(int i=k1+1;i<=n;i++){
+        cout<<i<<" "<<i<<" ";
+    }
+    cout<<endl;
 }
-
 int32_t main()
 {
     fast
@@ -95,7 +112,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

@@ -68,21 +68,55 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+int dfs(int u,int par,viv &adj,vi &d,vi &e){
+    int c=0;
+    for(auto v: adj[u]){
+        if(v!=par){
+            int c1=dfs(v,u,adj,d,e);
+            if(c1==0){
+                c++;
+                e[u]=v;
+            }
+        }
+    }
+    d[u]=c;
+    return d[u];
+}
+void dfs1(int u,int par,viv &adj,vi &d,vi &e){
+    if(par!=0 and (d[par]==0 or (d[par]==1 and e[par]==u))){
+        d[u]++;
+        e[u]=par;
+    }
+    for(auto v: adj[u]){
+        if(v!=par){
+            dfs1(v,u,adj,d,e);
+        }
+    }
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
+    int n,t;
+    cin>>n>>t;
+    viv adj(n+1);
+    vi d(n+1),e(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+    dfs(1,0,adj,d,e);
+    dfs1(1,0,adj,d,e);
+    while(t--){
         int x;
         cin>>x;
-        a.pb(x);
+        if(d[x]){
+            cout<<"Ron"<<endl;
+        }
+        else{
+            cout<<"Hermione"<<endl;
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
 }
 
 int32_t main()

@@ -36,6 +36,7 @@
 #define low lower_bound
 #define mod 1000000007
 #define mod 998244353
+#define INF 1e18
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
@@ -68,21 +69,21 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
+viv dp(60,vi(60,INF));
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int x,y;
+    cin>>x>>y;
+    int ans=INF;
+    for(int i=0;i<60;i++){
+        for(int j=0;j<60;j++){
+            if((x>>i)==(y>>j)){
+                ans=min(ans,dp[i][j]);
+            }
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
+    cout<<ans<<endl;
 }
 
 int32_t main()
@@ -93,9 +94,24 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
+    dp[0][0]=0;
+    for(int i=0;i<60;i++){
+        for(int j=59;j>=0;j--){
+            for(int k=59;k>=0;k--){
+                if(dp[j][k]==INF){
+                    continue;
+                }
+                if(i+j<60){
+                    dp[i+j][k]=min(dp[i+j][k],dp[j][k]+(1LL<<i));
+                }
+                if(i+k<60){
+                    dp[j][k+i]=min(dp[j][k+i],dp[j][k]+(1LL<<i));
+                }
+            }
+        }
+    }
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

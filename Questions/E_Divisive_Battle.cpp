@@ -19,8 +19,8 @@
 #define ff first
 #define ss second
 #define viv vector<vector<int>>
-#define nah cout << "NO\n";
-#define yah cout << "YES\n";
+#define nah cout << "Bob\n";
+#define yah cout << "Alice\n";
 #define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
@@ -68,21 +68,47 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+int MAXN = 2000005;
+vector<int> primedivisors(MAXN, 0);
+vector<int> divisor(MAXN, 0);
+void precompute() {
+    for (int i = 2; i < MAXN; i++) {
+        if (primedivisors[i] == 0) { 
+            for (int j = i; j < MAXN; j += i) {
+                primedivisors[j]++;
+                divisor[j]=i;
+            }
+        }
+    }
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi a(n);
+    vin(a);
+    if(is_sorted(all(a))){
+        nah
+        return;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(int i=0;i<n;i++){
+        if(primedivisors[a[i]]>1){
+            yah
+            return;
+        }
     }
-    cout<<s<<endl;
+    for(int i=0;i<n;i++){
+        if(a[i]!=1){
+            a[i]=divisor[a[i]];
+        }
+    }
+    for(int i=1;i<n;i++){
+        if(a[i]<a[i-1]){
+            yah;
+            return;
+        }
+    }
+    nah
 }
 
 int32_t main()
@@ -95,7 +121,8 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
+    precompute();
     while (t--)
     {
         solve();

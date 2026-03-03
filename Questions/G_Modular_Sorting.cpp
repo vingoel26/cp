@@ -71,18 +71,50 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m,q;
+    cin>>n>>m>>q;
+    vi a(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    map<int,int> mp;
+    for(int i=1;i*i<=m;i++){
+        if(m%i==0){
+            for(int j=1;j<=n;j++){
+                mp[i]+=((a[j]-a[j-1])%i+i)%i;
+                mp[m/i]+=((a[j]-a[j-1])%(m/i)+(m/i))%(m/i);
+            }
+            if(i*i==m){
+                mp[i]=mp[i]/2;
+            }
+        }
     }
-    cout<<s<<endl;
+    while(q--){
+        int q;
+        cin>>q;
+        if(q==1){
+            int i,x;
+            cin>>i>>x;
+            for(auto [g,ct]:mp){
+                mp[g]+=((x-a[i-1])%g+g)%g-((a[i]-a[i-1])%g+g)%g;
+                if(i!=n){
+                    mp[g]+=((a[i+1]-x)%g+g)%g-((a[i+1]-a[i])%g+g)%g;
+                }
+            }
+            a[i]=x;
+        }
+        else{
+            int k;
+            cin>>k;
+            int g=gcd(k,m);
+            if(mp[g]<m){
+                yah
+            }
+            else{
+                nah
+            }
+        }
+    }
 }
 
 int32_t main()
@@ -95,7 +127,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

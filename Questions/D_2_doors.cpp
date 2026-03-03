@@ -71,18 +71,49 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,q;
+    cin>>n>>q;
+    vector<vector<pair<int,int>>> adj(n+1);
+    vi ans(n+1,((1LL<<30)-1));
+    // vout(ans)
+    // cout<<endl;
+    for(int i=0;i<q;i++){
+        int u,v,x;
+        cin>>u>>v>>x;
+        adj[v].pb({u,x});
+        adj[u].pb({v,x});
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    for(int i=0;i<30;i++){
+        for(int u=1;u<=n;u++){
+            for(auto [v,x]:adj[u]){
+                if((x&(1LL<<i))==0){
+                    ans[u]=(ans[u]&(~(1LL<<i)));
+                }
+            }
+        }
+        // cout<<ans[1]<<endl;
+        for(int u=1;u<=n;u++){
+            if(ans[u]&(1LL<<i)){
+                bool q=true;
+                for(auto [v,x]:adj[u]){
+                    if(v==u){
+                        q=false;
+                        break;
+                    }
+                    if((ans[v]&(1LL<<i))==0){
+                        q=false;
+                        break;
+                    }
+                }
+                if(q){
+                    ans[u]=(ans[u]&(~(1LL<<i)));
+                }
+            }   
+        }
     }
-    cout<<s<<endl;
+    for(int i=1;i<=n;i++){
+        cout<<ans[i]<<" ";
+    }
 }
 
 int32_t main()

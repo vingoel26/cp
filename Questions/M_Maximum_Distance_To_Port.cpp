@@ -71,18 +71,42 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,m,k;
+    cin>>n>>m>>k;
+    vi a(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>a[i];
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    viv adj(n+1);
+    for(int i=0;i<m;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    cout<<s<<endl;
+    vi dist(n+1,-1),par(n+1);
+    queue<int>q;
+    q.push(1);
+    dist[1]=0;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        for(auto it : adj[u]){
+            if(dist[it]!=-1){
+                continue;
+            }
+            dist[it]=dist[u]+1;
+            q.push(it);
+        }
+    }
+    vi ans(k+1);
+    for(int i=1;i<=n;i++){
+        ans[a[i]]=max(ans[a[i]],dist[i]);
+    }
+    for(int i=1;i<=k;i++){
+        cout<<ans[i]<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()

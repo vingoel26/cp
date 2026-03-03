@@ -35,7 +35,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
@@ -68,21 +68,53 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+void dfs(int u,vi &l,vi &r,vi &ord){
+    ord.pb(u);
+    if(l[u]!=0 and r[u]!=0){
+        dfs(l[u],l,r,ord);
+        dfs(r[u],l,r,ord);
+    }
+}
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    vi l(n+1),r(n+1),par(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>l[i]>>r[i];
+        if(l[i]!=0 and r[i]!=0){
+            par[l[i]]=i;
+            par[r[i]]=i;
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    vi ord;
+    dfs(1,l,r,ord);
+    vi dp(n+1);
+    vi ord1=ord;
+    reverse(all(ord1));
+    for(int i=0;i<n;i++){
+        int k=ord1[i];
+        if(l[k]==0 and r[k]==0){
+            dp[k]=1;
+        }
+        else{
+            dp[k]=((dp[l[k]]+dp[r[k]])%mod+3)%mod;
+        }
     }
-    cout<<s<<endl;
+    vi ans(n+1);
+    for(int i=0;i<n;i++){
+        int k=ord[i];
+        if(k==1){
+            ans[k]=dp[k];
+        }
+        else{
+            ans[k]=(dp[k]+ans[par[k]])%mod;
+        }
+    }
+    for(int i=1;i<=n;i++){
+        cout<<ans[i]<<" ";
+    }
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +127,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

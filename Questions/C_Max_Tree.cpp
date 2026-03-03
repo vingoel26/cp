@@ -11,7 +11,7 @@
         cin >> a[i];            \
     }
 #define vout(a) \
-    for (int i = 0; i < a.size(); ++i) \
+    for (int i = 1; i < a.size(); ++i) \
     {                           \
         cout << a[i] << ' ';    \
     }
@@ -71,18 +71,43 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n;
+    cin>>n;
+    viv adj(n+1);
+    vi idx(n+1,0);
+    for(int i=0;i<n-1;++i){
+        int u,p,x,y;
+        cin>>u>>p>>x>>y;
+        if(x>y){
+            adj[p].pb(u);
+            idx[u]++;
+        } else {
+            adj[u].pb(p);
+            idx[p]++;
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    queue<int>q;
+    for(int i=1;i<=n;i++){
+        if(idx[i]==0){
+            q.push(i);
+        }
     }
-    cout<<s<<endl;
+    vi ans(n+1);
+    int k=1;
+    while(!q.empty()){
+        int s=q.front();
+        q.pop();
+        ans[s]=k;
+        for(auto x:adj[s]){
+            idx[x]--;
+            if(idx[x]==0){
+                q.push(x);
+            }
+        }
+        k++;
+    }
+    vout(ans);
+    cout<<endl;
 }
 
 int32_t main()
@@ -95,7 +120,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

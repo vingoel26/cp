@@ -71,18 +71,21 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int x,y;
+    cin>>x>>y;
+    if(x<2*y){
+        nah
+        return;
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    if(x<-4*y){
+        nah
+        return;
     }
-    cout<<s<<endl;
+    if((x+y)%3!=0){
+        nah
+        return;
+    }
+    yah
 }
 
 int32_t main()
@@ -95,7 +98,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

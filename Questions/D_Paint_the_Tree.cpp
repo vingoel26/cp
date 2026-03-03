@@ -71,18 +71,51 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
-        int x;
-        cin>>x;
-        a.pb(x);
+    int n,a,b;
+    cin>>n>>a>>b;
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
+    vi par(n+1,-1),dist(n+1,-1);
+    queue<int> q;
+    q.push(b);
+    dist[b]=0;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        for(auto v:adj[u]){
+            if(dist[v]==-1){
+                dist[v]=dist[u]+1;
+                par[v]=u;
+                q.push(v);
+            }
+        }
     }
-    cout<<s<<endl;
+    int st=(dist[a]+1)/2;
+    int ct=a;
+    for(int i=0;i<dist[a]-st;i++){
+        ct=par[ct];
+    }
+    vi dist2(n+1,-1);
+    q.push(ct);
+    dist2[ct]=0;
+    int mx=0;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        mx=max(mx,dist2[u]);
+        for(auto v:adj[u]){
+            if(dist2[v]==-1){
+                dist2[v]=dist2[u]+1;
+                q.push(v);
+            }
+        }
+    }
+    cout<<st+2*(n-1)-mx<<endl;
 }
 
 int32_t main()
@@ -95,7 +128,7 @@ int32_t main()
     // }
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--)
     {
         solve();

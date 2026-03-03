@@ -71,18 +71,40 @@ May the WA avoid you
 
 void solve()
 {
-    vi a;
-    a.pb(53);
-    for(int i=0;i<8;i++){
+    string s;
+    cin>>s;
+    vector<set<int>> mp(26);
+    for(int i=0;i<s.size();i++){
+        mp[s[i]-'a'].insert(i);
+    }
+    int q;
+    cin>>q;
+    while(q--){
         int x;
         cin>>x;
-        a.pb(x);
+        if(x==1){
+            char c;
+            int p;
+            cin>>p>>c;
+            mp[s[p-1]-'a'].erase(p-1);
+            s[p-1]=c;
+            mp[s[p-1]-'a'].insert(p-1);
+        }
+        else{
+            int l,r;
+            cin>>l>>r;
+            l--;
+            r--;
+            int ans=0;
+            for(int i=0;i<=25;i++){
+                auto it=mp[i].lower_bound(l);
+                if(it!=mp[i].end() and *it<=r){
+                    ans++;
+                }
+            }
+            cout<<ans<<endl;
+        }
     }
-    int s=0;
-    for(int i=0;i<8;i++){
-        s+=abs(a[i]-a[i+1]);
-    }
-    cout<<s<<endl;
 }
 
 int32_t main()
