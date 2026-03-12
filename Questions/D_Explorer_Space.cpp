@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-// #define int long long
+#define int long long
 #define inp(n) \
     int n;     \
     cin >> n
@@ -41,25 +41,25 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
-// vi fact(200001);
+vi fact(200001);
 
-// int binExpo(int a, int b, int m){
-//     if(b == 0) return 1;
-//     if(b % 2 == 0){
-//         int res = binExpo(a, b/2, m);
-//         return (res * res) % m;
-//     } else {
-//         return (a * binExpo(a, b-1, m)) % m;
-//     }
-// }
+int binExpo(int a, int b, int m){
+    if(b == 0) return 1;
+    if(b % 2 == 0){
+        int res = binExpo(a, b/2, m);
+        return (res * res) % m;
+    } else {
+        return (a * binExpo(a, b-1, m)) % m;
+    }
+}
 
-// int nCr(int n, int r){
-//     if(r > n) return 0;
-//     int res = fact[n];
-//     res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-//     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
-//     return res;
-// }
+int nCr(int n, int r){
+    if(r > n) return 0;
+    int res = fact[n];
+    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    return res;
+}
 
 /*
 ========================================
@@ -71,31 +71,57 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vi a(n);
-    vin(a);
-    viv ct(200,vi(n+1));
-    viv pos(200);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<200;j++){
-            ct[j][i+1]=ct[j][i];
+    int n,m,k;
+    cin>>n>>m>>k;
+    viv h(n+1,vi(m+1,0));
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<m;j++){
+            cin>>h[i][j];
         }
-        ct[a[i]-1][i+1]++;
-        pos[a[i]-1].pb(i);
     }
-    int ans=0;
-    for(int i=0;i<200;i++){
-        ans=max(ans,(int)pos[i].size());
-        for(int j=0;j<pos[i].size()/2;j++){
-            int l=pos[i][j]+1,r=pos[i][pos[i].size()-j-1]-1;
-            for(int k=0;k<200;k++){
-                int s=ct[k][r+1]-ct[k][l];
-                ans=max(ans,(j+1)*2+s);
+    viv v(n+1,vi(m+1,0));
+    for(int i=1;i<n;i++){
+        for(int j=1;j<=m;j++){
+            cin>>v[i][j];
+        }
+    }
+    if(k%2!=0){
+        for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            cout<<-1<<" ";
+        }
+        cout<<endl;
+    }
+    return;
+    }
+    k=k/2;
+    vector<viv> dp(k+1,viv(n+1,vi(m+1,0)));
+    for(int i=1;i<=k;i++){
+        for(int j=1;j<=n;j++){
+            for(int k1=1;k1<=m;k1++){
+                int mn=1e18;
+                if(j>1){
+                    mn=min(mn,dp[i-1][j-1][k1]+v[j-1][k1]);
+                }
+                if(j<n){
+                    mn=min(mn,dp[i-1][j+1][k1]+v[j][k1]);
+                }
+                if(k1>1){
+                    mn=min(mn,dp[i-1][j][k1-1]+h[j][k1-1]);
+                }
+                if(k1<m){
+                    mn=min(mn,dp[i-1][j][k1+1]+h[j][k1]);
+                }
+                dp[i][j][k1]=mn;
             }
         }
     }
-    cout<<ans<<endl;
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            cout<<dp[k][i][j]*2<<" ";
+        }
+        cout<<endl;
+    }
 }
 
 int32_t main()
@@ -108,7 +134,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

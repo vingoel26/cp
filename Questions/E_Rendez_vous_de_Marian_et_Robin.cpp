@@ -1,0 +1,141 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define int long long
+#define inp(n) \
+    int n;     \
+    cin >> n
+#define vin(a) \
+    for (int i = 0; i < a.size(); ++i) \
+    {                           \
+        cin >> a[i];            \
+    }
+#define vout(a) \
+    for (int i = 0; i < a.size(); ++i) \
+    {                           \
+        cout << a[i] << ' ';    \
+    }
+#define pb push_back
+#define ff first
+#define ss second
+#define viv vector<vector<int>>
+#define nah cout << "NO\n";
+#define yah cout << "YES\n";
+#define pt(x) cout<<x<<endl;
+#define be begin()
+#define en end()
+#define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define fast \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(NULL);                    \
+    cout.tie(NULL);
+#define vi vector<int>
+#define vpi vector<pair<int, int>>
+#define up upper_bound
+#define low lower_bound
+#define mod 1000000007
+#define mod 998244353
+using namespace std;
+using namespace __gnu_pbds;
+typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
+typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
+
+vi fact(200001);
+
+int binExpo(int a, int b, int m){
+    if(b == 0) return 1;
+    if(b % 2 == 0){
+        int res = binExpo(a, b/2, m);
+        return (res * res) % m;
+    } else {
+        return (a * binExpo(a, b-1, m)) % m;
+    }
+}
+
+int nCr(int n, int r){
+    if(r > n) return 0;
+    int res = fact[n];
+    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    return res;
+}
+
+/*
+========================================
+Author:         Vinayak Goel
+Institution:    IIITL
+May the WA avoid you
+========================================
+*/
+void dijkstra(int s, vector<vector<long long>> &d, vector<vector<pair<int,long long>>> &graph, vi &hs){
+    auto cmp = [&](auto &a, auto &b){return make_pair(d[a.first][a.second],a) < make_pair(d[b.first][b.second],b);};
+    set<pair<int,int>,decltype(cmp)> q(cmp);
+    d[s][0] = 0;
+    q.insert({s,0});
+    while (q.size()){
+        auto [curv,curh] = *q.begin();
+        q.erase(q.begin());
+        bool horse = (curh || hs[curv]);
+        for (auto &[neighv, neighd] : graph[curv]){
+            long long dist = horse?neighd/2:neighd;
+            if (d[neighv][horse] > d[curv][curh] + dist){
+                q.erase({neighv,horse});
+                d[neighv][horse] = d[curv][curh] + dist;
+                q.insert({neighv,horse});
+            }
+        }
+    }
+}
+void solve()
+{   
+    int n,m,h;
+    cin>>n>>m>>h;
+    vi hs(n);
+    vector<vpi> g(n);
+    for(int i=0;i<h;i++){
+        int x;
+        cin>>x;
+        x--;
+        hs[x]=1;
+    }
+    for(int i=0;i<m;i++){
+        int a,b,c;
+        cin>>a>>b>>c;
+        a--,b--;
+        g[a].pb({b,c});
+        g[b].pb({a,c});
+    }
+    viv d1(n,vi(2,1e18));
+    viv d2(n,vi(2,1e18));
+    dijkstra(0,d1,g,hs);
+    dijkstra(n-1,d2,g,hs);
+    int ans=1e18;
+    for(int i=0;i<n;i++){
+        ans=min(ans,max(min(d1[i][0],d1[i][1]),min(d2[i][0],d2[i][1])));
+    }
+    if(ans==1e18){
+        cout<<-1<<endl;
+    }
+    else{
+        cout<<ans<<endl;
+    }
+}
+
+int32_t main()
+{
+    fast
+    // Precompute factorials
+    // fact[0] = 1;
+    // for(int i = 1; i <= 200000; ++i){
+    //     fact[i] = (fact[i-1] * i) % mod;
+    // }
+
+    int t = 1;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
+    return 0;
+}

@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-// #define int long long
+#define int long long
 #define inp(n) \
     int n;     \
     cin >> n
@@ -35,31 +35,31 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
-// vi fact(200001);
+vi fact(200001);
 
-// int binExpo(int a, int b, int m){
-//     if(b == 0) return 1;
-//     if(b % 2 == 0){
-//         int res = binExpo(a, b/2, m);
-//         return (res * res) % m;
-//     } else {
-//         return (a * binExpo(a, b-1, m)) % m;
-//     }
-// }
+int binExpo(int a, int b, int m){
+    if(b == 0) return 1;
+    if(b % 2 == 0){
+        int res = binExpo(a, b/2, m);
+        return (res * res) % m;
+    } else {
+        return (a * binExpo(a, b-1, m)) % m;
+    }
+}
 
-// int nCr(int n, int r){
-//     if(r > n) return 0;
-//     int res = fact[n];
-//     res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-//     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
-//     return res;
-// }
+int nCr(int n, int r){
+    if(r > n) return 0;
+    int res = fact[n];
+    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    return res;
+}
 
 /*
 ========================================
@@ -73,26 +73,30 @@ void solve()
 {
     int n;
     cin>>n;
-    vi a(n);
-    vin(a);
-    viv ct(200,vi(n+1));
-    viv pos(200);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<200;j++){
-            ct[j][i+1]=ct[j][i];
-        }
-        ct[a[i]-1][i+1]++;
-        pos[a[i]-1].pb(i);
-    }
-    int ans=0;
-    for(int i=0;i<200;i++){
-        ans=max(ans,(int)pos[i].size());
-        for(int j=0;j<pos[i].size()/2;j++){
-            int l=pos[i][j]+1,r=pos[i][pos[i].size()-j-1]-1;
-            for(int k=0;k<200;k++){
-                int s=ct[k][r+1]-ct[k][l];
-                ans=max(ans,(j+1)*2+s);
+    string s;
+    cin>>s;
+    int ans=1;
+    for(int i=n;i>=1;i--){
+        queue<int> q;
+        bool q1=true;
+        for(int j=0;j<n;j++){
+            if(!q.empty() and q.front()<j){
+                q.pop();
             }
+            int crt=s[j]-'0';
+            if((crt+q.size())%2==0){
+                if(j+i-1<n){
+                    q.push(j+i-1);
+                }
+                else{
+                    q1=false;
+                    break;
+                }
+            }
+        }
+        if(q1){
+            ans=i;
+            break;
         }
     }
     cout<<ans<<endl;
