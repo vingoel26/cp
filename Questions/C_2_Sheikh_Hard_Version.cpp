@@ -32,6 +32,7 @@
     cout.tie(NULL);
 #define vi vector<int>
 #define vpi vector<pair<int, int>>
+#define vppi vector<vector<pair<int,int>>>
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
@@ -71,70 +72,51 @@ May the WA avoid you
 
 void solve()
 {
-    int n;
-    cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
-    }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
-    for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
-            }
+    int n,q;
+    cin>>n>>q;
+    vi a(n+1),s(n+1,0),x(n+1,0),nz;
+    for(int i=1;i<=n;++i){
+        cin>>a[i];
+        s[i]=s[i-1]+a[i];
+        x[i]=x[i-1]^a[i];
+        if(a[i]>0){
+            nz.pb(i);
         }
-        st.insert(v1[i].ff.ss);
     }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
+    while(q--){
+        int l,r;
+        cin>>l>>r;
+        int v=(s[r]-s[l-1])-(x[r]^x[l-1]);
+        if(v==0){
+            cout<<l<<" "<<l<<endl;
+            continue;
+        }
+        int li=low(all(nz),l)-nz.begin();
+        int ri=up(all(nz),r)-nz.begin()-1;
+        int bl=l,br=r;
+        int blen=r-l+1;
+        int lim=min(ri,li+31);
+        for(int i=li;i<=lim;++i){
+            int ll=nz[i];
+            int lo=i,hi=ri,ar=-1;
+            while(lo<=hi){
+                int mid=lo+(hi-lo)/2;
+                int rr=nz[mid];
+                int cf=(s[rr]-s[ll-1])-(x[rr]^x[ll-1]);
+                if(cf==v){
+                    ar=rr;
+                    hi=mid-1;
+                }else{
+                    lo=mid+1;
                 }
             }
+            if(ar!=-1 and ar-ll+1<blen){
+                blen=ar-ll+1;
+                bl=ll;
+                br=ar;
+            }
         }
-        st1.insert(v2[i].ff.ss);
-    }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
-        }
+        cout<<bl<<" "<<br<<endl;
     }
 }
 

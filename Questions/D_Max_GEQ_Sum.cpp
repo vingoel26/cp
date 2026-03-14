@@ -32,6 +32,7 @@
     cout.tie(NULL);
 #define vi vector<int>
 #define vpi vector<pair<int, int>>
+#define vppi vector<vector<pair<int,int>>>
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
@@ -68,74 +69,84 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
+const int MAXN = 200005;
+long long st_max[MAXN][20];
+long long st_min[MAXN][20];
+int Log[MAXN];
+void build(int n,vi P) {
+    for (int i = 0; i <= n; i++) {
+        st_max[i][0] = P[i];
+        st_min[i][0] = P[i];
+    }
+    for (int j = 1; j < 20; j++) {
+        for (int i = 0; i + (1 << j) <= n + 1; i++) {
+            st_max[i][j] = max(st_max[i][j - 1], st_max[i + (1 << (j - 1))][j - 1]);
+            st_min[i][j] = min(st_min[i][j - 1], st_min[i + (1 << (j - 1))][j - 1]);
+        }
+    }
+}
 
+long long query_max(int L, int R) {
+    int k = Log[R - L + 1];
+    return max(st_max[L][k], st_max[R - (1 << k) + 1][k]);
+}
+
+long long query_min(int L, int R) {
+    int k = Log[R - L + 1];
+    return min(st_min[L][k], st_min[R - (1 << k) + 1][k]);
+}
+vector<int> nextLargerElement(vector<int> &arr) {
+    int n = arr.size();
+    vector<int> res(n, n);
+    stack<int> stk;
+    for (int i = n - 1; i >= 0; i--) {
+        while (!stk.empty() && arr[stk.top()] < arr[i]) {
+            stk.pop();
+        }
+        if (!stk.empty()) {
+            res[i] = stk.top();
+        }
+        stk.push(i);
+    }
+    return res;
+}
+vector<int> preGreaterEle(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n, -1); 
+    stack<int> st; 
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && arr[st.top()] <= arr[i]) {
+            st.pop();
+        }
+        if (!st.empty()) {
+            result[i] = st.top();
+        }
+        st.push(i);
+    }
+    return result;
+}
 void solve()
 {
     int n;
     cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
+    vi a(n);
+    vin(a);
+    vi pr(n+1);
+    for(int i=1;i<=n;i++){
+        pr[i]=pr[i-1]+a[i-1];
     }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
+    build(n,pr);
+    vi r=nextLargerElement(a);
+    vi l=preGreaterEle(a);
     for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
-            }
-        }
-        st.insert(v1[i].ff.ss);
-    }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
-                }
-            }
-        }
-        st1.insert(v2[i].ff.ss);
-    }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
+        int mx=query_max(i+1,r[i]);
+        int mn=query_min(l[i]+1,i);
+        if(mx-mn>a[i]){
+            nah
+            return;
         }
     }
+    yah
 }
 
 int32_t main()
@@ -149,6 +160,10 @@ int32_t main()
 
     int t = 1;
     cin >> t;
+    Log[1] = 0;
+    for (int i = 2; i < MAXN; i++) {
+        Log[i] = Log[i / 2] + 1;
+    }
     while (t--)
     {
         solve();

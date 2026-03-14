@@ -32,6 +32,7 @@
     cout.tie(NULL);
 #define vi vector<int>
 #define vpi vector<pair<int, int>>
+#define vppi vector<vector<pair<int,int>>>
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
@@ -73,69 +74,17 @@ void solve()
 {
     int n;
     cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
-    }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
-    for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
-            }
-        }
-        st.insert(v1[i].ff.ss);
-    }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
-                }
-            }
-        }
-        st1.insert(v2[i].ff.ss);
-    }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
+    vi a(n);
+    vin(a);
+    sort(all(a));
+    viv dp(n+1,vi(n+1,0));
+    for(int i=2;i<=n;i++){
+        for(int j=0;j<=n-i;j++){
+            int k=j+i-1;
+            dp[j][k]=a[k]-a[j]+min(dp[j+1][k],dp[j][k-1]);
         }
     }
+    cout<<dp[0][n-1]<<endl;
 }
 
 int32_t main()
@@ -148,7 +97,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

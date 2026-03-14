@@ -68,74 +68,76 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+const int MAXA = 300005;
+int spf[MAXA];
+void compute_spf() {
+    for (int i = 2; i < MAXA; i++) spf[i] = i;
+    for (int i = 2; i * i < MAXA; i++) {
+        if (spf[i] == i) {
+            for (int j = i * i; j < MAXA; j += i) {
+                if (spf[j] == j) spf[j] = i;
+            }
+        }
+    }
+}
 void solve()
 {
     int n;
     cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
+    vi a(n);
+    vin(a);
+    int s,t;
+    cin>>s>>t;
+    if(s==t){
+        cout<<1<<endl;
+        cout<<s<<endl;
+        return;
     }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
+    viv adj(n+MAXA+1);
     for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
+        int v=a[i];
+        while(v>1){
+            int p=spf[v];
+            adj[i+1].pb(n+p);
+            adj[n+p].pb(i+1);
+            while(v%p==0){
+                v/=p;
             }
         }
-        st.insert(v1[i].ff.ss);
     }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
-                }
+    vi dis(n+MAXA+1,-1),par(n+MAXA+1,-1);
+    queue<int>q;
+    dis[s]=0;
+    q.push(s);
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        if(u==t){
+            break;
+        }
+        for(auto v : adj[u]){
+            if(dis[v]==-1){
+                dis[v]=dis[u]+1;
+                par[v]=u;
+                q.push(v);
             }
         }
-        st1.insert(v2[i].ff.ss);
     }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
+    if(dis[t]==-1){
+        cout<<-1<<endl;
+        return;
+    }
+    vi ans;
+    while(t!=-1){
+        if(t<=n){
+            ans.pb(t);
         }
+        t=par[t];
     }
+    reverse(all(ans));
+    cout<<ans.size()<<endl;
+    vout(ans)
+    cout<<endl;
 }
 
 int32_t main()
@@ -148,7 +150,8 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    compute_spf();
+    // cin >> t;
     while (t--)
     {
         solve();

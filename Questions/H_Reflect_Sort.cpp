@@ -73,69 +73,23 @@ void solve()
 {
     int n;
     cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
+    vi a(n);
+    vin(a);
+    int g=0,s=0;
+    for(int i=0;i<n-1;i++){
+        g=gcd(g,abs(a[i+1]-a[i]));
+        s+=abs(a[i+1]-a[i]);
     }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
-    for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
-            }
-        }
-        st.insert(v1[i].ff.ss);
+    if(g==0){
+        cout<<a[0]<<endl;
+        return;
     }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
-                }
-            }
-        }
-        st1.insert(v2[i].ff.ss);
+    g=g*2;
+    int mn=a[0]%g;
+    if(mn==0){
+        mn=g;
     }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
-        }
-    }
+    cout<<mn+s<<endl;
 }
 
 int32_t main()
@@ -148,7 +102,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

@@ -73,69 +73,64 @@ void solve()
 {
     int n;
     cin>>n;
-    vector<pair<pair<int,int>,int>> v1(n), v2(n);
-    vpi orig(n);
-    vi lm(n,0);
-    vi rm(n,0);
-    for(int i=0;i<n;i++) {
-        int f,s; 
-        cin>>f>>s;
-        orig[i]={f,s};
-        v1[i]={{f,s},i};
-        v2[i]={{s,f},i};
-    }
-    sort(all(v1));
-    sort(all(v2));
-    multiset<int> st;
-    for(int i=0;i<n;i++){
-        auto it=st.lower_bound(v1[i].ff.ss);
-        if(it!=st.end()){
-            int l=*it,r=2e18; 
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                r=v1[i+1].ff.ss;
-            }
-            rm[v1[i].ss]=min(l, r);
-        } 
-        else{
-            if(i+1<n and v1[i+1].ff.ff==v1[i].ff.ff){
-                rm[v1[i].ss]=v1[i+1].ff.ss;
-            }
-        }
-        st.insert(v1[i].ff.ss);
-    }
-    multiset<int> st1;
-    for(int i=n-1;i>=0;i--){
-        if(i==n-1){
-            if(n>1 and v2[i-1].ff.ff==v2[i].ff.ff){
-                lm[v2[i].ss]=v2[i-1].ff.ss;
-            }
-        } 
-        else {
-            auto it=st1.upper_bound(v2[i].ff.ss);
-            if(it!=st1.begin()){
-                it--;
-                int l=*it,r=-1;
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    r=v2[i-1].ff.ss;
-                }
-                lm[v2[i].ss]=max(l, r);
-            } 
-            else{
-                if(i>0 and v2[i-1].ff.ff==v2[i].ff.ff){
-                    lm[v2[i].ss]=v2[i-1].ff.ss;
+    string s;
+    cin>>s;
+    int ans=1e18;
+    for(int i=1;i*i<=n;i++){
+        if(n%i==0){
+            int ct=0;
+            for(int j=0;j<n;j++){
+                if(s[j]!=s[(j%i)]){
+                    ct++;
+                    if(ct>1){
+                        break;
+                    }
                 }
             }
+            if(ct<=1){
+                ans=min(ans,i);
+                break;
+            }
+            ct=0;
+            for(int j=0;j<n;j++){
+                if(s[j]!=s[n-i+(j%i)]){
+                    ct++;
+                    if(ct>1){
+                        break;
+                    }
+                }
+            }
+            if(ct<=1){
+                ans=min(ans,i);
+                break;
+            }
+            ct=0;
+            for(int j=0;j<n;j++){
+                if(s[j]!=s[(j%(n/i))]){
+                    ct++;
+                    if(ct>1){
+                        break;
+                    }
+                }
+            }
+            if(ct<=1){
+                ans=min(ans,n/i);
+            }
+            ct=0;
+            for(int j=0;j<n;j++){
+                if(s[j]!=s[n-(n/i)+(j%(n/i))]){
+                    ct++;
+                    if(ct>1){
+                        break;
+                    }
+                }
+            }
+            if(ct<=1){
+                ans=min(ans,n/i);
+            }
         }
-        st1.insert(v2[i].ff.ss);
     }
-    for(int i=0; i<n; i++) {
-        if(lm[i]==0 or rm[i]==0){
-            cout<<0<<endl;
-        } 
-        else{
-            cout<<orig[i].ff-lm[i]+rm[i]-orig[i].ss<<endl; 
-        }
-    }
+    cout<<ans<<endl;
 }
 
 int32_t main()
