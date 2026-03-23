@@ -1,78 +1,42 @@
 #include <bits/stdc++.h>
-#define int long long
-#define inp(n) \
-    int n;     \
-    cin >> n
-#define vin(a)                  \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cin >> a[i];            \
-    }
-#define vout(a)                 \
-    for (int i = 0; i < n; ++i) \
-    {                           \
-        cout << a[i] << ' ';    \
-    }
-#define pb push_back
-#define ff first
-#define ss second
-#define viv vector<vector<int>>
-#define nah cout << "NO\n";
-#define yah cout << "YES\n";
-#define be begin()
-#define en end()
-#define all(x) x.begin(), x.end()
-#define rall(x) x.rbegin(), x.rend()
-#define fast                          \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);                    \
-    cout.tie(NULL);
-#define vi vector<int>
-#define vpi vector<pair<int, int>>
-#define up upper_bound
-#define low lower_bound
-#define mod 1000000007
 using namespace std;
 
-/*
-========================================
-Author:         Vinayak Goel
-Institution:    IIITL
-May the WA avoid you
-========================================
-*/
-
-void solve()
-{
-    int n;
-    cin >> n;
-    vi a(n);
-    vin(a);
-    sort(all(a));
-    int ans=0;
-    if (n % 2 == 0)
-    {
-        for (int i = 1; i < n; i = i + 2)
-        {
-            ans+=a[i];
+long long signalBoosters(int N, int K, vector<long long> pos) {
+    long long l = 1;
+    long long r = pos[pos.size()-1] - pos[0];
+    long long ans = r;
+    while (l <= r) {
+        long long mid = l + (r - l) / 2;
+        long long cnt = 0;
+        for (int i = 0; i < (int)pos.size() - 1; ++i) {
+            long long dif = pos[i+1] - pos[i];
+            cnt += (dif - 1) / mid;
+        }
+        if (cnt <= K) {
+            ans = mid;
+            r = mid - 1;
+        } else {
+            l = mid + 1;
         }
     }
-    else{
-        for (int i = 0; i < n; i = i + 2)
-        {
-            ans+=a[i];
-        }
-    }
-    cout<<ans<<endl;
+    return ans;
 }
+int main() {
+    // Fast I/O for competitive programming
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-int32_t main()
-{
-    fast int t = 1;
-    cin >> t;
-    while (t--)
-    {
-        solve();
+    int N, K;
+    // Read N and K. If no input is provided, exit cleanly.
+    if (cin >> N >> K) {
+        vector<long long> pos(N);
+        for (int i = 0; i < N; ++i) {
+            cin >> pos[i];
+        }
+
+        // Print the result
+        cout << signalBoosters(N, K, pos) << "\n";
     }
+
     return 0;
 }
