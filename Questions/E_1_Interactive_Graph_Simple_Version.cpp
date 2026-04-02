@@ -18,6 +18,7 @@
     {                           \
         cout << a[i] << ' ';    \
     }
+//bottom gay here
 #define pb push_back
 #define ff first
 #define ss second
@@ -40,7 +41,7 @@
 #define low lower_bound
 #define mod 1000000007
 #define mod 998244353
-#define endl "\n"
+// #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
@@ -73,41 +74,56 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+pair<int,int> query(int u) {
+	cout<<"? "<<u<<endl;
+	int n; 
+    cin>>n;
+	if(n==0){
+        return {16,-1};
+    }
+	if(n==1){
+		int x;
+        cin>>x;
+        return {x,-1};
+	}
+	vector<int> v(n);
+	for(auto &x:v){
+        cin>>x;
+    }
+	return {v[0],v[1]};
+}
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    int p=2;
+    vpi e;
+    pair<int,int> k={1,-1};
+    while(k.ff<16){
+        int l=p,r=(1LL<<30);
+        int nxt=r;
+        pair<int,int> k1;
+        while(l<=r){
+            int m=(l+r)/2;
+            pair<int,int> ans=query(m);
+            if(ans>k){
+                k1=ans;
+                nxt=m;
+                r=m-1;
+            }
+            else{
+                l=m+1;
             }
         }
-        dp=v;
+        p=nxt,k=k1;
+        if(k.ss!=-1){
+            e.pb({k});
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    cout<<"! "<<e.size()<<endl;
+    for(auto [u,v]:e){
+        cout<<u<<" "<<v<<endl;
     }
-    cout<<ans<<endl;
 }
 
 int32_t main()

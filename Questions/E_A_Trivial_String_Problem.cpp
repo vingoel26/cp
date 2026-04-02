@@ -18,6 +18,7 @@
     {                           \
         cout << a[i] << ' ';    \
     }
+//bottom gay here
 #define pb push_back
 #define ff first
 #define ss second
@@ -76,38 +77,52 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    int n,q;
+    cin>>n>>q;
+    string s;
+    cin>>s;
+    vi pi(n,0),b(n,0),dp(n,0);
+    while(q--){
+        int l,r;
+        cin>>l>>r;
+        l--,r--;
+        int len=r-l+1;
+        int ans=0;
+        pi[0]=0;
+        for(int i=1;i<len;i++){
+            int j=pi[i-1];
+            while(j>0 and s[l+i]!=s[l+j]){
+                j=pi[j-1];
+            }
+            if(s[l+i]==s[l+j]){
+                j++;
+            }
+            pi[i]=j;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+        for(int i=0;i<len;i++){
+        if(pi[i]==0){
+            b[i]=0;
+        }
+        else{
+            int l1=pi[i];
+            if(pi[l1-1]==0){
+                b[i]=l1;
+            }
+            else{
+                b[i]=b[l1-1];
             }
         }
-        dp=v;
+        if(b[i]==0){
+        dp[i]=1;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    else{
+        dp[i]=dp[i-b[i]]+1;
+    }
+    ans+=dp[i];
     }
     cout<<ans<<endl;
+    }
+    
 }
 
 int32_t main()

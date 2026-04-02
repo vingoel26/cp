@@ -27,7 +27,7 @@
 #define pt(x) cout<<x<<endl;
 #define be begin()
 #define en end()
-#define all(x) x.begin(), x.end()
+#define all(x) x.begin()+1, x.end()
 #define rall(x) x.rbegin(), x.rend()
 #define fast \
     ios_base::sync_with_stdio(false); \
@@ -65,7 +65,19 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
+void floydWarshall(vector<vector<int>> &dist) {
+    int V = dist.size();
+    int INF = 1e18;
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if(dist[i][k] != INF && dist[k][j]!= INF )
+                    dist[i][j] = min(dist[i][j],
+                                     dist[i][k] + dist[k][j]);
+            }
+        }
+    }
+}
 /*
 ========================================
 Author:         Vinayak Goel
@@ -76,38 +88,42 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
+    int n,m;
+    cin>>n>>m;
+    viv dist(n,vi(n,1e18));
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        dist[i][i]=0;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    for(int i=0;i<m;i++){
+        int u,v,y;
+        cin>>u>>v>>y;
+        u--,v--;
+        dist[u][v]=y;
+        dist[v][u]=y;
+    }
+    floydWarshall(dist);
+    if(dist[0][n-1]==1e18){
+        cout<<"inf"<<endl;
+        return;
+    }
+    vpi a;
+    for(int i=0;i<n;i++){
+        a.pb({dist[0][i],i});
+    }
+    sort(all(a));
+    vector<pair<string,int>> ans;
+    string s(n,'0');
+    for(int i=0;i<n-1;i++){
+        s[a[i].ss]='1';
+        ans.pb({s,dist[0][a[i+1].ss]-dist[0][a[i].ss]});
+        if(a[i+1].ss==n-1){
+            break;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
+    cout<<dist[0][n-1]<<" "<<ans.size()<<endl;
+    for(auto [s,t]:ans){
+        cout<<s<<" "<<t<<endl;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
 }
 
 int32_t main()
@@ -120,7 +136,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

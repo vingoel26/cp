@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -74,40 +86,48 @@ May the WA avoid you
 ========================================
 */
 
+int dp1(int mask,int lst,vi& adj,viv& dp){
+    if(dp[mask][lst]!=-1){
+        return dp[mask][lst];
+    }
+    int mx=0;
+    int k=(adj[lst]&(~mask));
+    while(k>0){
+        int nxt=__builtin_ctzll(k); 
+        mx=max(mx,1LL+dp1(mask|(1LL<<nxt),nxt,adj,dp));
+        k&=(k-1LL); 
+    }
+    dp[mask][lst]=mx;
+    return dp[mask][lst];
+}
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vpi sng(n);
+    map<string,int> mp;
+    int ct=0;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        string g,w;
+        cin>>g>>w;
+        if(mp.find(g)==mp.end()) mp[g]=ct++;
+        if(mp.find(w)==mp.end()) mp[w]=ct++;
+        sng[i]={mp[g],mp[w]};
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    vi adj(n,0);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i!=j and (sng[i].ff==sng[j].ff or sng[i].ss==sng[j].ss)){
+                adj[i]|=(1LL<<j);
             }
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    viv dp(1LL<<n,vi(n,-1));
+    int len=0;
+    for(int i=0;i<n;i++){
+        len=max(len,1LL+dp1((1LL<<i),i,adj,dp));
     }
-    cout<<ans<<endl;
+    cout<<n-len<<endl;
 }
 
 int32_t main()

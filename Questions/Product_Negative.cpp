@@ -76,38 +76,59 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vi a(n);
+    vin(a);
+    int ct=0;
+    int idx=-1;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+        if(a[i]==-1){
+            ct++;
+            idx=i;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    if(ct%2==0){
+        cout<<"Alice"<<endl;
+        cout<<1<<" "<<n<<endl;
+    }
+    else{
+        if(ct==1){
+            int l=idx-0,r=n-1-idx;
+            if(l==r){
+                cout<<"Bob"<<endl;
+            }
+            else{
+                cout<<"Alice"<<endl;
+                if(l>r){
+                    cout<<1<<" "<<(l-r)<<endl;
+                }
+                else{
+                    cout<<n-(r-l)+1<<" "<<n<<endl;
+                }
             }
         }
-        dp=v;
+        else{
+            cout<<"Alice"<<endl;
+            vi len(3),p;
+            for(int i=0;i<n;i++){
+                if(a[i]==-1){
+                    p.pb(i);
+                }
+            }
+            len[0]=p[0];
+            len[1]=p[1]-p[0]-1;
+            len[2]=n-1-p[p.size()-1];
+            if(len[0]<=len[1]+len[2]){
+                int d=min(len[0],len[2]);
+                cout<<p[0]+2+(len[0]-d)<<" "<<n-d<<endl;
+            }
+            else{
+                int d=min(len[0],len[2]);
+                cout<<d+1<<" "<<p[p.size()-1]-(len[2]-d)<<endl;
+            }
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
 }
 
 int32_t main()

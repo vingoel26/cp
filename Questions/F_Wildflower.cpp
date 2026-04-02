@@ -38,14 +38,26 @@
 #define vppi vector<vector<pair<int,int>>>
 #define up upper_bound
 #define low lower_bound
-#define mod 1000000007
 #define mod 998244353
+#define mod 1000000007
 #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -73,41 +85,69 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+vi po(2e5+1);
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+    viv adj(n+1);
+    vi deg(n+1,0);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+        deg[u]++;
+        deg[v]++;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    int ct=0;
+    for(int i=1;i<=n;i++){
+        if(deg[i]==1 and i!=1) ct++;
+    }
+    if(ct==1){
+        cout<<po[n]<<endl;
+        return;
+    }
+    if(ct>2){
+        cout<<0<<endl;
+        return;
+    }
+    int lca=-1;
+    vi leaf;
+    for(int i=1;i<=n;i++){
+        if(deg[i]==1 and i!=1) leaf.pb(i);
+    }
+    vi depth(n+1,0);
+    queue<int> q;
+    vi parent(n+1, -1);
+    q.push(1);
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        for(auto v:adj[u]){
+            if(v==parent[u]) continue;
+            parent[v]=u;
+            depth[v]=depth[u]+1;
+            q.push(v);
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
+    int a=leaf[0],b=leaf[1];
+    while(depth[a]>depth[b]) a=parent[a];
+    while(depth[b]>depth[a]) b=parent[b];
+    while(a!=b){
+        a=parent[a];
+        b=parent[b];
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    lca=a;
+    int d1=depth[leaf[0]];
+    int d2=depth[leaf[1]];
+    if(d1==d2){
+        cout<<po[depth[lca]+2]<<endl;
     }
-    cout<<ans<<endl;
+    else{
+        int d=abs(d1-d2);
+        cout<<(po[d+depth[lca]+1]+po[d+depth[lca]-1+1])%mod<<endl;
+    }
 }
 
 int32_t main()
@@ -119,6 +159,10 @@ int32_t main()
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
 
+    po[0]=1;
+    for(int i=1;i<=2e5;i++){
+        po[i]=(po[i-1]*2)%mod;
+    }
     int t = 1;
     cin >> t;
     while (t--)

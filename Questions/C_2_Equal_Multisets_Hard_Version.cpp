@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -76,38 +88,81 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    int n,k;
+    cin>>n>>k;
+    vi a(n),b(n);
+    vin(a);
+    vin(b);
+    for(int i=0;i<k;i++){
+        bool ok=true;
+        for(int j=i;j<n;j+=k){
+            if(a[i]!=a[j]){
+                ok=false;
+                break;
             }
         }
-        dp=v;
+        if(ok){
+            int v=-1;
+            for(int j=i;j<n;j+=k){
+                if(b[j]!=-1){
+                    v=b[j];
+                }
+            }
+            if(v!=-1){
+                for(int j=i;j<n;j+=k){
+                    if(b[j]==-1){
+                        b[j]=v;
+                    }
+                }
+                for(int j=i;j<n;j+=k){
+                    if(b[j]!=v and b[j]!=-1){
+                        nah
+                        return;
+                    }
+                } 
+            }
+        }
+        else{
+            for(int j=i;j<n;j+=k){
+                if(a[j]==b[j]){
+                    continue;
+                }
+                else if(b[j]==-1){
+                    b[j]=a[j];
+                }
+                else{
+                    nah
+                    return;
+                }
+            }
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    vi ct(n+1);
+    for(int i=0;i<k;i++){
+        ct[a[i]]++;
+        if(b[i]!=-1){
+            ct[b[i]]--;
+        }
+        // if(ct[a[i]]<0){
+        //     nah
+        //     return;
+        // }
+        // if(ct[b[i]]<0){
+        //     nah
+        //     return;
+        // }
     }
-    cout<<ans<<endl;
+    // vout(a);
+    // cout<<endl;
+    // vout(b);
+    // cout<<endl;
+    for(int i=1;i<=n;i++){
+        if(ct[i]<0){
+            nah
+            return;
+        }
+    }
+    yah
 }
 
 int32_t main()

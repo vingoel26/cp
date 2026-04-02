@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -73,41 +85,65 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+vector<pair<long long,int>>segmentTree;
+pair<long long,int> merge(pair<long long,int>&p1,pair<long long,int>&p2){
+    return {p1.first+p2.first,p1.second+p2.second};
+}
+void update(int l,int r,int index,int pos){
+    if(l==r){
+        segmentTree[index].first+=pos;
+        segmentTree[index].second++;
+        return;
+    }
+    int mid=(l+r)/2;
+    if(pos<=mid){
+        update(l,mid,2*index,pos);
+    }
+    else{
+        update(mid+1,r,2*index+1,pos);
+    }
+    segmentTree[index]=merge(segmentTree[2*index],segmentTree[2*index+1]);
+}
+int query(int l,int r,int index,long long sum){
+    if(l==r){
+        return min(segmentTree[index].second,(int)sum/l);
+    }
+    int mid=(l+r)/2;
+    if(segmentTree[2*index].first<=sum){
+        return segmentTree[2*index].second + query(mid+1,r,2*index+1,sum-segmentTree[2*index].first);
+    }
+    return query(l,mid,2*index,sum);
+}
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    int n,q;
+	cin >>n>>q;
+	vector<int>v(n);
+	for(int i=0;i<n;i++)cin>>v[i];
+	segmentTree.assign(4*n,{0,0});
+	vector<pair<int,pair<int,int>>>qr;
+	for(int i=0;i<q;i++){
+	    int x,y;
+	    cin>>x>>y;
+	    x--;
+	    qr.push_back({x,{y,i}});
+	}
+	sort(qr.begin(),qr.end());
+    vector<int>ans(q);
+    int prev=0;
+    for(int i=0;i<q;i++){
+        int x=qr[i].first;
+        int y=qr[i].second.first;
+        int index=qr[i].second.second;
+        while(prev<=x){
+           update(1,n,1,v[prev]);
+           prev++;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
+        ans[index]= query(1,n,1,y);
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
+    for(int i=0;i<q;i++){
+        cout<<ans[i]<<"\n";
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
 }
 
 int32_t main()
@@ -120,7 +156,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

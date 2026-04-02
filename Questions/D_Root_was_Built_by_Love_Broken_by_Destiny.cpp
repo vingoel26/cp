@@ -39,13 +39,25 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -76,36 +88,64 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+    int n,m;
+    cin>>n>>m;
+    vpi e(m);
+    for(int i=0;i<m;i++){
+        cin>>e[i].ff>>e[i].ss;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    if(n==2){
+        cout<<2<<endl;
+        return;
+    }
+    if(m!=n-1){
+        cout<<0<<endl;
+        return;
+    }
+    vi deg(n+1,0);
+    for(int i=0;i<m;i++){
+        deg[e[i].ff]++;
+        deg[e[i].ss]++;
+    }
+    vi vis(n+1,0);
+    for(int i=1;i<=n;i++){
+        if(deg[i]==1){
+            vis[i]=1;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
+    int ct=0;
+    for(int i=1;i<=n;i++){
+        if(vis[i]){
+            ct++;
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    if(ct==n-1){
+        cout<<(2*fact[n-1])%mod<<endl;
+        return;
+    }
+    vi deg2(n+1,0);
+    for(int i=0;i<m;i++){
+        if(!vis[e[i].ff] && !vis[e[i].ss]){
+            deg2[e[i].ff]++;
+            deg2[e[i].ss]++;
+        }
+    }
+    for(int i=1;i<=n;i++){
+        if(deg2[i]>2){
+            cout<<0<<endl;
+            return;
+        }
+    }
+    int ans=4;
+    // vout(deg);
+    // cout<<endl;
+    // vout(deg2);
+    // cout<<endl;
+    for(int i=1;i<=n;i++){
+        if(deg[i]>=2){
+            int l=deg[i]-deg2[i];
+            ans=(ans*fact[l])%mod;
+        }
     }
     cout<<ans<<endl;
 }
@@ -114,10 +154,10 @@ int32_t main()
 {
     fast
     // Precompute factorials
-    // fact[0] = 1;
-    // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
-    // }
+    fact[0] = 1;
+    for(int i = 1; i <= 200000; ++i){
+        fact[i] = (fact[i-1] * i) % mod;
+    }
 
     int t = 1;
     cin >> t;

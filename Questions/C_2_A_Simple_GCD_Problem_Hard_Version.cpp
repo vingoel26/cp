@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -76,36 +88,78 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vi a(n),b(n);
+    vin(a);
+    vin(b);
+    vi g(n-1),l(n);
+    for(int i=0;i<n-1;i++){
+        g[i]=gcd(a[i],a[i+1]);
+    }
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+        if(i==0){
+            l[i]=lcm(1,g[i]);
+        } 
+        else if(i==n-1){
+            l[i]=lcm(g[i-1],1);
+        } 
+        else {
+            l[i]=lcm(g[i-1],g[i]);
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    vi prime={2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97};
+    viv dp(n);
+    viv c(n);
+    for(int i=0;i<n;i++){
+        vi c1;
+        c1.pb(a[i]);
+        if(l[i]<=b[i]){
+            c1.pb(l[i]);
+        }
+        for(int j=0;j<prime.size();j++){
+            if(l[i]*prime[j]<=b[i]){
+                c1.pb(l[i]*prime[j]);
+            }
+            else{
+                break;
             }
         }
-        dp=v;
+        sort(all(c1));
+        c1.erase(unique(all(c1)),c1.end());
+        c[i]=c1;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    for(int i=0;i<n;i++){
+        dp[i].assign(c[i].size(),-1);
+    }
+    for(int i=0;i<c[0].size();i++){
+        if(c[0][i]==a[0]){
+            dp[0][i]=0;
+        }
+        else{
+            dp[0][i]=1;
+        }
+    }
+    for(int i=1;i<n;i++){
+        for(int j=0;j<c[i].size();j++){
+            int v=c[i][j];
+            int cst;
+            if(v==a[i]){
+                cst=0;
+            }
+            else{
+                cst=1;
+            }
+            for(int k=0;k<c[i-1].size();k++){
+                if(dp[i-1][k]!=-1 and gcd(c[i-1][k],v)==g[i-1]){
+                    dp[i][j]=max(dp[i][j],dp[i-1][k]+cst);
+                }
+            }
+        }
+    }
+    int ans=0;
+    for(int i=0;i<c[n-1].size();i++){
+        ans=max(ans,dp[n-1][i]);
     }
     cout<<ans<<endl;
 }

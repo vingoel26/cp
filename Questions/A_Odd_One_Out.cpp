@@ -71,20 +71,7 @@ May the WA avoid you
 
 void solve()
 {
-    int a,b,c;
-    cin>>a>>b>>c;
-    if(a==b){
-        cout<<c<<endl;
-        return;
-    }
-    if(a==c){
-        cout<<b<<endl;
-        return;
-    }
-    if(b==c){
-        cout<<a<<endl;
-        return;
-    }
+    cout<<"C2";
 }
 
 int32_t main()
@@ -97,7 +84,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

@@ -39,13 +39,25 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -61,8 +73,8 @@ int binExpo(int a, int b, int m){
 int nCr(int n, int r){
     if(r > n) return 0;
     int res = fact[n];
-    res = (res * binExpo(fact[r], mod-2, mod)) % mod;
-    res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
+    res = (res * binExpo(fact[r],mod-2,mod)) %mod;
+    res = (res * binExpo(fact[n-r],mod-2,mod)) %mod;
     return res;
 }
 
@@ -76,37 +88,22 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+    int n,m,k;
+    cin>>n>>m>>k;
+    int s=0;
+    for(int i=0;i<m;i++){
+        int u,v,f;
+        cin>>u>>v>>f;
+        s=(s+f)%mod;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
-    }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
+    int denom=binExpo((n*(n-1))/2,mod-2,mod);
+    int ans=0;
+    ans=(ans+(((k*s)%mod)*denom)%mod)%mod;
+    int ans1=((((m*k)%mod)*(k-1))%mod)%mod;
+    ans1=(ans1*binExpo(2,mod-2,mod))%mod;
+    ans1=(ans1*denom)%mod;
+    ans1=(ans1*denom)%mod;
+    ans=(ans+ans1)%mod;
     cout<<ans<<endl;
 }
 
@@ -116,7 +113,7 @@ int32_t main()
     // Precompute factorials
     // fact[0] = 1;
     // for(int i = 1; i <= 200000; ++i){
-    //     fact[i] = (fact[i-1] * i) % mod;
+    //     fact[i] = (fact[i-1] * i) %mod;
     // }
 
     int t = 1;

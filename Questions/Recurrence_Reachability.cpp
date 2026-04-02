@@ -74,38 +74,51 @@ May the WA avoid you
 ========================================
 */
 
-void solve()
-{
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+bool check(int x,int n,vector<int>& a) {
+    vector<bool> dp(n+2,false);
+    dp[0]=true;
+    for(int i=2;i<=n+1;i++){
+        if(i>=2){
+            if(dp[i-2] and a[i-2]>=x){
+                dp[i]=true;
             }
         }
-        dp=v;
+        if(i>=3 and !dp[i]){
+            if(dp[i-3] and (a[i-3]>=x or a[i-2]>=x)){
+                dp[i]=true;
+            }
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    return dp[n+1];
+}
+
+void solve(){
+    int n;
+    cin>>n;
+    vi a(n);
+    int mx=0;
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+        mx=max(mx,a[i]);
+    }
+    if(n==1){
+        cout<<a[0]<<endl;
+        return;
+    }
+    if(n==2){
+        cout<<max(a[0],a[1])<<endl;
+        return;
+    }
+    int l=1,r=mx,ans=1;
+    while(l<=r){
+        int mid=l+(r-l)/2;
+        if(check(mid,n,a)){
+            ans=mid;
+            l=mid+1;
+        } 
+        else{
+            r=mid-1;
+        }
     }
     cout<<ans<<endl;
 }

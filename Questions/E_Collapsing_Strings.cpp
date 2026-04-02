@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -65,7 +77,13 @@ int nCr(int n, int r){
     res = (res * binExpo(fact[n-r], mod-2, mod)) % mod;
     return res;
 }
-
+const long long MOD1 = 1e9 + 7;
+const long long MOD2 = 1e9 + 9;
+const long long P1 = 313;
+const long long P2 = 317;
+uint64_t get_hash(long long h1, long long h2) {
+    return ((uint64_t)h1 << 32) | (uint32_t)h2;
+}
 /*
 ========================================
 Author:         Vinayak Goel
@@ -76,38 +94,41 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vector<string>s(n);
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        cin>>s[i];
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    int ans=0;
+    unordered_map<uint64_t,int,custom_hash> ct;
+    ct.reserve(1e6);
+    for(int i=0;i<n;i++){
+        ans+=s[i].length();
+        int h1=0,h2=0;
+        for(int j=0;j<s[i].length();j++){
+            h1=(h1*P1+s[i][j])%MOD1;
+            h2=(h2*P2+s[i][j])%MOD2;
+            ct[get_hash(h1,h2)]++;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    int ans1=0;
+    for(int i=0;i<n;i++){
+        int h1=0,h2=0;
+        for(int j=s[i].length()-1;j>=0;j--){
+            h1=(h1*P1+s[i][j])%MOD1;
+            h2=(h2*P2+s[i][j])%MOD2;
+            auto hsh=get_hash(h1,h2);
+            auto it=ct.find(hsh);
+            if(it!=ct.end()){
+                ans1+=it->ss;
+            }
+            else{
+                break;
             }
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
+    cout<<2*n*ans-2*ans1<<endl;
 }
 
 int32_t main()
@@ -120,7 +141,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

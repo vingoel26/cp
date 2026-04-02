@@ -76,36 +76,26 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
+    vin(a);
+    vi b(n);
+    vin(b);
+    int ans=0;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+        for(int j=0;j<n;j++){
+            if(i!=j){
+                int mx=max(a[i],a[j]);
+                int mn=min(a[i],a[j]);
+                int d=min(a[i]/2,100LL);
+                mx-=d;
+                int s=b[i]+b[j];
+                if(mx+mn<=k){
+                    ans=max(ans,s);
+                }
             }
         }
-        dp=v;
-    }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
     }
     cout<<ans<<endl;
 }

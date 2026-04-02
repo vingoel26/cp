@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -76,38 +88,52 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
+    int n,q;
+    cin>>n>>q;
+    vi a(n);
+    vin(a);
+    vi idx(n+1);
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        idx[a[i]]=i;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    while(q--){
+        int l,r,k;
+        cin>>l>>r>>k;
+        if(idx[k]<l-1 or idx[k]>r-1){
+            cout<<-1<<endl;
+            continue;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+        int ct1=0,ct2=0;
+        int ctt1=0,ctt2=0;
+        int l1=l-1,r1=r-1;
+        while(l1<=r1){
+            int m=(l1+r1)/2;
+            if(m==idx[k]){
+                break;
+            }
+            if(idx[k]<m){
+                ct1++;
+                if(a[m]<k){
+                    ctt1++;
+                }
+                r1=m-1;
+            }
+            else{
+                ct2++;
+                if(a[m]>k){
+                    ctt2++;
+                }
+                l1=m+1;
             }
         }
-        dp=v;
+        r1=n-k,l1=k-1;
+        if(ct1>r1 or ct2>l1){
+            cout<<-1<<endl;
+            continue;
+        }
+        cout<<2*max(ctt1,ctt2)<<" ";
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
+    cout<<endl;
 }
 
 int32_t main()

@@ -76,38 +76,68 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vi a(n);
+    vin(a);
+    int ct=0,ct1=0;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+        if(a[i]%2==0){
+            ct++;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
+        else{
+            ct1++;
+        }
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    vpi ans;
+    if(ct==n or ct1==n){
+        bool q=true;
+        while(q){
+            int mx=*max_element(all(a)),mn=*min_element(all(a));
+            if(mx==mn and mx==0){
+                cout<<0<<endl;
+                cout<<ans.size()<<endl;
+                for(auto [u,v]:ans){
+                    cout<<u<<" "<<v<<endl;
+                }
+                q=false;
+                continue;
             }
+            int k=(mx+mn)/2;
+            for(int i=0;i<n;i++){
+                a[i]=abs(a[i]-k);
+            }
+            ans.pb({1,k});
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    else{
+        bool q=true;
+        while(q){
+            int mx=*max_element(all(a)),mn=*min_element(all(a));
+            if(mx==mn+1){
+                q=false;
+                continue;
+            }
+            int k=(mx+mn)/2;
+            for(int i=0;i<n;i++){
+                a[i]=abs(a[i]-k);
+            }
+            ans.pb({1,k});
+        }
+        int mn=*min_element(all(a));
+        if(mn!=0){
+            ans.pb({1,mn});
+        }
+        ans.pb({1,3});
+        ans.pb({2,3});
+        ans.pb({1,1});
+        ans.pb({1,1});
+        cout<<1<<endl;
+        cout<<ans.size()<<endl;
+        for(auto [u,v]:ans){
+            cout<<u<<" "<<v<<endl;
+        }
     }
-    cout<<ans<<endl;
 }
 
 int32_t main()

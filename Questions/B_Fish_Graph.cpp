@@ -76,38 +76,92 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+    int n,m;
+    cin>>n>>m;
+    viv adj(n+1);
+    for(int i=0;i<m;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    bool k=true;
+    for(int u=1;u<=n;u++){
+        if (adj[u].size()<4){
+            continue;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+        vi visited(n+1,0);
+        vi parent(n+1,-1);
+        vi root(n+1,-1);
+        queue<int> q;
+        visited[u]=1;
+        for(int v:adj[u]){
+            visited[v]=1;
+            root[v]=v;
+            parent[v]=u;
+            q.push(v);
+        }
+        bool pos=false;
+        int n1=-1,n2=-1;
+        while(!q.empty()){
+            int u1=q.front();
+            q.pop();
+            for(int v:adj[u1]){
+                if(v==u){
+                    continue;
+                }
+                if(!visited[v]){
+                    visited[v]=1;
+                    root[v]=root[u1];
+                    parent[v]=u1;
+                    q.push(v);
+                } 
+                else if(root[v]!=root[u1]){
+                    n1=u1;
+                    n2=v;
+                    pos=true;
+                    break;
+                }
+            }
+            if(pos){
+                break;
             }
         }
-        dp=v;
+        if(pos){
+            vpi ans;
+            int u1=n1;
+            while(u1!=root[n1]){
+                ans.pb({u1,parent[u1]});
+                u1=parent[u1];
+            }
+            u1=n2;
+            while(u1!=root[n2]){
+                ans.pb({u1,parent[u1]});
+                u1=parent[u1];
+            }
+            ans.pb({n1,n2});
+            ans.pb({root[n1],u}); 
+            ans.pb({root[n2],u});
+            int ct=0;
+            for(int v:adj[u]){
+                if(v!=root[n1] and v!=root[n2]){
+                    ans.pb({u,v});
+                    ct++;
+                    if(ct==2){
+                        break;
+                    }
+                }
+            }
+            yah
+            k=false;
+            cout<<ans.size()<<endl;
+            for(auto [u,v]:ans){
+                cout<<u<<" "<<v<<endl;
+            }
+            return;
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
-    cout<<ans<<endl;
+    if(k) nah
 }
 
 int32_t main()

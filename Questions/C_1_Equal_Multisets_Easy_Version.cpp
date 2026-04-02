@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -76,38 +88,49 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
+    vin(a);
+    vi b(n);
+    vin(b);
+    map<int,int>ct;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        ct[b[i]]++;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    for(int i=1;i<=n;i++){
+        if(ct[i]>1){
+            nah
+            return;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
+    k=n-k;
+    for(int i=0;i<k;i++){
+        if(b[i]==-1) continue;
+        if(a[i]!=b[i]) {
+            nah
+            return;
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    for(int i=n-k;i<n;i++){
+        if(b[i]==-1) continue;
+        if(a[i]!=b[i]) {
+            nah
+            return;
+        }
     }
-    cout<<ans<<endl;
+    set<int>st;
+    for(int i=k;i<n-k;i++){
+        st.insert(a[i]);
+    }
+    for(int i=k;i<n-k;i++){
+        if(b[i]==-1) continue;
+        if(st.find(b[i])==st.end()){
+            nah
+            return;
+        }
+    }
+    yah
 }
 
 int32_t main()

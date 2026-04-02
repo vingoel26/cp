@@ -76,38 +76,79 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
+    vpi a(n);
+    int mxh=0,mxw=0;
+    int s=0;
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        cin>>a[i].ff>>a[i].ss;
+        mxh=max(mxh,a[i].ff);
+        mxw=max(mxw,a[i].ss);
+        s+=a[i].ff*a[i].ss;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
+    multiset<pair<int,int>> m,m1;
+    for(int i=0;i<n;i++){
+        m.insert({a[i].ff,a[i].ss});
+        m1.insert({a[i].ss,a[i].ff});
     }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+    multiset<pair<int,int>> m11=m;
+    multiset<pair<int,int>> m111=m1;
+    set<pair<int,int>> ans;
+    if(s%mxh==0){
+        int h=mxh,w=s/mxh;
+        while(!m.empty()){
+            if((*m.rbegin()).ff==h){
+                w-=(*m.rbegin()).ss;
+                int h1=(*m.rbegin()).ff;
+                int w1=(*m.rbegin()).ss;
+                m.erase((--m.end()));
+                m1.erase(m1.find({w1,h1}));
+            }
+            else if((*m1.rbegin()).ff==w){
+                h-=(*m1.rbegin()).ss;
+                int h1=(*m1.rbegin()).ss;
+                int w1=(*m1.rbegin()).ff;
+                m1.erase((--m1.end()));
+                m.erase(m.find({h1,w1}));
+            }
+            else{
+                break;
             }
         }
-        dp=v;
+        if(h==0 or w==0){
+            ans.insert({mxh,s/mxh});
+        }
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    if(s%mxw==0){
+        int w=mxw,h=s/mxw;
+        while(!m11.empty()){
+            if((*m11.rbegin()).ff==h){
+                w-=(*m11.rbegin()).ss;
+                int h1=(*m11.rbegin()).ff;
+                int w1=(*m11.rbegin()).ss;
+                m11.erase((--m11.end()));
+                m111.erase(m111.find({w1,h1}));
+            }
+            else if((*m111.rbegin()).ff==w){
+                h-=(*m111.rbegin()).ss;
+                int h1=(*m111.rbegin()).ss;
+                int w1=(*m111.rbegin()).ff;
+                m111.erase((--m111.end()));
+                m11.erase(m11.find({h1,w1}));
+            }
+            else{
+                break;
+            }
+        }
+        if(h==0 or w==0){
+            ans.insert({s/mxw,mxw});
+        }
     }
-    cout<<ans<<endl;
+    cout<<ans.size()<<endl;
+    for(auto [u,v]:ans){
+        cout<<u<<" "<<v<<endl;
+    }
 }
 
 int32_t main()

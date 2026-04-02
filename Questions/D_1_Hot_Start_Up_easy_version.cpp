@@ -9,7 +9,7 @@
     int n;     \
     cin >> n
 #define vin(a) \
-    for (int i = 0; i < a.size(); ++i) \
+    for (int i = 1; i < a.size(); ++i) \
     {                           \
         cin >> a[i];            \
     }
@@ -18,6 +18,7 @@
     {                           \
         cout << a[i] << ' ';    \
     }
+//bottom gay here
 #define pb push_back
 #define ff first
 #define ss second
@@ -76,37 +77,35 @@ May the WA avoid you
 
 void solve()
 {
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
-    }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    int n,k;
+    cin>>n>>k;
+    vi a(n+1);
+    vin(a);
+    vi hot(k+1),cold(k+1);
+    vin(cold);
+    vin(hot);
+    vi dp(k+1,1e18),ndp(k+1,1e18);
+    dp[0]=cold[a[1]];
+    int prev=a[1];
+    for(int i=2;i<=n;i++){
+        int curr=a[i];
+        for(int j=0;j<=k;j++){
+            ndp[j]=1e18;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+        for(int j=0;j<=k;j++){
+            int ct=dp[j];
+            if(ct>=1e18){
+                continue;
             }
+            int cst1=ct+(prev==curr? hot[curr]:cold[curr]);
+            ndp[j]=min(ndp[j],cst1);
+            int cst2=ct+(j==curr? hot[curr]:cold[curr]);
+            ndp[prev]=min(ndp[prev],cst2);
         }
-        dp=v;
+        dp=ndp;
+        prev=curr;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
+    int ans=*min_element(all(dp));
     cout<<ans<<endl;
 }
 

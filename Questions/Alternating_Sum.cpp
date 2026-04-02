@@ -46,6 +46,18 @@ using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -74,40 +86,76 @@ May the WA avoid you
 ========================================
 */
 
-void solve()
-{
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+const long long INF = 1e18;
+
+struct Node {
+    long long mat[2][2];
+        Node() {
+        mat[0][0] = 0;    mat[0][1] = -INF;
+        mat[1][0] = -INF; mat[1][1] = 0;
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
+};
+
+Node mergeNodes(const Node& a, const Node& b) {
+    Node res;
+    res.mat[0][0] = res.mat[0][1] = res.mat[1][0] = res.mat[1][1] = -INF;
+    
+    for(int i = 0; i < 2; ++i) {
+        for(int j = 0; j < 2; ++j) {
+            for(int k = 0; k < 2; ++k) {
+                if (a.mat[i][k] != -INF && b.mat[k][j] != -INF) {
+                    res.mat[i][j] = max(res.mat[i][j], a.mat[i][k] + b.mat[k][j]);
+                }
             }
         }
-        dp=v;
     }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
+    return res;
+}
+
+const int MAXN = 200005;
+Node segtre[4 * MAXN];
+long long A[MAXN];
+
+void build(int node, int start, int end) {
+    if (start == end) {
+        segtre[node].mat[0][0] = 0;
+        segtre[node].mat[0][1] = -A[start];
+        segtre[node].mat[1][0] = A[start];
+        segtre[node].mat[1][1] = 0;
+        return;
     }
-    cout<<ans<<endl;
+    int mid = start + (end - start) / 2;
+    build(2 * node, start, mid);
+    build(2 * node + 1, mid + 1, end);
+    segtre[node] = mergeNodes(segtre[2 * node], segtre[2 * node + 1]);
+}
+
+Node query(int node, int start, int end, int l, int r) {
+    if (r < start || end < l) {
+        return Node(); 
+    }
+    if (l <= start && end <= r) {
+        return segtre[node];
+    }
+    int mid = start + (end - start) / 2;
+    Node p1 = query(2 * node, start, mid, l, r);
+    Node p2 = query(2 * node + 1, mid + 1, end, l, r);
+    return mergeNodes(p1, p2);
+}
+void solve()
+{
+    int n,q;
+    cin>>n>>q;
+    for(int i=1;i<=n;i++){
+        cin>>A[i];
+    }
+    build(1,1,n);
+    for(int i=0;i<q;i++){
+        int l,r;
+        cin>>l>>r;
+        Node res=query(1, 1, n, l, r);
+        cout << max(res.mat[0][0], res.mat[0][1]) << endl;
+    }
 }
 
 int32_t main()
@@ -120,7 +168,7 @@ int32_t main()
     // }
 
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

@@ -39,13 +39,25 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
 typedef tree < pair < int, int > , null_type, less < pair < int, int >> , rb_tree_tag, tree_order_statistics_node_update > ordered_multiset;
 typedef tree < int, null_type, less < int > , rb_tree_tag, tree_order_statistics_node_update > ordered_set;
 
+struct custom_hash {
+static uint64_t splitmix64(uint64_t x) {
+x += 0x9e3779b97f4a7c15;
+x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+return x ^ (x >> 31);
+}
+size_t operator()(uint64_t x) const {
+static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+return splitmix64(x + FIXED_RANDOM);
+}
+};
 vi fact(200001);
 
 int binExpo(int a, int b, int m){
@@ -74,42 +86,48 @@ May the WA avoid you
 ========================================
 */
 
-void solve()
-{
-    int n,x;
-    cin>>n;
-    vi v(n+1,0);
+vi p(36);
+vi q(36);
+int func(int x,int& k) {
+    if(k==0) return 1;
+    int ans=x%mod;
+    k--;
+    for(int i=1;i<x;i++){
+        if(k == 0) break;
+        if(i<=31 and k>=(1LL<<(i-1))){
+            k-=(1LL<<(i-1));
+            ans=(ans*p[i])%mod;
+        } 
+        else{
+            ans=(ans*func(i,k))%mod;
+            break; 
+        }
+    }
+    return ans;
+}
+void solve() {
+    int n,k;
+    cin>>n>>k;
+    vi s(n);
     for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+        cin>>s[i];
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
+    sort(s.begin(),s.end());
+    int ans=1;
+    for(int j=0;j<n;j++){
+        if(k==0) break;
+        int x=s[j];
+        if(x<=31 and k>=(1LL<<(x-1))){
+            k-=(1LL<<(x-1));
+            ans=(ans*p[x])%mod;
+        } 
+        else{
+            ans=(ans*func(x,k))%mod;
+            break;
         }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
-    }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
     }
     cout<<ans<<endl;
 }
-
 int32_t main()
 {
     fast
@@ -118,7 +136,12 @@ int32_t main()
     // for(int i = 1; i <= 200000; ++i){
     //     fact[i] = (fact[i-1] * i) % mod;
     // }
-
+    p[1]=1;
+    q[1]=1;
+    for(int i=2;i<=35;i++){
+        p[i]=(i*q[i-1])%mod;
+        q[i]=(q[i-1]*p[i])%mod;
+    }
     int t = 1;
     cin >> t;
     while (t--)

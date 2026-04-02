@@ -39,7 +39,7 @@
 #define up upper_bound
 #define low lower_bound
 #define mod 1000000007
-#define mod 998244353
+// #define mod 998244353
 #define endl "\n"
 using namespace std;
 using namespace __gnu_pbds;
@@ -73,40 +73,30 @@ Institution:    IIITL
 May the WA avoid you
 ========================================
 */
-
+int dfs(int u,int p,viv &adj,int dep,int &ans,int k){
+    int mx=dep;
+    for(auto v:adj[u]){
+        if(v!=p){
+            mx=max(mx,dfs(v,u,adj,dep+1,ans,k));
+        }
+    }
+    ans=(ans+(((mx-dep+1)%mod)*k)%mod)%mod;
+    return mx;
+}
 void solve()
 {
-    int n,x;
+    int n;
     cin>>n;
-    vi v(n+1,0);
-    for(int i=0;i<n;i++){
-        cin>>x;
-        v[x]++;
+    viv adj(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    vi a;
-    int mx=0,ans=1;
-    for(int i=0;i<=n;i++){
-        if(v[i]>0){
-            a.push_back(v[i]);
-        }
-        mx=max(mx,v[i]);
-        ans=(ans*(1+v[i]))%mod;
-    }
-    vi dp(mx,0);
-    dp[0]=1;
-    for(int i=0;i<a.size();i++){
-        v=dp;
-        for(int j=0;j<mx;j++){
-            if(j-a[i]>=0){
-                int k=(v[j]+(a[i]*dp[j-a[i]])%mod)%mod;
-                v[j]=k;
-            }
-        }
-        dp=v;
-    }
-    for(int i=0;i<mx;i++){
-        ans=((ans-dp[i])%mod+mod)%mod;
-    }
+    int k=binExpo(2,n-1,mod);
+    int ans=0;
+    dfs(1,0,adj,0,ans,k);
     cout<<ans<<endl;
 }
 
